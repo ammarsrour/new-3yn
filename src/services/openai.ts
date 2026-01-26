@@ -41,14 +41,6 @@ export const analyzeBillboardWithAI = async (
   let attempt = 0;
 
   try {
-    console.log('🔑 API Key exists:', !!import.meta.env.VITE_OPENAI_API_KEY);
-    console.log('🔑 API Key length:', import.meta.env.VITE_OPENAI_API_KEY?.length);
-
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
-      console.error('❌ VITE_OPENAI_API_KEY is not set!');
-      throw new Error('OpenAI API key not configured');
-    }
-
     const base64Image = await convertImageToBase64(imageFile);
 
     const validationResult = await validateImageContent(base64Image);
@@ -125,13 +117,13 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
     console.log('🔍 FIRST 200 CHARS:', systemPrompt.substring(0, 200));
     console.log('🔍 Contains "Ordinance 25/93":', systemPrompt.includes('Ordinance 25/93'));
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('/.netlify/functions/openai', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        action: "analyze",
         model: "gpt-4o",
         response_format: { type: "json_object" },
         messages: [
@@ -158,7 +150,7 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
           }
         ],
         max_tokens: 1500,
-        temperature: 0.3 // Low temperature for consistent analysis
+        temperature: 0.3
       })
     });
 
@@ -763,13 +755,13 @@ const convertImageToBase64 = (file: File): Promise<string> => {
  */
 const validateImageContent = async (base64Image: string): Promise<{ isValid: boolean; message?: string }> => {
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('/.netlify/functions/openai', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        action: "validate",
         model: "gpt-4o-mini",
         messages: [
           {

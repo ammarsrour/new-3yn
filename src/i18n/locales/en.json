@@ -1,0 +1,250 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "download": "Download",
+    "share": "Share",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "header": {
+    "title": "Billboard Analyzer",
+    "subtitle": "3YN",
+    "demo": "Demo",
+    "pricing": "Pricing",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "account": "Account"
+  },
+  "hero": {
+    "title": "Analyze Your Billboard's",
+    "titleHighlight": "Readability in Seconds",
+    "subtitle": "AI-powered billboard analysis for optimal advertising effectiveness. Get comprehensive readability scores and actionable insights instantly.",
+    "tagline": "Instant clarity. Actionable insights. No more guesswork.",
+    "comparison": {
+      "our": "Our Analysis",
+      "ourTime": "2-3 min",
+      "vs": "vs",
+      "traditional": "Traditional",
+      "traditionalTime": "2-3 days"
+    },
+    "uploadButton": "Upload Your Creative",
+    "demoButton": "View Demo"
+  },
+  "features": {
+    "title": "Everything You Need for",
+    "titleHighlight": "Data-driven",
+    "subtitle": "Our AI-powered platform provides comprehensive analysis tools to maximize your billboard's impact and ROI.",
+    "instant": {
+      "title": "Instant Results",
+      "description": "AI-powered scoring (0-100) delivers comprehensive analysis in seconds, not days."
+    },
+    "distance": {
+      "title": "Distance Analysis",
+      "description": "Test readability at multiple viewing distances: 50m, 100m, and 150m for complete coverage."
+    },
+    "reports": {
+      "title": "Professional Reports",
+      "description": "Get actionable suggestions with detailed PDF reports you can share with clients."
+    },
+    "location": {
+      "title": "Location Insights",
+      "description": "Factor in geographic and demographic considerations for optimal placement strategy."
+    }
+  },
+  "pricing": {
+    "title": "Choose Your Perfect Plan",
+    "subtitle": "Start optimizing your billboard campaigns today with our flexible pricing options.",
+    "popular": "Most Popular",
+    "getStarted": "Get Started",
+    "starter": {
+      "name": "Starter",
+      "price": 299,
+      "description": "Perfect for small agencies and freelancers",
+      "features": [
+        "10 analyses per month",
+        "Basic AI scoring",
+        "PDF reports",
+        "Email support",
+        "Basic dashboard"
+      ]
+    },
+    "professional": {
+      "name": "Professional",
+      "price": 999,
+      "description": "Most popular for growing businesses",
+      "features": [
+        "50 analyses per month",
+        "Advanced AI analysis",
+        "Priority support",
+        "Custom branding",
+        "Analytics dashboard",
+        "Location insights",
+        "Team collaboration"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": 2999,
+      "description": "For large agencies and enterprises",
+      "features": [
+        "Unlimited analyses",
+        "Dedicated account manager",
+        "White-label solution",
+        "API integration",
+        "24/7 phone support",
+        "Custom integrations",
+        "Advanced reporting",
+        "Priority processing"
+      ]
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your Billboard Analyzer account"
+    },
+    "signup": {
+      "title": "Get Started",
+      "subtitle": "Create your Billboard Analyzer account"
+    },
+    "fields": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password",
+      "namePlaceholder": "Enter your full name",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password"
+    },
+    "buttons": {
+      "signIn": "Sign In",
+      "signUp": "Create Account",
+      "switchToSignup": "Sign up",
+      "switchToLogin": "Sign in"
+    },
+    "messages": {
+      "noAccount": "Don't have an account? ",
+      "hasAccount": "Already have an account? ",
+      "loading": "Please wait...",
+      "loginSuccess": "Successfully logged in!",
+      "accountCreated": "Account created successfully!",
+      "loginFailed": "Login failed. Please check your credentials.",
+      "accountCreationFailed": "Account creation failed. Please try again."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {{name}}! Ready to analyze your billboard?",
+    "stats": {
+      "analysesThisMonth": "Analyses This Month",
+      "totalAnalyses": "Total Analyses",
+      "averageScore": "Average Score",
+      "plan": "Plan",
+      "usage": "Usage"
+    },
+    "upload": {
+      "title": "Upload Your Billboard Creative",
+      "dragDrop": "Drag & drop your creative here",
+      "or": "or",
+      "browse": "Browse Files",
+      "supports": "Supports JPG, PNG, MP4 files up to 50MB",
+      "location": "Billboard Location",
+      "distance": "Viewing Distance",
+      "analyze": "Analyze Readability",
+      "analyzing": "Analyzing Billboard..."
+    },
+    "location": {
+      "address": "Address",
+      "coordinates": "Coordinates",
+      "addressPlaceholder": "Enter billboard location (e.g., Sultan Qaboos Street, Muscat)",
+      "coordinatesPlaceholder": "Enter coordinates (e.g., 23.5880, 58.3829)",
+      "useCurrentLocation": "Use current location",
+      "recentLocations": "Recent Locations",
+      "popularLocations": "Popular Locations",
+      "suggestions": "Suggestions",
+      "example": "Example: 23.5880, 58.3829 (Muscat, Oman)",
+      "helpText": "Start typing to see suggestions, or click the navigation icon to use your current location"
+    },
+    "analysis": {
+      "title": "Analysis Results",
+      "newAnalysis": "New Analysis",
+      "downloadPDF": "Download PDF Report",
+      "readabilityScore": "Readability Score",
+      "distanceAnalysis": "Distance Analysis",
+      "criticalIssues": "Critical Issues",
+      "minorIssues": "Minor Issues",
+      "quickWins": "Quick Wins",
+      "detailedAnalysis": "Detailed AI Analysis",
+      "visualAnalysis": "Visual Analysis",
+      "hideOverlay": "Hide Overlay",
+      "showOverlay": "Show Overlay",
+      "beforeAfter": "Visual Improvements",
+      "distanceSimulation": "Distance Simulation",
+      "competitiveBenchmarking": "Competitive Benchmarking",
+      "driversView": "Driver's View"
+    },
+    "history": {
+      "title": "Analysis History",
+      "noAnalyses": "No analyses yet",
+      "firstAnalysis": "Upload your first billboard to get started",
+      "averageScore": "Avg Score"
+    },
+    "progress": {
+      "title": "Analyzing Your Billboard",
+      "subtitle": "Our AI is examining your creative for optimal readability",
+      "progress": "Progress",
+      "uploading": "Uploading image...",
+      "analyzing": "Analyzing with AI...",
+      "generating": "Generating report...",
+      "completed": "Analysis complete!",
+      "timeEstimate": "This usually takes 30-60 seconds"
+    }
+  },
+  "locations": {
+    "sultanQaboos": "Sultan Qaboos Street, Muscat",
+    "alKhuwair": "Al Khuwair, Muscat",
+    "ruwi": "Ruwi Business District, Muscat",
+    "sheikhZayed": "Sheikh Zayed Road, Dubai, UAE",
+    "kingFahd": "King Fahd Road, Riyadh, Saudi Arabia",
+    "sohar": "Sohar, Oman",
+    "salalah": "Salalah, Oman"
+  },
+  "compliance": {
+    "title": "Regulatory Compliance",
+    "mtcit": "MTCIT Compliance Check",
+    "tra": "TRA Guidelines Adherence",
+    "arabicContent": "Arabic Content Requirements",
+    "recommendations": {
+      "arabicPercentage": "Ensure Arabic text occupies at least 60% of billboard space per MTCIT guidelines",
+      "trademark": "Verify trademark compliance with Oman IP regulations",
+      "culturalSensitivity": "Content reviewed for cultural appropriateness"
+    }
+  },
+  "cultural": {
+    "considerations": "Cultural Considerations",
+    "colorPsychology": "Color Psychology for MENA Market",
+    "designGuidelines": "Regional Design Guidelines",
+    "religiousConsiderations": "Religious Considerations"
+  },
+  "errors": {
+    "fileRequired": "Please select an image file (JPG, PNG) or video file (MP4) to analyze.",
+    "locationRequired": "Please enter a billboard location.",
+    "invalidLocation": "Please enter a valid location.",
+    "fileTooLarge": "File size must be less than 50MB.",
+    "invalidFileType": "Please upload a JPG, PNG, or MP4 file.",
+    "analysisLimitReached": "Monthly analysis limit reached. Please upgrade your plan.",
+    "locationNotFound": "Location not found. Please check the address and try again.",
+    "invalidCoordinates": "Invalid coordinates. Use format: 23.5880, 58.3829",
+    "gpsUnavailable": "Unable to get current location",
+    "apiError": "Analysis failed. Please try again or contact support if the issue persists."
+  }
+}

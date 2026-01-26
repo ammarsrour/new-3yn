@@ -1,0 +1,376 @@
+/* Arabic font imports - must come first */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RTL support */
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+/* Ensure proper RTL flow - but don't force on all children */
+[dir="rtl"] body {
+  direction: rtl;
+}
+
+[dir="rtl"] .ltr-numbers {
+  direction: ltr;
+  display: inline-block;
+}
+
+/* RTL spacing utilities */
+[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+[dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+/* Arabic typography */
+html[lang="ar"] {
+  font-family: 'Cairo', 'Tajawal', 'Amiri', 'Noto Sans Arabic', sans-serif;
+  line-height: 1.7;
+}
+
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4,
+html[lang="ar"] h5,
+html[lang="ar"] h6 {
+  font-family: 'Cairo', 'Tajawal', 'Amiri', sans-serif;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+/* RTL layout adjustments */
+[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+[dir="rtl"] .flex-row {
+  flex-direction: row;
+}
+
+[dir="rtl"] .grid {
+  direction: rtl;
+}
+
+[dir="rtl"] .justify-between {
+  justify-content: space-between;
+}
+
+[dir="rtl"] .items-center {
+  align-items: center;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .text-center {
+  text-align: center;
+}
+
+[dir="rtl"] input, [dir="rtl"] textarea {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] input[type="email"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL positioning */
+[dir="rtl"] .left-0 {
+  right: 0;
+  left: auto;
+}
+
+[dir="rtl"] .right-0 {
+  left: 0;
+  right: auto;
+}
+
+[dir="rtl"] .left-3 {
+  right: 0.75rem;
+  left: auto;
+}
+
+[dir="rtl"] .right-3 {
+  left: 0.75rem;
+  right: auto;
+}
+
+[dir="rtl"] .left-4 {
+  right: 1rem;
+  left: auto;
+}
+
+[dir="rtl"] .right-4 {
+  left: 1rem;
+  right: auto;
+}
+
+/* RTL margins */
+[dir="rtl"] .ml-1 {
+  margin-right: 0.25rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .mr-1 {
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] .ml-2 {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-left: 0.5rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] .ml-3 {
+  margin-right: 0.75rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .mr-3 {
+  margin-left: 0.75rem;
+  margin-right: 0;
+}
+
+[dir="rtl"] .ml-4 {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+[dir="rtl"] .mr-4 {
+  margin-left: 1rem;
+  margin-right: 0;
+}
+
+/* RTL padding */
+[dir="rtl"] .pl-3 {
+  padding-right: 0.75rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .pr-3 {
+  padding-left: 0.75rem;
+  padding-right: 0;
+}
+
+[dir="rtl"] .pl-4 {
+  padding-right: 1rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .pr-4 {
+  padding-left: 1rem;
+  padding-right: 0;
+}
+
+[dir="rtl"] .pl-10 {
+  padding-right: 2.5rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .pr-10 {
+  padding-left: 2.5rem;
+  padding-right: 0;
+}
+
+[dir="rtl"] .pl-11 {
+  padding-right: 2.75rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .pr-20 {
+  padding-left: 5rem;
+  padding-right: 0;
+}
+
+/* Arabic number formatting */
+html[lang="ar"] .ltr-numbers {
+  direction: ltr;
+  display: inline-block;
+}
+
+/* RTL transforms */
+[dir="rtl"] .transform {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .transform svg {
+  transform: scaleX(-1);
+}
+
+/* Fix for specific icons that shouldn't flip */
+[dir="rtl"] .no-flip {
+  transform: none !important;
+}
+
+[dir="rtl"] .no-flip svg {
+  transform: none !important;
+}
+
+/* RTL grid and flex adjustments */
+[dir="rtl"] .justify-between {
+  justify-content: space-between;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+/* RTL border radius */
+[dir="rtl"] .rounded-l-lg {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+[dir="rtl"] .rounded-r-lg {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Arabic specific styling */
+html[lang="ar"] .text-sm {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+html[lang="ar"] .text-base {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+html[lang="ar"] .text-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+html[lang="ar"] .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+html[lang="ar"] .text-2xl {
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+html[lang="ar"] .text-3xl {
+  font-size: 1.875rem;
+  line-height: 1.4;
+}
+
+html[lang="ar"] .text-4xl {
+  font-size: 2.25rem;
+  line-height: 1.3;
+}
+
+html[lang="ar"] .text-5xl {
+  font-size: 3rem;
+  line-height: 1.2;
+}
+
+html[lang="ar"] .text-6xl {
+  font-size: 3.75rem;
+  line-height: 1.1;
+}
+
+/* Modal and overlay RTL fixes */
+[dir="rtl"] .modal input[type="email"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Toast notifications RTL */
+[dir="rtl"] .toast {
+  right: auto;
+  left: 1rem;
+}
+
+/* Dropdown RTL */
+[dir="rtl"] .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
+/* Billboard Image Enhancement Styles */
+.optimized-billboard-image {
+  /* Make colors more vibrant and text bolder */
+  filter: contrast(1.4) saturate(1.3) brightness(1.1);
+  
+  /* Enhance overall clarity */
+  image-rendering: crisp-edges;
+  transform: scale(1.02); /* Slight enlargement for impact */
+  
+  /* Smooth transition */
+  transition: all 0.5s ease-in-out;
+}
+
+.original-billboard-image {
+  /* Slightly dull the original for comparison */
+  filter: contrast(0.9) saturate(0.8) brightness(0.95);
+  
+  /* Smooth transition */
+  transition: all 0.5s ease-in-out;
+}
+
+/* Text enhancement for optimized billboards */
+.optimized-billboard-image .text-content {
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}

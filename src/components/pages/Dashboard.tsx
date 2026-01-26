@@ -305,7 +305,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <div className="flex justify-between items-center mt-2">
           <p className="text-gray-600">
-            Welcome back, {user.name}! Ready to analyze your billboard?
+            Welcome back dude, {user.name}! Ready to analyze your billboard?
           </p>
           {false && (user.plan === 'Enterprise' || user.plan === 'Professional') && (
             <div className="flex space-x-2">

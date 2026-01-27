@@ -1,5 +1,19 @@
 import { supabase } from './supabaseAuth';
 
+// Helper to verify current user is admin
+async function verifyAdminAccess(): Promise<boolean> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  return profile?.role === 'admin';
+}
+
 export type ActivityType =
   | 'page_view'
   | 'upload'
@@ -43,11 +57,9 @@ class ActivityLogger {
           user_agent: this.getUserAgent(),
         });
 
-      if (error) {
-        console.error('Failed to log activity:', error);
-      }
-    } catch (err) {
-      console.error('Error logging activity:', err);
+      // Silently fail - activity logging should not interrupt user flow
+    } catch {
+      // Silently fail - activity logging should not interrupt user flow
     }
   }
 
@@ -75,11 +87,9 @@ class ActivityLogger {
           storage_path: storagePath,
         });
 
-      if (error) {
-        console.error('Failed to log file activity:', error);
-      }
-    } catch (err) {
-      console.error('Error logging file activity:', err);
+      // Silently fail - file logging should not interrupt user flow
+    } catch {
+      // Silently fail - file logging should not interrupt user flow
     }
   }
 
@@ -196,14 +206,19 @@ class ActivityLogger {
 
       if (error) throw error;
       return data;
-    } catch (err) {
-      console.error('Error fetching user activities:', err);
+    } catch {
       return [];
     }
   }
 
   async getAllActivities(limit: number = 100) {
     try {
+      // Server-side admin verification
+      const isAdmin = await verifyAdminAccess();
+      if (!isAdmin) {
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('user_activities')
         .select('*')
@@ -211,7 +226,6 @@ class ActivityLogger {
         .limit(limit);
 
       if (error) {
-        console.error('Error fetching activities:', error);
         return [];
       }
 
@@ -225,24 +239,25 @@ class ActivityLogger {
         .select('id, email, full_name, company_name')
         .in('id', userIds);
 
-      if (profileError) {
-        console.error('Error fetching profiles:', profileError);
-      }
-
       const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
       return data.map(activity => ({
         ...activity,
         user_profiles: profileMap.get(activity.user_id) || null
       }));
-    } catch (err) {
-      console.error('Error fetching all activities:', err);
+    } catch {
       return [];
     }
   }
 
   async getAllFileActivities(limit: number = 100) {
     try {
+      // Server-side admin verification
+      const isAdmin = await verifyAdminAccess();
+      if (!isAdmin) {
+        return [];
+      }
+
       const { data, error } = await supabase
         .from('user_files')
         .select('*')
@@ -250,7 +265,6 @@ class ActivityLogger {
         .limit(limit);
 
       if (error) {
-        console.error('Error fetching file activities:', error);
         return [];
       }
 
@@ -264,24 +278,25 @@ class ActivityLogger {
         .select('id, email, full_name, company_name')
         .in('id', userIds);
 
-      if (profileError) {
-        console.error('Error fetching profiles:', profileError);
-      }
-
       const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
 
       return data.map(file => ({
         ...file,
         user_profiles: profileMap.get(file.user_id) || null
       }));
-    } catch (err) {
-      console.error('Error fetching file activities:', err);
+    } catch {
       return [];
     }
   }
 
   async getActivitySummary() {
     try {
+      // Server-side admin verification
+      const isAdmin = await verifyAdminAccess();
+      if (!isAdmin) {
+        return { totalActivities: 0, analyses: 0, uploads: 0, downloads: 0 };
+      }
+
       const { data: activities, error: activitiesError } = await supabase
         .from('user_activities')
         .select('activity_type');
@@ -297,7 +312,7 @@ class ActivityLogger {
         .eq('action', 'download');
 
       if (activitiesError || uploadsError || downloadsError) {
-        throw new Error('Failed to fetch activity summary');
+        return { totalActivities: 0, analyses: 0, uploads: 0, downloads: 0 };
       }
 
       const analysisCount = activities?.filter(a => a.activity_type === 'analysis').length || 0;
@@ -310,8 +325,7 @@ class ActivityLogger {
         uploads: uploadCount,
         downloads: downloadCount,
       };
-    } catch (err) {
-      console.error('Error fetching activity summary:', err);
+    } catch {
       return {
         totalActivities: 0,
         analyses: 0,

@@ -54,17 +54,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
         fetchUsers(),
       ]);
 
-      console.log('Admin Dashboard - Summary:', summaryData);
-      console.log('Admin Dashboard - Activities:', activitiesData.length, 'items');
-      console.log('Admin Dashboard - Files:', filesData.length, 'items');
-      console.log('Admin Dashboard - Users:', usersData.length, 'users');
-
       setSummary(summaryData);
       setActivities(activitiesData);
       setFileActivities(filesData);
       setUsers(usersData);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+    } catch {
+      // Silently handle error - data will be empty
     } finally {
       setLoading(false);
     }
@@ -79,8 +74,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
 
       if (error) throw error;
       return data || [];
-    } catch (error) {
-      console.error('Error fetching users:', error);
+    } catch {
       return [];
     }
   };
@@ -94,8 +88,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
     : fileActivities.filter(f => f.user_id === selectedUser);
 
   const exportToCSV = (data: any[], filename: string) => {
-    console.log('Export CSV clicked, data length:', data.length);
-
     if (data.length === 0) {
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -146,8 +138,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
           document.body.removeChild(toast);
         }
       }, 3000);
-    } catch (error) {
-      console.error('Error exporting CSV:', error);
+    } catch {
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
       toast.textContent = 'Failed to export CSV';
@@ -161,8 +152,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
   };
 
   const downloadAllReports = async () => {
-    console.log('Download all reports clicked');
-
     const reportsWithUrls = filteredFileActivities.filter(f => f.file_url && f.action === 'download');
 
     if (reportsWithUrls.length === 0) {
@@ -200,8 +189,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
           document.body.removeChild(successToast);
         }
       }, 3000);
-    } catch (error) {
-      console.error('Error downloading reports:', error);
+    } catch {
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
       toast.textContent = 'Failed to download reports';

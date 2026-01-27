@@ -143,23 +143,36 @@ export const supabaseAuthService = {
   },
 
   decrementTrialCredit: async (userId: string): Promise<boolean> => {
-    const profile = await supabaseAuthService.getProfile(userId);
+    // First, get current credits to calculate new value
+    const { data: currentProfile } = await supabase
+      .from('user_profiles')
+      .select('trial_credits_remaining')
+      .eq('id', userId)
+      .single();
 
-    if (!profile) return false;
-
-    if (profile.trial_credits_remaining <= 0) {
+    if (!currentProfile || currentProfile.trial_credits_remaining <= 0) {
       return false;
     }
 
-    const { error } = await supabase
+    // Atomic update: only decrement if credits still > 0
+    // The .gt() condition prevents race conditions by only updating
+    // rows where trial_credits_remaining > 0 at update time
+    const { data, error } = await supabase
       .from('user_profiles')
       .update({
-        trial_credits_remaining: profile.trial_credits_remaining - 1,
+        trial_credits_remaining: currentProfile.trial_credits_remaining - 1,
         last_analysis_at: new Date().toISOString(),
       })
-      .eq('id', userId);
+      .eq('id', userId)
+      .gt('trial_credits_remaining', 0)
+      .select('trial_credits_remaining');
 
-    return !error;
+    // If no rows were updated (data is empty), the condition failed
+    if (error || !data || data.length === 0) {
+      return false;
+    }
+
+    return true;
   },
 
   isTrialActive: (profile: UserProfile): boolean => {

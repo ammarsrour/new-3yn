@@ -168,15 +168,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         billboardMetadata
       } : locationData;
 
-      console.log('🎯 About to call analyzeBillboardWithAI');
-      console.log('🎯 File:', file.name, file.type, file.size);
-      console.log('🎯 Location:', location);
-      console.log('🎯 Distance:', distance);
-
       const aiAnalysis = await analyzeBillboardWithAI(file, location, distance, enhancedLocationData);
 
-      console.log('📊 AI Analysis returned:', aiAnalysis);
-      
       // Stage 3: Generating report
       setAnalysisStage('generating');
       setAnalysisProgress(75);
@@ -238,8 +231,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       setAnalysisHistory(prev => [historyItem, ...prev]);
       
     } catch (error) {
-      console.error('Analysis failed:', error);
-      
       // Show detailed error message
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md relative';
@@ -275,7 +266,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     
   const handleSelectAnalysis = (id: string) => {
     // In a real app, this would fetch the full analysis from the backend
-    console.log('Selected analysis:', id);
+    // TODO: Implement analysis selection
   };
 
   const handleNewAnalysis = () => {

@@ -32,11 +32,6 @@ export const analyzeBillboardWithAI = async (
   distance: number,
   locationData?: import('./locationService').LocationData & { billboardMetadata?: import('../types/billboard').BillboardMetadata }
 ): Promise<OpenAIAnalysisResponse> => {
-  console.log('🚀 analyzeBillboardWithAI CALLED');
-  console.log('📁 Image file:', imageFile.name, imageFile.size, 'bytes');
-  console.log('📍 Location:', location);
-  console.log('📏 Distance:', distance);
-
   const maxRetries = 2;
   let attempt = 0;
 
@@ -48,8 +43,6 @@ export const analyzeBillboardWithAI = async (
       throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
     }
 
-    console.log('Starting OpenAI Vision API analysis...');
-    
     // 📍 ENHANCED LOCATION CONTEXT WITH REAL BILLBOARD DATA
     let locationContext = `Location: ${location}`;
     let billboardSpecs = '';
@@ -109,13 +102,8 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
       }
     }
 
-    console.log('Image validation passed, proceeding with analysis');
-    
     // 🤖 ENHANCED OPENAI API CALL WITH REAL BILLBOARD CONSTRAINTS
     const systemPrompt = getBillboardAnalyzerSystemPrompt();
-    console.log('🔍 SYSTEM PROMPT LENGTH:', systemPrompt.length);
-    console.log('🔍 FIRST 200 CHARS:', systemPrompt.substring(0, 200));
-    console.log('🔍 Contains "Ordinance 25/93":', systemPrompt.includes('Ordinance 25/93'));
 
     const response = await fetch('/.netlify/functions/openai', {
       method: 'POST',
@@ -154,33 +142,25 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
       })
     });
 
-    console.log('OpenAI API response status:', response.status);
-
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('OpenAI API error:', response.status, errorData);
       throw new Error(`OpenAI API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI API response received:', data);
-    
+
     const analysisText = data.choices[0]?.message?.content;
     if (!analysisText) {
       throw new Error('No response content from OpenAI');
     }
 
-    console.log('Analysis text:', analysisText);
-    
     // 🔄 ENHANCED RESPONSE PROCESSING WITH VALIDATION
     return await parseAndValidateResponse(analysisText, maxRetries, imageFile.name, locationData?.billboardMetadata);
     
   } catch (error) {
-    console.error('OpenAI Analysis Error:', error);
-    console.log('🔄 Using enhanced fallback response due to API error');
-    
     // 🛡️ ENHANCED FALLBACK WITH VARIABLE SCORING
-    return generateVariableFallbackResponse(location, distance, imageFile.name, error.message, locationData?.billboardMetadata);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return generateVariableFallbackResponse(location, distance, imageFile.name, errorMessage, locationData?.billboardMetadata);
   }
 };
 
@@ -197,7 +177,6 @@ const parseAndValidateResponse = async (analysisText: string, maxRetries: number
       }
 
       const analysisData = JSON.parse(jsonMatch[0]);
-      console.log(`✅ Successfully parsed JSON response on attempt ${attempt + 1}`);
 
       // Validate required fields
       if (!analysisData.assessment?.overall_score && !analysisData.overall_score) {
@@ -207,7 +186,6 @@ const parseAndValidateResponse = async (analysisText: string, maxRetries: number
       // 🚨 VALIDATE RESPONSE IS NOT GENERIC
       const isGenericResponse = validateResponseQuality(analysisData, analysisText, billboardMetadata);
       if (isGenericResponse && attempt < maxRetries) {
-        console.warn(`❌ Generic response detected on attempt ${attempt + 1}, retrying...`);
         throw new Error('Generic response detected');
       }
       
@@ -291,10 +269,7 @@ const parseAndValidateResponse = async (analysisText: string, maxRetries: number
         menaConsiderations: analysisData.mena_considerations || generateMenaConsiderations(billboardMetadata)
       };
     } catch (parseError) {
-      console.warn(`❌ JSON parsing failed on attempt ${attempt + 1}:`, parseError);
-      
       if (attempt === maxRetries) {
-        console.log('🔄 Using enhanced text parsing fallback');
         return parseAnalysisTextEnhanced(analysisText, fileName, billboardMetadata);
       }
       
@@ -379,17 +354,14 @@ const validateResponseQuality = (analysisData: any, fullText: string, billboardM
   // Check for generic score patterns (0-10 scale in new format)
   const overallScore = analysisData.assessment?.overall_score || analysisData.overall_score || 0;
   if (overallScore >= 7 && overallScore <= 7.5 && overallScore !== 0) {
-    console.warn('⚠️ Detected generic 7.0-7.5 score range');
     return true;
   }
 
   // Check if response has required structure
   const hasAssessment = analysisData.assessment?.overall_score !== undefined;
   const hasTextContent = analysisData.text_content?.headline || analysisData.actual_text_content;
-  const hasRecommendations = analysisData.recommendations?.length > 0 || analysisData.assessment?.critical_issues?.length > 0;
 
   if (!hasAssessment && !hasTextContent) {
-    console.warn('⚠️ Missing required response structure');
     return true;
   }
 
@@ -397,7 +369,6 @@ const validateResponseQuality = (analysisData: any, fullText: string, billboardM
   if (analysisData.readability_metrics) {
     if (analysisData.readability_metrics.word_count === undefined ||
         analysisData.readability_metrics.viewing_time_seconds === undefined) {
-      console.warn('⚠️ Missing readability metrics');
       return true;
     }
   }
@@ -508,7 +479,6 @@ const generateVariableFallbackResponse = (location: string, distance: number, fi
  * 📝 ENHANCED TEXT PARSING FALLBACK
  */
 const parseAnalysisTextEnhanced = (text: string, fileName: string, billboardMetadata?: import('../types/billboard').BillboardMetadata): OpenAIAnalysisResponse => {
-  console.log('🔄 Using enhanced text parsing fallback');
   
   // Extract visual description
   const visualMatch = text.match(/visual[_\s]description['":\s]*([^"',}]+)/i);
@@ -790,7 +760,6 @@ const validateImageContent = async (base64Image: string): Promise<{ isValid: boo
     });
 
     if (!response.ok) {
-      console.warn('Validation API failed, allowing image through');
       return { isValid: true };
     }
 
@@ -817,8 +786,7 @@ const validateImageContent = async (base64Image: string): Promise<{ isValid: boo
 
     return { isValid: true };
 
-  } catch (error) {
-    console.error('Image validation error:', error);
+  } catch {
     return { isValid: true };
   }
 };

@@ -1,3 +1,12 @@
+/**
+ * @deprecated This service uses insecure client-side JWT simulation.
+ * Use supabaseAuthService from './supabaseAuth.ts' for all authentication.
+ * This file is kept for backward compatibility but should not be used.
+ */
+if (typeof window !== 'undefined') {
+  console.warn('[SECURITY WARNING] auth.ts is deprecated and insecure. Use supabaseAuthService instead.');
+}
+
 export interface AuthUser {
   id: string;
   email: string;

@@ -128,10 +128,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       if (!accessCheck.allowed) {
         const toast = document.createElement('div');
         toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
-        toast.innerHTML = `
-          <div class="font-semibold mb-1">Access Denied</div>
-          <div class="text-sm">${accessCheck.reason}</div>
-        `;
+
+        const title = document.createElement('div');
+        title.className = 'font-semibold mb-1';
+        title.textContent = 'Access Denied';
+
+        const message = document.createElement('div');
+        message.className = 'text-sm';
+        message.textContent = accessCheck.reason || 'Access not permitted';
+
+        toast.appendChild(title);
+        toast.appendChild(message);
         document.body.appendChild(toast);
         setTimeout(() => {
           if (document.body.contains(toast)) {
@@ -235,12 +242,26 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       
       // Show detailed error message
       const toast = document.createElement('div');
-      toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
-      toast.innerHTML = `
-        <div class="font-semibold mb-1">Analysis Failed</div>
-        <div class="text-sm">${error.message || 'Please try again or contact support if the issue persists.'}</div>
-        <button onclick="this.parentElement.remove()" class="absolute top-1 right-2 text-white hover:text-gray-200">&times;</button>
-      `;
+      toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md relative';
+
+      const title = document.createElement('div');
+      title.className = 'font-semibold mb-1';
+      title.textContent = 'Analysis Failed';
+
+      const message = document.createElement('div');
+      message.className = 'text-sm';
+      message.textContent = error instanceof Error
+        ? error.message
+        : 'Please try again or contact support if the issue persists.';
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'absolute top-1 right-2 text-white hover:text-gray-200';
+      closeBtn.textContent = '×';
+      closeBtn.onclick = () => toast.remove();
+
+      toast.appendChild(title);
+      toast.appendChild(message);
+      toast.appendChild(closeBtn);
       document.body.appendChild(toast);
       setTimeout(() => {
         if (document.body.contains(toast)) {

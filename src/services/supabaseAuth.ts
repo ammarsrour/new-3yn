@@ -115,15 +115,23 @@ export const supabaseAuthService = {
         return { user: null, profile: null, error: { message: 'Sign up failed. No user returned.' } };
       }
 
+      // Small delay to let the DB trigger complete
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       // Fetch profile created by DB trigger
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
       .select('*')
       .eq('id', authData.user.id)
-      .single();
+      .maybeSingle();
 
-      return { user: authData.user, profile, error: profileError };
+      if (profileError) {
+        console.error('Profile fetch error:', profileError);
+        // Profile fetch failed but user was created - don't treat as fatal
+        return { user: authData.user, profile: null, error: null };
+      }
+
+      return { user: authData.user, profile, error: null };
     } catch (error: any) {
       // Detailed error logging for network/fetch errors
       const errorDetails = {

@@ -13,6 +13,7 @@ import { analyzeBillboardWithAI } from '../../services/openai';
 import { LocationData } from '../../services/locationService';
 import { TeamMember, Organization, Project, ClientPortal as ClientPortalType } from '../../types';
 import { UserProfile, supabaseAuthService } from '../../services/supabaseAuth';
+import { activityLogger } from '../../services/activityLogger';
 import { AlertCircle, Lock, Calendar, Zap } from 'lucide-react';
 
 interface DashboardProps {
@@ -215,6 +216,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       
       setCurrentAnalysis(analysis);
 
+      // Log analysis completion for audit trail
+      await activityLogger.logAnalysisComplete(user.id, {
+        analysisId: analysis.id,
+        score: analysis.score,
+        location: analysis.location,
+        criticalIssuesCount: analysis.criticalIssues.length,
+        fontScore: analysis.fontScore,
+        contrastScore: analysis.contrastScore,
+        layoutScore: analysis.layoutScore,
+        ctaScore: analysis.ctaScore
+      });
+
       if (userProfile && userProfile.subscription_status === 'trial') {
         await supabaseAuthService.decrementTrialCredit(userProfile.id);
       }
@@ -231,6 +244,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       setAnalysisHistory(prev => [historyItem, ...prev]);
       
     } catch (error) {
+      // Log analysis failure for audit trail
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      await activityLogger.logAnalysisFailed(user.id, location, errorMessage);
+
       // Show detailed error message
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md relative';

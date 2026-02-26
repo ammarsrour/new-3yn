@@ -73,7 +73,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
                   <span className="text-gray-600 mx-2">
                     {isArabic ? 'ر.ع' : '$'}
                   </span>
-                  <span className="text-gray-600">{t('pricing.perMonth')}</span>
+                  <span className="text-gray-600">{t('')}</span>
                 </div>
 
                 <ul className="space-y-4 mb-8">

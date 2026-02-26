@@ -18,10 +18,39 @@ export type ActivityType =
   | 'page_view'
   | 'upload'
   | 'analysis'
+  | 'analysis_complete'
+  | 'analysis_failed'
   | 'download'
   | 'login'
   | 'logout'
+  | 'signup'
   | 'location_select';
+
+export type AdminActionType =
+  | 'view_dashboard'
+  | 'view_activities'
+  | 'export_csv'
+  | 'bulk_download'
+  | 'filter_user'
+  | 'view_user_detail';
+
+export interface AnalysisMetadata {
+  analysisId?: string;
+  score: number;
+  location: string;
+  criticalIssuesCount: number;
+  fontScore?: number;
+  contrastScore?: number;
+  layoutScore?: number;
+  ctaScore?: number;
+}
+
+export interface ActivityFilterOptions {
+  startDate?: Date;
+  endDate?: Date;
+  activityTypes?: ActivityType[];
+  userId?: string;
+}
 
 export type FileAction = 'upload' | 'download';
 
@@ -195,6 +224,67 @@ class ActivityLogger {
     );
   }
 
+  async logSignup(
+    userId: string,
+    email: string,
+    name: string,
+    company?: string
+  ): Promise<void> {
+    await this.logActivity(
+      userId,
+      'signup',
+      `New user registered: ${email}`,
+      { email, name, company }
+    );
+  }
+
+  async logAnalysisComplete(
+    userId: string,
+    analysisData: AnalysisMetadata
+  ): Promise<void> {
+    await this.logActivity(
+      userId,
+      'analysis_complete',
+      `Analysis completed with score ${analysisData.score} for ${analysisData.location}`,
+      analysisData
+    );
+  }
+
+  async logAnalysisFailed(
+    userId: string,
+    location: string,
+    errorMessage: string
+  ): Promise<void> {
+    await this.logActivity(
+      userId,
+      'analysis_failed',
+      `Analysis failed for ${location}: ${errorMessage}`,
+      { location, errorMessage }
+    );
+  }
+
+  async logAdminAction(
+    adminId: string,
+    actionType: AdminActionType,
+    targetUserId?: string,
+    metadata: Record<string, any> = {}
+  ): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('admin_audit_log')
+        .insert({
+          admin_id: adminId,
+          action_type: actionType,
+          target_user_id: targetUserId || null,
+          metadata,
+        });
+
+      // Silently fail - admin logging should not interrupt flow
+    } catch {
+      // Silently fail
+    }
+  }
+
   async getUserActivities(userId: string, limit: number = 50) {
     try {
       const { data, error } = await supabase
@@ -211,7 +301,7 @@ class ActivityLogger {
     }
   }
 
-  async getAllActivities(limit: number = 100) {
+  async getAllActivities(limit: number = 100, options?: ActivityFilterOptions) {
     try {
       // Server-side admin verification
       const isAdmin = await verifyAdminAccess();
@@ -219,9 +309,28 @@ class ActivityLogger {
         return [];
       }
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('user_activities')
-        .select('*')
+        .select('*');
+
+      // Apply filters if provided
+      if (options?.userId) {
+        query = query.eq('user_id', options.userId);
+      }
+
+      if (options?.activityTypes && options.activityTypes.length > 0) {
+        query = query.in('activity_type', options.activityTypes);
+      }
+
+      if (options?.startDate) {
+        query = query.gte('created_at', options.startDate.toISOString());
+      }
+
+      if (options?.endDate) {
+        query = query.lte('created_at', options.endDate.toISOString());
+      }
+
+      const { data, error } = await query
         .order('created_at', { ascending: false })
         .limit(limit);
 
@@ -250,7 +359,7 @@ class ActivityLogger {
     }
   }
 
-  async getAllFileActivities(limit: number = 100) {
+  async getAllFileActivities(limit: number = 100, options?: ActivityFilterOptions) {
     try {
       // Server-side admin verification
       const isAdmin = await verifyAdminAccess();
@@ -258,9 +367,24 @@ class ActivityLogger {
         return [];
       }
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('user_files')
-        .select('*')
+        .select('*');
+
+      // Apply filters if provided
+      if (options?.userId) {
+        query = query.eq('user_id', options.userId);
+      }
+
+      if (options?.startDate) {
+        query = query.gte('created_at', options.startDate.toISOString());
+      }
+
+      if (options?.endDate) {
+        query = query.lte('created_at', options.endDate.toISOString());
+      }
+
+      const { data, error } = await query
         .order('created_at', { ascending: false })
         .limit(limit);
 
@@ -289,41 +413,87 @@ class ActivityLogger {
     }
   }
 
-  async getActivitySummary() {
+  async getActivitySummary(options?: { startDate?: Date; endDate?: Date }) {
     try {
       // Server-side admin verification
       const isAdmin = await verifyAdminAccess();
       if (!isAdmin) {
-        return { totalActivities: 0, analyses: 0, uploads: 0, downloads: 0 };
+        return {
+          totalActivities: 0,
+          analyses: 0,
+          uploads: 0,
+          downloads: 0,
+          logins: 0,
+          signups: 0,
+          activeUsers: 0,
+          failedAnalyses: 0
+        };
       }
 
-      const { data: activities, error: activitiesError } = await supabase
+      let activitiesQuery = supabase
         .from('user_activities')
-        .select('activity_type');
+        .select('activity_type, user_id');
 
-      const { data: uploads, error: uploadsError } = await supabase
+      let uploadsQuery = supabase
         .from('user_files')
         .select('action')
         .eq('action', 'upload');
 
-      const { data: downloads, error: downloadsError } = await supabase
+      let downloadsQuery = supabase
         .from('user_files')
         .select('action')
         .eq('action', 'download');
 
-      if (activitiesError || uploadsError || downloadsError) {
-        return { totalActivities: 0, analyses: 0, uploads: 0, downloads: 0 };
+      // Apply date filters if provided
+      if (options?.startDate) {
+        const startStr = options.startDate.toISOString();
+        activitiesQuery = activitiesQuery.gte('created_at', startStr);
+        uploadsQuery = uploadsQuery.gte('created_at', startStr);
+        downloadsQuery = downloadsQuery.gte('created_at', startStr);
       }
 
-      const analysisCount = activities?.filter(a => a.activity_type === 'analysis').length || 0;
-      const uploadCount = uploads?.length || 0;
-      const downloadCount = downloads?.length || 0;
+      if (options?.endDate) {
+        const endStr = options.endDate.toISOString();
+        activitiesQuery = activitiesQuery.lte('created_at', endStr);
+        uploadsQuery = uploadsQuery.lte('created_at', endStr);
+        downloadsQuery = downloadsQuery.lte('created_at', endStr);
+      }
+
+      const [activitiesRes, uploadsRes, downloadsRes] = await Promise.all([
+        activitiesQuery,
+        uploadsQuery,
+        downloadsQuery
+      ]);
+
+      if (activitiesRes.error || uploadsRes.error || downloadsRes.error) {
+        return {
+          totalActivities: 0,
+          analyses: 0,
+          uploads: 0,
+          downloads: 0,
+          logins: 0,
+          signups: 0,
+          activeUsers: 0,
+          failedAnalyses: 0
+        };
+      }
+
+      const activities = activitiesRes.data || [];
+      const analysisCount = activities.filter(a => a.activity_type === 'analysis' || a.activity_type === 'analysis_complete').length;
+      const loginCount = activities.filter(a => a.activity_type === 'login').length;
+      const signupCount = activities.filter(a => a.activity_type === 'signup').length;
+      const failedAnalysesCount = activities.filter(a => a.activity_type === 'analysis_failed').length;
+      const uniqueUsers = new Set(activities.map(a => a.user_id));
 
       return {
-        totalActivities: activities?.length || 0,
+        totalActivities: activities.length,
         analyses: analysisCount,
-        uploads: uploadCount,
-        downloads: downloadCount,
+        uploads: uploadsRes.data?.length || 0,
+        downloads: downloadsRes.data?.length || 0,
+        logins: loginCount,
+        signups: signupCount,
+        activeUsers: uniqueUsers.size,
+        failedAnalyses: failedAnalysesCount
       };
     } catch {
       return {
@@ -331,6 +501,10 @@ class ActivityLogger {
         analyses: 0,
         uploads: 0,
         downloads: 0,
+        logins: 0,
+        signups: 0,
+        activeUsers: 0,
+        failedAnalyses: 0
       };
     }
   }

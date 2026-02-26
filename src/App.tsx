@@ -86,7 +86,7 @@ function App() {
   };
 
   const handleSignup = async (email: string, password: string, name: string, company?: string) => {
-    console.log('Attempting signup for:', email);
+    console.log('[App] Attempting signup for:', email);
     try {
       const { user, profile, error } = await supabaseAuthService.signUp({
         email,
@@ -96,22 +96,40 @@ function App() {
       });
 
       if (error) {
-        console.error('Signup error:', error);
-        throw new Error(error.message || 'Sign up failed. Please try again.');
+        console.error('[App] Signup error received:', {
+          message: error.message,
+          originalError: error.originalError,
+          errorType: error.errorType,
+          fullError: error
+        });
+
+        // Show specific error message based on error type
+        let displayMessage = error.message;
+        if (error.errorType === 'network') {
+          displayMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+        } else if (error.originalError) {
+          displayMessage = `${error.message} (${error.originalError})`;
+        }
+
+        throw new Error(displayMessage || 'Sign up failed. Please try again.');
       }
 
       if (!user) {
+        console.error('[App] No user returned from signup');
         throw new Error('Sign up failed. Please try again.');
       }
 
-      if (user) {
-        console.log('Signup successful for user:', user.id);
-        await loadUserProfile(user.id);
-        setShowAuthModal(false);
-        showToast(t('auth.messages.accountCreated'), 'success');
-      }
+      console.log('[App] Signup successful for user:', user.id);
+      await loadUserProfile(user.id);
+      await activityLogger.logSignup(user.id, email, name, company);
+      setShowAuthModal(false);
+      showToast(t('auth.messages.accountCreated'), 'success');
     } catch (error: any) {
-      console.error('Signup exception:', error);
+      console.error('[App] Signup exception:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack
+      });
       throw new Error(error.message || 'Network error. Please check your connection and try again.');
     }
   };

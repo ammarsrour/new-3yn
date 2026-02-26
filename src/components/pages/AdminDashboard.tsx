@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Activity,
   Upload,
@@ -7,12 +7,18 @@ import {
   Filter,
   FileText,
   Users,
-  Calendar
+  Calendar,
+  LogIn,
+  UserPlus,
+  AlertTriangle,
+  RefreshCw
 } from 'lucide-react';
-import { activityLogger } from '../../services/activityLogger';
+import { activityLogger, ActivityType, ActivityFilterOptions } from '../../services/activityLogger';
 import ActivityTable from '../admin/ActivityTable';
 import FileActivityTable from '../admin/FileActivityTable';
 import SummaryCard from '../admin/SummaryCard';
+import DateRangeFilter, { DateRange } from '../admin/DateRangeFilter';
+import ActivityTypeFilter from '../admin/ActivityTypeFilter';
 import { supabase } from '../../services/supabaseAuth';
 import { reportStorage } from '../../services/reportStorage';
 
@@ -21,6 +27,10 @@ interface ActivitySummary {
   analyses: number;
   uploads: number;
   downloads: number;
+  logins: number;
+  signups: number;
+  activeUsers: number;
+  failedAnalyses: number;
 }
 
 interface AdminDashboardProps {
@@ -33,24 +43,46 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
     analyses: 0,
     uploads: 0,
     downloads: 0,
+    logins: 0,
+    signups: 0,
+    activeUsers: 0,
+    failedAnalyses: 0,
   });
   const [activities, setActivities] = useState<any[]>([]);
   const [fileActivities, setFileActivities] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUser, setSelectedUser] = useState<string>('all');
   const [loading, setLoading] = useState(true);
+  const [dateRange, setDateRange] = useState<DateRange>({ startDate: null, endDate: null });
+  const [selectedActivityTypes, setSelectedActivityTypes] = useState<ActivityType[]>([]);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     setLoading(true);
     try {
+      // Log admin dashboard view
+      await activityLogger.logAdminAction(userId, 'view_dashboard', undefined, {
+        dateRange: dateRange.startDate ? 'custom' : 'all_time',
+        selectedUser: selectedUser,
+        activityTypesFilter: selectedActivityTypes.length > 0 ? selectedActivityTypes : 'all'
+      });
+
+      // Build filter options
+      const filterOptions: ActivityFilterOptions = {
+        startDate: dateRange.startDate || undefined,
+        endDate: dateRange.endDate || undefined,
+        activityTypes: selectedActivityTypes.length > 0 ? selectedActivityTypes : undefined,
+        userId: selectedUser !== 'all' ? selectedUser : undefined,
+      };
+
+      const summaryOptions = {
+        startDate: dateRange.startDate || undefined,
+        endDate: dateRange.endDate || undefined,
+      };
+
       const [summaryData, activitiesData, filesData, usersData] = await Promise.all([
-        activityLogger.getActivitySummary(),
-        activityLogger.getAllActivities(200),
-        activityLogger.getAllFileActivities(200),
+        activityLogger.getActivitySummary(summaryOptions),
+        activityLogger.getAllActivities(200, filterOptions),
+        activityLogger.getAllFileActivities(200, filterOptions),
         fetchUsers(),
       ]);
 
@@ -63,7 +95,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, dateRange, selectedUser, selectedActivityTypes]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const fetchUsers = async () => {
     try {
@@ -79,15 +115,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
     }
   };
 
-  const filteredActivities = selectedUser === 'all'
-    ? activities
-    : activities.filter(a => a.user_id === selectedUser);
+  // Activities are now filtered server-side, but we keep the client-side filter as backup
+  const filteredActivities = activities;
+  const filteredFileActivities = fileActivities;
 
-  const filteredFileActivities = selectedUser === 'all'
-    ? fileActivities
-    : fileActivities.filter(f => f.user_id === selectedUser);
-
-  const exportToCSV = (data: any[], filename: string) => {
+  const exportToCSV = async (data: any[], filename: string) => {
     if (data.length === 0) {
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -128,6 +160,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+
+      // Log CSV export action
+      await activityLogger.logAdminAction(userId, 'export_csv', undefined, {
+        filename,
+        recordCount: data.length,
+        dateRange: dateRange.startDate ? { start: dateRange.startDate, end: dateRange.endDate } : 'all_time'
+      });
 
       const toast = document.createElement('div');
       toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
@@ -176,6 +215,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
       const fileUrls = reportsWithUrls.map(f => f.file_url);
       await reportStorage.bulkDownloadReports(fileUrls);
 
+      // Log bulk download action
+      await activityLogger.logAdminAction(userId, 'bulk_download', undefined, {
+        reportCount: reportsWithUrls.length,
+        selectedUser: selectedUser !== 'all' ? selectedUser : 'all_users'
+      });
+
       if (document.body.contains(toast)) {
         document.body.removeChild(toast);
       }
@@ -221,7 +266,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
           <p className="text-gray-600">Monitor user activities and platform usage</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-6">
           <SummaryCard
             title="Total Activities"
             value={summary.totalActivities}
@@ -248,25 +293,47 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
           />
         </div>
 
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-8">
+          <SummaryCard
+            title="Active Users"
+            value={summary.activeUsers}
+            icon={Users}
+            color="cyan"
+          />
+          <SummaryCard
+            title="Logins"
+            value={summary.logins}
+            icon={LogIn}
+            color="emerald"
+          />
+          <SummaryCard
+            title="Signups"
+            value={summary.signups}
+            icon={UserPlus}
+            color="indigo"
+          />
+          <SummaryCard
+            title="Failed Analyses"
+            value={summary.failedAnalyses}
+            icon={AlertTriangle}
+            color="red"
+          />
+        </div>
+
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
             <h2 className="text-xl font-bold text-gray-900 flex items-center">
               <Filter className="w-5 h-5 mr-2" />
               Filters & Actions
             </h2>
-            <div className="flex gap-3 w-full sm:w-auto">
-              <select
-                value={selectedUser}
-                onChange={(e) => setSelectedUser(e.target.value)}
-                className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => loadDashboardData()}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
               >
-                <option value="all">All Users</option>
-                {users.map(user => (
-                  <option key={user.id} value={user.id}>
-                    {user.full_name || user.email}
-                  </option>
-                ))}
-              </select>
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </button>
               <button
                 onClick={() => exportToCSV(filteredActivities, 'activities')}
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 whitespace-nowrap"
@@ -281,6 +348,41 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ userId }) => {
                 <Download className="w-4 h-4" />
                 Download All
               </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <DateRangeFilter
+              dateRange={dateRange}
+              onChange={setDateRange}
+            />
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Activity Type</span>
+              </div>
+              <ActivityTypeFilter
+                selectedTypes={selectedActivityTypes}
+                onChange={setSelectedActivityTypes}
+              />
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">User</span>
+              </div>
+              <select
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Users</option>
+                {users.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.full_name || user.email}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 

@@ -3,10 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Log configuration status (without exposing sensitive values)
+console.log('[Supabase] Configuration check:', {
+  url: supabaseUrl ? `configured (${supabaseUrl.substring(0, 30)}...)` : 'MISSING',
+  key: supabaseAnonKey ? `configured (${supabaseAnonKey.substring(0, 20)}...)` : 'MISSING',
+  env: import.meta.env.MODE
+});
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase configuration missing:', {
+  console.error('[Supabase] Configuration missing:', {
     url: supabaseUrl ? 'configured' : 'MISSING',
-    key: supabaseAnonKey ? 'configured' : 'MISSING'
+    key: supabaseAnonKey ? 'configured' : 'MISSING',
+    availableEnvVars: Object.keys(import.meta.env).filter(k => k.startsWith('VITE_'))
   });
   throw new Error('Supabase configuration is incomplete. Please check your environment variables.');
 }
@@ -18,6 +26,36 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: true
   }
 });
+
+// Test Supabase connectivity on initialization
+(async () => {
+  try {
+    console.log('[Supabase] Testing connectivity...');
+    const startTime = performance.now();
+    const { error } = await supabase.from('user_profiles').select('count', { count: 'exact', head: true });
+    const latency = Math.round(performance.now() - startTime);
+
+    if (error) {
+      console.warn('[Supabase] Connectivity test warning:', {
+        message: error.message,
+        code: error.code,
+        hint: error.hint,
+        latency: `${latency}ms`
+      });
+    } else {
+      console.log('[Supabase] Connectivity test passed:', {
+        status: 'connected',
+        latency: `${latency}ms`
+      });
+    }
+  } catch (e: any) {
+    console.error('[Supabase] Connectivity test failed:', {
+      message: e.message,
+      isNetworkError: e.message?.includes('Failed to fetch'),
+      hint: 'Check if Supabase URL is correct and project is active'
+    });
+  }
+})();
 
 export interface UserProfile {
   id: string;
@@ -44,7 +82,10 @@ export interface SignUpData {
 
 export const supabaseAuthService = {
   signUp: async (data: SignUpData): Promise<{ user: any; profile: UserProfile | null; error: any }> => {
+    console.log('[Supabase] signUp called for:', data.email);
+
     try {
+      console.log('[Supabase] Calling auth.signUp...');
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -58,55 +99,109 @@ export const supabaseAuthService = {
       });
 
       if (signUpError) {
-        console.error('Sign up error:', signUpError);
+        console.error('[Supabase] Sign up error:', {
+          message: signUpError.message,
+          status: signUpError.status,
+          name: signUpError.name,
+          stack: signUpError.stack
+        });
         return { user: null, profile: null, error: signUpError };
       }
 
+      console.log('[Supabase] Auth signup successful, user:', authData.user?.id);
+
       if (!authData.user) {
+        console.error('[Supabase] No user returned from signup');
         return { user: null, profile: null, error: { message: 'Sign up failed. No user returned.' } };
       }
 
-      const { data: profile, error: profileError } = await supabase
-        .from('user_profiles')
-        .insert({
-          id: authData.user.id,
-          email: data.email,
-          full_name: data.fullName,
-          company_name: data.companyName || null,
-        })
-        .select()
-        .maybeSingle();
 
-      if (profileError) {
-        console.error('Profile creation error:', profileError);
-      }
+      // Fetch profile created by DB trigger
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('id', authData.user.id)
+      .single();
 
       return { user: authData.user, profile, error: profileError };
     } catch (error: any) {
-      console.error('Sign up exception:', error);
+      // Detailed error logging for network/fetch errors
+      const errorDetails = {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+        cause: error.cause,
+        // Check for specific fetch error patterns
+        isNetworkError: error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError'),
+        isCorsError: error.message?.includes('CORS') || error.message?.includes('cross-origin'),
+        supabaseUrl: supabaseUrl?.substring(0, 40) + '...'
+      };
+
+      console.error('[Supabase] Sign up exception:', errorDetails);
+
+      // Provide user-friendly error messages based on error type
+      let userMessage = 'An unexpected error occurred. Please try again.';
+
+      if (errorDetails.isNetworkError) {
+        userMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
+      } else if (errorDetails.isCorsError) {
+        userMessage = 'Connection error: Please try again or contact support if the issue persists.';
+      } else if (error.message) {
+        userMessage = error.message;
+      }
+
       return {
         user: null,
         profile: null,
         error: {
-          message: error.message || 'Network error. Please check your connection and try again.'
+          message: userMessage,
+          originalError: error.message,
+          errorType: errorDetails.isNetworkError ? 'network' : errorDetails.isCorsError ? 'cors' : 'unknown'
         }
       };
     }
   },
 
   signIn: async (email: string, password: string) => {
+    console.log('[Supabase] signIn called for:', email);
+
     try {
+      console.log('[Supabase] Calling auth.signInWithPassword...');
       const result = await supabase.auth.signInWithPassword({ email, password });
+
       if (result.error) {
-        console.error('Sign in error:', result.error);
+        console.error('[Supabase] Sign in error:', {
+          message: result.error.message,
+          status: result.error.status,
+          name: result.error.name
+        });
+      } else {
+        console.log('[Supabase] Sign in successful, user:', result.data.user?.id);
       }
+
       return result;
     } catch (error: any) {
-      console.error('Sign in exception:', error);
+      const errorDetails = {
+        message: error.message,
+        name: error.name,
+        isNetworkError: error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError'),
+        isCorsError: error.message?.includes('CORS')
+      };
+
+      console.error('[Supabase] Sign in exception:', errorDetails);
+
+      let userMessage = 'An unexpected error occurred. Please try again.';
+      if (errorDetails.isNetworkError) {
+        userMessage = 'Network error: Unable to connect to the server. Please check your internet connection.';
+      } else if (error.message) {
+        userMessage = error.message;
+      }
+
       return {
         data: { user: null, session: null },
         error: {
-          message: error.message || 'Network error. Please check your connection and try again.'
+          message: userMessage,
+          originalError: error.message
         }
       };
     }

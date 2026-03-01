@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { toArabicNumerals } from '../../utils/arabicNumbers';
 
 interface HeroSectionProps {
@@ -40,11 +40,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
               <span>{t('hero.uploadButton')}</span>
               <ArrowRight className="w-5 h-5" />
             </button>
-
-            <button className={`bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-xl hover:bg-gray-50 transition-all duration-200 font-semibold text-lg flex items-center ${isArabic ? 'space-x-reverse' : ''} space-x-2 shadow-lg hover:shadow-xl`}>
-              <Play className="w-5 h-5" />
-              <span>{t('hero.demoButton')}</span>
-            </button>
+            
           </div>
         </div>
       </div>

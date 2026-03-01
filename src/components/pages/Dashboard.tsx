@@ -30,17 +30,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   const [analysisHistory, setAnalysisHistory] = useState<AnalysisHistory[]>([
     {
       id: '1',
-      thumbnail: 'https://images.pexels.com/photos/1666021/pexels-photo-1666021.jpeg?auto=compress&cs=tinysrgb&w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1599743777555-e362a2feab39?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       score: 78,
-      location: 'Times Square, NYC',
+      location: 'Muttrah Corniche',
       timestamp: new Date(Date.now() - 86400000),
       status: 'completed'
     },
     {
       id: '2',
-      thumbnail: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=400',
+      thumbnail: 'https://images.unsplash.com/photo-1606813332135-228593b6e201?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       score: 65,
-      location: 'Hollywood Blvd, LA',
+      location: 'Sultan Qaboos Highway',
       timestamp: new Date(Date.now() - 172800000),
       status: 'completed'
     }

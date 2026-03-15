@@ -44,8 +44,8 @@ const mapContainerStyle = {
   height: '350px',
 };
 
-// Map options
-const mapOptions: google.maps.MapOptions = {
+// Map options - defined as plain object, typed inside component when google is available
+const mapOptionsConfig = {
   disableDefaultUI: false,
   zoomControl: true,
   mapTypeControl: false,
@@ -455,7 +455,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                 center={MUSCAT_CENTER}
                 zoom={11}
                 onLoad={onMapLoad}
-                options={mapOptions}
+                options={mapOptionsConfig}
               >
                 {allLocations.map((location) => {
                   const coords = getCoordinatesForLocation(location);
@@ -467,7 +467,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                       position={coords}
                       onClick={() => setSelectedMapMarker(location)}
                       icon={{
-                        path: google.maps.SymbolPath.CIRCLE,
+                        path: window.google.maps.SymbolPath.CIRCLE,
                         scale: 10,
                         fillColor: markerColor,
                         fillOpacity: 1,

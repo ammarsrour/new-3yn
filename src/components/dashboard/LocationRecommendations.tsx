@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { MapPin, Star, DollarSign, Eye, TrendingUp, Map, List } from 'lucide-react';
 import { BillboardLocation } from '../../types/billboard';
 import { BrandAnalysisData } from './BrandAnalysisForm';
@@ -36,28 +38,47 @@ const DISTRICT_COORDINATES: Record<string, { lat: number; lng: number }> = {
 };
 
 // Muscat center coordinates
-const MUSCAT_CENTER = { lat: 23.5880, lng: 58.3829 };
+const MUSCAT_CENTER: [number, number] = [23.5880, 58.3829];
 
-// Map container styles
-const mapContainerStyle = {
-  width: '100%',
-  height: '100%',
+// Create custom marker icons
+const createMarkerIcon = (color: string, label: string) => {
+  return L.divIcon({
+    className: 'custom-marker',
+    html: `
+      <div style="
+        background-color: ${color};
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      ">${label}</div>
+    `,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16],
+  });
 };
 
-// Map options for styling
-const mapOptions: google.maps.MapOptions = {
-  disableDefaultUI: false,
-  zoomControl: true,
-  mapTypeControl: false,
-  streetViewControl: false,
-  fullscreenControl: true,
-  styles: [
-    {
-      featureType: 'poi',
-      elementType: 'labels',
-      stylers: [{ visibility: 'off' }],
-    },
-  ],
+// Component to fit map bounds
+const FitBounds: React.FC<{ positions: [number, number][] }> = ({ positions }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (positions.length > 0) {
+      const bounds = L.latLngBounds(positions);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [map, positions]);
+
+  return null;
 };
 
 const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
@@ -65,10 +86,7 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
   allLocations
 }) => {
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
-  const [selectedMarker, setSelectedMarker] = useState<LocationRecommendation | null>(null);
   const [highlightedCardId, setHighlightedCardId] = useState<string | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const mapRef = useRef<google.maps.Map | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Check if we're on mobile (for default view mode)
@@ -83,10 +101,10 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const getCoordinatesForLocation = (location: BillboardLocation): { lat: number; lng: number } => {
+  const getCoordinatesForLocation = (location: BillboardLocation): [number, number] => {
     // First check if location has its own coordinates
     if (location.location?.latitude && location.location?.longitude) {
-      return { lat: location.location.latitude, lng: location.location.longitude };
+      return [location.location.latitude, location.location.longitude];
     }
 
     // Check district for fallback coordinates
@@ -95,10 +113,10 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
     for (const [key, coords] of Object.entries(DISTRICT_COORDINATES)) {
       if (districtLower.includes(key)) {
         // Add slight offset to prevent marker overlap
-        return {
-          lat: coords.lat + (Math.random() - 0.5) * 0.01,
-          lng: coords.lng + (Math.random() - 0.5) * 0.01,
-        };
+        return [
+          coords.lat + (Math.random() - 0.5) * 0.01,
+          coords.lng + (Math.random() - 0.5) * 0.01,
+        ];
       }
     }
 
@@ -106,18 +124,18 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
     const addressLower = (location.addressLandmark || '').toLowerCase();
     for (const [key, coords] of Object.entries(DISTRICT_COORDINATES)) {
       if (addressLower.includes(key)) {
-        return {
-          lat: coords.lat + (Math.random() - 0.5) * 0.01,
-          lng: coords.lng + (Math.random() - 0.5) * 0.01,
-        };
+        return [
+          coords.lat + (Math.random() - 0.5) * 0.01,
+          coords.lng + (Math.random() - 0.5) * 0.01,
+        ];
       }
     }
 
     // Default to Muscat center with offset
-    return {
-      lat: MUSCAT_CENTER.lat + (Math.random() - 0.5) * 0.02,
-      lng: MUSCAT_CENTER.lng + (Math.random() - 0.5) * 0.02,
-    };
+    return [
+      MUSCAT_CENTER[0] + (Math.random() - 0.5) * 0.02,
+      MUSCAT_CENTER[1] + (Math.random() - 0.5) * 0.02,
+    ];
   };
 
   const generateRecommendations = (): LocationRecommendation[] => {
@@ -301,27 +319,7 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
 
   const recommendations = generateRecommendations();
 
-  const onMapLoad = useCallback((map: google.maps.Map) => {
-    mapRef.current = map;
-    setMapLoaded(true);
-
-    // Fit bounds to show all markers
-    if (recommendations.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      recommendations.forEach((rec) => {
-        const coords = getCoordinatesForLocation(rec.location);
-        bounds.extend(coords);
-      });
-      map.fitBounds(bounds, { top: 50, right: 50, bottom: 50, left: 50 });
-    }
-  }, [recommendations]);
-
-  const handleMarkerClick = (rec: LocationRecommendation) => {
-    setSelectedMarker(rec);
-  };
-
   const handleViewDetails = (locationId: string) => {
-    setSelectedMarker(null);
     setHighlightedCardId(locationId);
 
     // Scroll to the card
@@ -334,6 +332,16 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
     setTimeout(() => {
       setHighlightedCardId(null);
     }, 2000);
+  };
+
+  // Get marker colors based on rank
+  const getMarkerColor = (index: number) => {
+    switch (index) {
+      case 0: return '#10b981'; // emerald-500 - Gold/Best
+      case 1: return '#6b7280'; // gray-500 - Silver
+      case 2: return '#f97316'; // orange-500 - Bronze
+      default: return '#6b7280';
+    }
   };
 
   if (recommendations.length === 0) {
@@ -350,6 +358,11 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
       </div>
     );
   }
+
+  // Prepare marker positions for bounds fitting
+  const markerPositions: [number, number][] = recommendations.map(rec =>
+    getCoordinatesForLocation(rec.location)
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -389,100 +402,74 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
       {/* Map View */}
       {viewMode === 'map' && (
         <div className="mb-6 rounded-xl overflow-hidden border border-gray-200 shadow-sm h-[250px] md:h-[400px]">
-          <LoadScript
-            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}
-            loadingElement={
-              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                  <p className="text-gray-500 text-sm">Loading map...</p>
-                </div>
-              </div>
-            }
+          <MapContainer
+            center={MUSCAT_CENTER}
+            zoom={11}
+            style={{ height: '100%', width: '100%' }}
+            scrollWheelZoom={true}
           >
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={MUSCAT_CENTER}
-              zoom={11}
-              onLoad={onMapLoad}
-              options={mapOptions}
-            >
-              {recommendations.map((rec, index) => {
-                const coords = getCoordinatesForLocation(rec.location);
-                return (
-                  <MarkerF
-                    key={rec.location.id}
-                    position={coords}
-                    onClick={() => handleMarkerClick(rec)}
-                    label={{
-                      text: String(index + 1),
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '12px',
-                    }}
-                    icon={{
-                      path: google.maps.SymbolPath.CIRCLE,
-                      scale: 14,
-                      fillColor: index === 0 ? '#10b981' : index === 1 ? '#6b7280' : '#f97316',
-                      fillOpacity: 1,
-                      strokeColor: 'white',
-                      strokeWeight: 2,
-                    }}
-                  />
-                );
-              })}
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <FitBounds positions={markerPositions} />
 
-              {selectedMarker && (
-                <InfoWindowF
-                  position={getCoordinatesForLocation(selectedMarker.location)}
-                  onCloseClick={() => setSelectedMarker(null)}
+            {recommendations.map((rec, index) => {
+              const coords = getCoordinatesForLocation(rec.location);
+              return (
+                <Marker
+                  key={rec.location.id}
+                  position={coords}
+                  icon={createMarkerIcon(getMarkerColor(index), String(index + 1))}
                 >
-                  <div className="p-2 max-w-xs" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                    <h4 className="font-bold text-gray-900 text-base mb-2">
-                      {selectedMarker.location.locationName}
-                    </h4>
+                  <Popup>
+                    <div className="p-1 min-w-[200px]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      <h4 className="font-bold text-gray-900 text-base mb-2">
+                        {rec.location.locationName}
+                      </h4>
 
-                    <div className="space-y-1.5 text-sm mb-3">
-                      <div className="flex items-center text-gray-600">
-                        <span className="font-medium text-gray-700 w-24">Board Type:</span>
-                        <span>{selectedMarker.location.boardType}</span>
+                      <div className="space-y-1.5 text-sm mb-3">
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium text-gray-700 w-24">Board Type:</span>
+                          <span>{rec.location.boardType}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium text-gray-700 w-24">Format:</span>
+                          <span>{rec.location.format}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium text-gray-700 w-24">Impressions:</span>
+                          <span className="text-emerald-600 font-semibold">
+                            {rec.estimatedImpressions.toLocaleString()}/mo
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium text-gray-700 w-24">Rental:</span>
+                          <span className="text-emerald-600 font-semibold">
+                            {rec.rentalCost.includes('OMR')
+                              ? rec.rentalCost
+                              : `OMR ${rec.rentalCost}`}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-600">
-                        <span className="font-medium text-gray-700 w-24">Format:</span>
-                        <span>{selectedMarker.location.format}</span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <span className="font-medium text-gray-700 w-24">Impressions:</span>
-                        <span className="text-emerald-600 font-semibold">
-                          {selectedMarker.estimatedImpressions.toLocaleString()}/mo
+
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <span className="text-emerald-600 font-bold text-lg">
+                          {rec.matchPercentage}% Match
                         </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <span className="font-medium text-gray-700 w-24">Rental:</span>
-                        <span className="text-emerald-600 font-semibold">
-                          {selectedMarker.rentalCost.includes('OMR')
-                            ? selectedMarker.rentalCost
-                            : `OMR ${selectedMarker.rentalCost}`}
-                        </span>
+                        <button
+                          onClick={() => handleViewDetails(rec.location.id)}
+                          className="text-emerald-600 hover:text-emerald-700 font-medium text-sm hover:underline"
+                        >
+                          View Details →
+                        </button>
                       </div>
                     </div>
-
-                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                      <span className="text-emerald-600 font-bold text-lg">
-                        {selectedMarker.matchPercentage}% Match
-                      </span>
-                      <button
-                        onClick={() => handleViewDetails(selectedMarker.location.id)}
-                        className="text-emerald-600 hover:text-emerald-700 font-medium text-sm hover:underline"
-                      >
-                        View Details →
-                      </button>
-                    </div>
-                  </div>
-                </InfoWindowF>
-              )}
-            </GoogleMap>
-          </LoadScript>
+                  </Popup>
+                </Marker>
+              );
+            })}
+          </MapContainer>
         </div>
       )}
 

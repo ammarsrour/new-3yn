@@ -4,7 +4,7 @@ import { Zap, Target, FileText, MapPin } from 'lucide-react';
 
 const FeaturesSection: React.FC = () => {
   const { t } = useTranslation();
-  
+
   const features = [
     {
       icon: Zap,
@@ -29,29 +29,29 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-white">
+    <section id="features" className="py-24 bg-white border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              {t('features.titleHighlight')}
-            <span className="bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"> Intelligent Optimisation</span>
+        <div className="text-center mb-20">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            {t('features.titleHighlight')}
+            <span className="text-emerald-500"> Intelligent Optimisation</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
             {t('features.subtitle')}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {features.map((feature, index) => (
-            <div 
-              key={index} 
-              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group hover:-translate-y-2"
+            <div
+              key={index}
+              className="bg-white p-8 rounded-2xl border border-gray-200 hover:border-emerald-200 transition-all duration-300 group hover:shadow-lg hover:shadow-emerald-500/5"
             >
-              <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <feature.icon className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 bg-gray-900 rounded-xl flex items-center justify-center mb-6 group-hover:bg-gray-800 transition-colors duration-300">
+                <feature.icon className="w-7 h-7 text-emerald-400" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">{feature.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+              <p className="text-gray-500 leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>

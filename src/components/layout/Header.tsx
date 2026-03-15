@@ -16,30 +16,30 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
   const { t } = useTranslation();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-gray-950 border-b border-gray-800 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16" dir="ltr">
           <div className="flex items-center">
             <div className="flex items-center space-x-2">
-              <img 
-                src="/3yn eye.png" 
-                alt="3YN Logo" 
-                className="w-8 h-8 object-contain"
+              <img
+                src="/3yn eye.png"
+                alt="3YN Logo"
+                className="w-8 h-8 object-contain brightness-0 invert"
               />
-              <span className="text-xl font-bold text-gray-900 ltr-numbers">{t('header.subtitle')}</span>
+              <span className="text-xl font-bold text-white ltr-numbers">{t('header.subtitle')}</span>
             </div>
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
             {!user && (
               <>
-                <a href="#demo" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  {t('header.demo')}
+                <a href="#features" className="text-gray-400 hover:text-white transition-colors duration-200">
+                  Features
                 </a>
-                <a href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a href="#pricing" className="text-gray-400 hover:text-white transition-colors duration-200">
                   {t('header.pricing')}
                 </a>
-                <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors">
+                <a href="#contact" className="text-gray-400 hover:text-white transition-colors duration-200">
                   Contact
                 </a>
               </>
@@ -50,8 +50,8 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
                   onClick={() => onViewChange?.('dashboard')}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
                     currentView === 'dashboard'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-emerald-500/10 text-emerald-400'
+                      : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" />
@@ -61,8 +61,8 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
                   onClick={() => onViewChange?.('admin')}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
                     currentView === 'admin'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-emerald-500/10 text-emerald-400'
+                      : 'text-gray-400 hover:text-white'
                   }`}
                 >
                   <Shield className="w-4 h-4" />
@@ -76,15 +76,15 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
             {user ? (
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <UserIcon className="w-5 h-5 text-gray-500" />
-                  <span className="text-sm text-gray-700">{user.name}</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                  <UserIcon className="w-5 h-5 text-gray-400" />
+                  <span className="text-sm text-gray-300">{user.name}</span>
+                  <span className="px-2 py-1 text-xs bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
                     {user.plan}
                   </span>
                 </div>
                 <button
                   onClick={onLogout}
-                  className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
+                  className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>{t('header.logout')}</span>
@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
             ) : (
               <button
                 onClick={onLogin}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium"
+                className="text-white px-5 py-2 rounded-lg border border-gray-700 hover:bg-white hover:text-gray-950 transition-all duration-200 font-medium"
               >
                 {t('header.login')}
               </button>

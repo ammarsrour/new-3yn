@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-  MapPin, 
-  Navigation, 
-  Search, 
-  X, 
-  Clock, 
+import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import {
+  MapPin,
+  Navigation,
+  Search,
+  X,
+  Clock,
   Globe,
   Eye,
   Gauge,
@@ -20,6 +21,55 @@ import {
 import { BillboardLocation, BillboardMetadata } from '../../types/billboard';
 import { BillboardDataService } from '../../services/billboardDataService';
 import LocationComparison from './LocationComparison';
+
+// Muscat center coordinates
+const MUSCAT_CENTER = { lat: 23.5880, lng: 58.3829 };
+
+// Fallback coordinates by district
+const DISTRICT_COORDINATES: Record<string, { lat: number; lng: number }> = {
+  'darsait': { lat: 23.6100, lng: 58.5400 },
+  'cbd': { lat: 23.6100, lng: 58.5400 },
+  'al amerat': { lat: 23.5200, lng: 58.5500 },
+  'amerat': { lat: 23.5200, lng: 58.5500 },
+  'al mouj': { lat: 23.6200, lng: 58.2800 },
+  'madinat al-irfan': { lat: 23.5900, lng: 58.3200 },
+  'ruwi': { lat: 23.5900, lng: 58.5400 },
+  'al khuwair': { lat: 23.5950, lng: 58.4100 },
+  'qurum': { lat: 23.5850, lng: 58.4350 },
+};
+
+// Map container style
+const mapContainerStyle = {
+  width: '100%',
+  height: '350px',
+};
+
+// Map options
+const mapOptions: google.maps.MapOptions = {
+  disableDefaultUI: false,
+  zoomControl: true,
+  mapTypeControl: false,
+  streetViewControl: false,
+  fullscreenControl: true,
+  styles: [
+    {
+      featureType: 'poi',
+      elementType: 'labels',
+      stylers: [{ visibility: 'off' }],
+    },
+  ],
+};
+
+// Get marker color based on difficulty
+const getDifficultyMarkerColor = (difficulty?: string): string => {
+  switch (difficulty) {
+    case 'easy': return '#22c55e';      // green-500
+    case 'medium': return '#eab308';    // yellow-500
+    case 'hard': return '#f97316';      // orange-500
+    case 'extreme': return '#ef4444';   // red-500
+    default: return '#6b7280';          // gray-500
+  }
+};
 
 interface IntelligentLocationSelectorProps {
   value: string;
@@ -44,9 +94,45 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
   const [isValidating, setIsValidating] = useState(false);
   const [comparisonLocations, setComparisonLocations] = useState<BillboardLocation[]>([]);
   const [showComparison, setShowComparison] = useState(false);
-  
+  const [selectedMapMarker, setSelectedMapMarker] = useState<BillboardLocation | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+
+  // Get coordinates for a location with fallback to district
+  const getCoordinatesForLocation = useCallback((location: BillboardLocation): { lat: number; lng: number } => {
+    // Check if location has its own coordinates
+    if (location.location?.latitude && location.location?.longitude) {
+      return { lat: location.location.latitude, lng: location.location.longitude };
+    }
+
+    // Check district for fallback coordinates
+    const districtLower = location.district?.toLowerCase() || '';
+    const addressLower = (location.addressLandmark || '').toLowerCase();
+
+    for (const [key, coords] of Object.entries(DISTRICT_COORDINATES)) {
+      if (districtLower.includes(key) || addressLower.includes(key)) {
+        // Add slight offset to prevent marker overlap
+        return {
+          lat: coords.lat + (Math.random() - 0.5) * 0.008,
+          lng: coords.lng + (Math.random() - 0.5) * 0.008,
+        };
+      }
+    }
+
+    // Default to Muscat center with offset
+    return {
+      lat: MUSCAT_CENTER.lat + (Math.random() - 0.5) * 0.02,
+      lng: MUSCAT_CENTER.lng + (Math.random() - 0.5) * 0.02,
+    };
+  }, []);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+    setMapLoaded(true);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -343,10 +429,91 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
             })}
           </div>
           
-          <div className="bg-white rounded-lg p-4 text-center">
-            <MapPin className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-            <p className="text-gray-600">Interactive map with color-coded difficulty levels coming soon</p>
-            <p className="text-sm text-gray-500 mt-1">Click any location above to see detailed specifications</p>
+          <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+            <LoadScript
+              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}
+              loadingElement={
+                <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                    <p className="text-gray-500 text-sm">Loading map...</p>
+                  </div>
+                </div>
+              }
+            >
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={MUSCAT_CENTER}
+                zoom={11}
+                onLoad={onMapLoad}
+                options={mapOptions}
+              >
+                {allLocations.map((location) => {
+                  const coords = getCoordinatesForLocation(location);
+                  const markerColor = getDifficultyMarkerColor(location.readabilityDifficulty);
+
+                  return (
+                    <MarkerF
+                      key={location.id}
+                      position={coords}
+                      onClick={() => setSelectedMapMarker(location)}
+                      icon={{
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: markerColor,
+                        fillOpacity: 1,
+                        strokeColor: 'white',
+                        strokeWeight: 2,
+                      }}
+                    />
+                  );
+                })}
+
+                {selectedMapMarker && (
+                  <InfoWindowF
+                    position={getCoordinatesForLocation(selectedMapMarker)}
+                    onCloseClick={() => setSelectedMapMarker(null)}
+                  >
+                    <div className="p-2 max-w-xs" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      <h4 className="font-bold text-gray-900 text-sm mb-2">
+                        {selectedMapMarker.locationName}
+                      </h4>
+
+                      <div className="space-y-1 text-xs mb-3">
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium w-20">District:</span>
+                          <span>{selectedMapMarker.district}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium w-20">Board:</span>
+                          <span>{selectedMapMarker.boardType}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium w-20">Speed:</span>
+                          <span>{selectedMapMarker.speedLimitKmh} km/h</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <span className="font-medium w-20">Difficulty:</span>
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getDifficultyColor(selectedMapMarker.readabilityDifficulty)}`}>
+                            {selectedMapMarker.readabilityDifficulty?.toUpperCase() || 'N/A'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          handleLocationSelect(selectedMapMarker);
+                          setSelectedMapMarker(null);
+                        }}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-2 px-3 rounded transition-colors"
+                      >
+                        Select This Location
+                      </button>
+                    </div>
+                  </InfoWindowF>
+                )}
+              </GoogleMap>
+            </LoadScript>
           </div>
         </div>
       )}

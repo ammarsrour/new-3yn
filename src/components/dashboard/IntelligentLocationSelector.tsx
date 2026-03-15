@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GoogleMap, LoadScript, MarkerF, InfoWindowF } from '@react-google-maps/api';
+import { GoogleMap, MarkerF, InfoWindowF, useJsApiLoader } from '@react-google-maps/api';
 import {
   MapPin,
   Navigation,
@@ -78,13 +78,18 @@ interface IntelligentLocationSelectorProps {
   brandCategory?: string;
 }
 
-const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = ({ 
-  value, 
-  onChange, 
+const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = ({
+  value,
+  onChange,
   error,
   brandCategory
 }) => {
   const { t } = useTranslation();
+
+  // Load Google Maps API
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+  });
   const [inputMode, setInputMode] = useState<'billboard' | 'address' | 'coordinates'>('billboard');
   const [suggestions, setSuggestions] = useState<BillboardLocation[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -95,7 +100,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
   const [comparisonLocations, setComparisonLocations] = useState<BillboardLocation[]>([]);
   const [showComparison, setShowComparison] = useState(false);
   const [selectedMapMarker, setSelectedMapMarker] = useState<BillboardLocation | null>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -131,7 +136,6 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
-    setMapLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -430,17 +434,22 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </div>
           
           <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
-            <LoadScript
-              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}
-              loadingElement={
-                <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                    <p className="text-gray-500 text-sm">Loading map...</p>
-                  </div>
+            {loadError || mapError ? (
+              <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                  <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600 font-medium">Map unavailable</p>
+                  <p className="text-gray-500 text-sm mt-1">Please check your API key or try again later</p>
                 </div>
-              }
-            >
+              </div>
+            ) : !isLoaded ? (
+              <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                  <p className="text-gray-500 text-sm">Loading map...</p>
+                </div>
+              </div>
+            ) : (
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={MUSCAT_CENTER}
@@ -513,7 +522,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                   </InfoWindowF>
                 )}
               </GoogleMap>
-            </LoadScript>
+            )}
           </div>
         </div>
       )}

@@ -176,10 +176,10 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
         <div
           className={`relative border-3 border-dashed rounded-2xl p-8 sm:p-16 text-center transition-all duration-300 ${
             dragActive
-              ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 scale-[1.02] shadow-lg'
+              ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 scale-[1.02] shadow-lg'
               : file
-                ? 'border-green-500 bg-gradient-to-br from-green-50 to-emerald-50'
-                : 'border-gray-300 bg-gradient-to-br from-gray-50/50 to-slate-50/50 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50/50 hover:to-purple-50/50'
+                ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50'
+                : 'border-gray-300 bg-gradient-to-br from-gray-50/50 to-slate-50/50 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50/50 hover:to-green-50/50'
           }`}
           style={{
             borderWidth: '3px',
@@ -199,8 +199,8 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           {/* Background decoration */}
           {!file && (
             <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-              <div className="absolute top-4 right-4 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
-              <div className="absolute bottom-4 left-4 w-24 h-24 bg-purple-100/30 rounded-full blur-xl"></div>
+              <div className="absolute top-4 right-4 w-32 h-32 bg-emerald-100/30 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-4 left-4 w-24 h-24 bg-green-100/30 rounded-full blur-xl"></div>
             </div>
           )}
 
@@ -216,19 +216,19 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           <div className="relative flex flex-col items-center space-y-6">
             <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl flex items-center justify-center transition-all duration-300 ${
               dragActive
-                ? 'bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg scale-110'
+                ? 'bg-emerald-500 shadow-lg scale-110'
                 : file
-                  ? 'bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg'
-                  : 'bg-gradient-to-br from-blue-100 to-purple-100'
+                  ? 'bg-emerald-500 shadow-lg'
+                  : 'bg-gradient-to-br from-emerald-100 to-green-100'
             }`}>
               <Upload className={`w-10 h-10 sm:w-12 sm:h-12 transition-all duration-300 ${
-                dragActive || file ? 'text-white' : 'text-blue-500'
+                dragActive || file ? 'text-white' : 'text-emerald-500'
               }`} />
             </div>
 
             {file ? (
               <div className="space-y-2">
-                <p className="text-xl font-bold text-green-700">{file.name}</p>
+                <p className="text-xl font-bold text-emerald-700">{file.name}</p>
                 <p className="text-sm text-gray-500 font-medium">
                   {(file.size / (1024 * 1024)).toFixed(2)} MB
                 </p>
@@ -255,7 +255,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
                   onClick={() => {
                     console.log('🖱️ Label clicked - native browser file picker should open');
                   }}
-                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 cursor-pointer font-semibold text-lg shadow-lg hover:shadow-xl active:scale-95 transform hover:-translate-y-0.5"
+                  className="inline-flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl transition-all duration-300 cursor-pointer font-semibold text-lg shadow-lg hover:shadow-xl active:scale-95 transform hover:-translate-y-0.5"
                 >
                   <Upload className="w-5 h-5" />
                   <span>Browse Files</span>
@@ -294,14 +294,14 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
 
         {/* Distance Information */}
         {billboardMetadata?.location.distanceFromRoadM && (
-          <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200/60 rounded-xl">
-            <div className="flex items-center space-x-3 text-blue-800">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Target className="w-5 h-5 text-blue-600" />
+          <div className="mt-8 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200/60 rounded-xl">
+            <div className="flex items-center space-x-3 text-emerald-800">
+              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                <Target className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
                 <span className="text-sm text-gray-600">Viewing Distance</span>
-                <p className="font-bold text-lg text-blue-700">
+                <p className="font-bold text-lg text-emerald-700">
                   <span className="ltr-numbers">{billboardMetadata.location.distanceFromRoadM}</span>m from road
                 </p>
               </div>
@@ -314,7 +314,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing || !file}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-4 px-8 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-8 rounded-xl transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg transform hover:-translate-y-0.5 disabled:transform-none"
           >
             {isAnalyzing ? (
               <span className="flex items-center justify-center space-x-2">

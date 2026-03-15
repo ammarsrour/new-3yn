@@ -9,15 +9,15 @@ interface AnalysisHistoryProps {
 
 const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnalysis }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-600';
-    if (score >= 70) return 'text-blue-600';
+    if (score >= 90) return 'text-emerald-600';
+    if (score >= 70) return 'text-emerald-500';
     if (score >= 50) return 'text-amber-600';
     return 'text-red-600';
   };
 
   const getScoreBadgeColor = (score: number) => {
-    if (score >= 90) return 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200/50';
-    if (score >= 70) return 'bg-gradient-to-r from-blue-100 to-blue-100 text-blue-800 border border-blue-200/50';
+    if (score >= 90) return 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border border-emerald-200/50';
+    if (score >= 70) return 'bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-700 border border-emerald-200/50';
     if (score >= 50) return 'bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border border-amber-200/50';
     return 'bg-gradient-to-r from-red-100 to-red-100 text-red-800 border border-red-200/50';
   };
@@ -34,8 +34,8 @@ const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnal
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg flex items-center justify-center">
-            <Clock className="w-4 h-4 text-purple-600" />
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-100 to-green-100 rounded-lg flex items-center justify-center">
+            <Clock className="w-4 h-4 text-emerald-600" />
           </div>
           <h3 className="text-lg font-bold text-gray-900">Analysis History</h3>
         </div>
@@ -49,7 +49,7 @@ const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnal
             </div>
             {scoreTrend !== 0 && (
               <div className={`flex items-center space-x-1 px-2 py-1 rounded-lg ${
-                scoreTrend > 0 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                scoreTrend > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
               }`}>
                 {scoreTrend > 0 ? (
                   <TrendingUp className="w-4 h-4" />
@@ -67,8 +67,8 @@ const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnal
 
       {history.length === 0 ? (
         <div className="text-center py-12 px-4">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner">
-            <Upload className="w-10 h-10 text-blue-500" />
+          <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-inner">
+            <Upload className="w-10 h-10 text-emerald-500" />
           </div>
           <h4 className="text-lg font-bold text-gray-900 mb-2">No analyses yet</h4>
           <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
@@ -81,11 +81,11 @@ const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnal
             <div
               key={item.id}
               onClick={() => onSelectAnalysis(item.id)}
-              className={`flex items-center space-x-4 p-4 border border-gray-100 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50/30 cursor-pointer transition-all duration-300 hover:shadow-md hover:border-blue-200/50 group ${
-                index === 0 ? 'bg-gradient-to-r from-blue-50/30 to-purple-50/30 border-blue-100' : 'bg-white'
+              className={`flex items-center space-x-4 p-4 border border-gray-100 rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-emerald-50/30 cursor-pointer transition-all duration-300 hover:shadow-md hover:border-emerald-200/50 group ${
+                index === 0 ? 'bg-gradient-to-r from-emerald-50/30 to-green-50/30 border-emerald-100' : 'bg-white'
               }`}
             >
-              <div className="w-14 h-14 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white shadow-sm group-hover:ring-blue-100 transition-all duration-300">
+              <div className="w-14 h-14 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white shadow-sm group-hover:ring-emerald-100 transition-all duration-300">
                 <img
                   src={item.thumbnail}
                   alt="Billboard thumbnail"
@@ -95,8 +95,8 @@ const AnalysisHistory: React.FC<AnalysisHistoryProps> = ({ history, onSelectAnal
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                  <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                  <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-emerald-700 transition-colors">
                     {item.location}
                   </p>
                 </div>

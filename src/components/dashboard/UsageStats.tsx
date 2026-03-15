@@ -15,25 +15,22 @@ const UsageStats: React.FC<UsageStatsProps> = ({ user, totalAnalyses }) => {
       label: 'Analyses This Month',
       value: `${user.analysesThisMonth}/${user.maxAnalyses}`,
       icon: BarChart3,
-      color: 'blue',
-      gradient: 'from-blue-500 to-blue-600',
-      bgGradient: 'from-blue-50 to-blue-100',
+      color: 'emerald',
+      bgGradient: 'from-emerald-50 to-green-100',
       percentage: usagePercentage
     },
     {
       label: 'Total Analyses',
       value: (totalAnalyses ?? user.totalAnalyses).toString(),
       icon: Target,
-      color: 'purple',
-      gradient: 'from-purple-500 to-purple-600',
-      bgGradient: 'from-purple-50 to-purple-100'
+      color: 'emerald',
+      bgGradient: 'from-emerald-50 to-emerald-100'
     },
     {
       label: 'Average Score',
       value: user.totalAnalyses > 0 ? '73/100' : '--',
       icon: TrendingUp,
       color: 'green',
-      gradient: 'from-green-500 to-emerald-600',
       bgGradient: 'from-green-50 to-emerald-100'
     },
     {
@@ -41,7 +38,6 @@ const UsageStats: React.FC<UsageStatsProps> = ({ user, totalAnalyses }) => {
       value: user.plan,
       icon: Crown,
       color: 'amber',
-      gradient: 'from-amber-500 to-orange-500',
       bgGradient: 'from-amber-50 to-orange-100'
     }
   ];
@@ -52,12 +48,11 @@ const UsageStats: React.FC<UsageStatsProps> = ({ user, totalAnalyses }) => {
 
   const getIconColorClass = (color: string) => {
     const colors: Record<string, string> = {
-      blue: 'text-blue-600',
-      purple: 'text-purple-600',
+      emerald: 'text-emerald-600',
       green: 'text-green-600',
       amber: 'text-amber-600'
     };
-    return colors[color] || colors.blue;
+    return colors[color] || colors.emerald;
   };
 
   return (
@@ -86,9 +81,9 @@ const UsageStats: React.FC<UsageStatsProps> = ({ user, totalAnalyses }) => {
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div
-                  className={`h-2 rounded-full transition-all duration-700 ease-out bg-gradient-to-r ${
-                    stat.percentage > 80 ? 'from-red-500 to-red-600' :
-                    stat.percentage > 60 ? 'from-amber-500 to-orange-500' : 'from-blue-500 to-blue-600'
+                  className={`h-2 rounded-full transition-all duration-700 ease-out ${
+                    stat.percentage > 80 ? 'bg-red-500' :
+                    stat.percentage > 60 ? 'bg-amber-500' : 'bg-emerald-500'
                   }`}
                   style={{ width: `${Math.min(stat.percentage, 100)}%` }}
                 ></div>

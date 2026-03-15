@@ -287,27 +287,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {userProfile && userProfile.subscription_status === 'trial' && (
-        <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-blue-50 border border-blue-200/60 rounded-2xl p-5 shadow-sm">
+        <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50 border border-emerald-200/60 rounded-2xl p-5 shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 text-white p-3 rounded-xl shadow-md">
+              <div className="bg-emerald-500 text-white p-3 rounded-xl shadow-md">
                 <Zap className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 text-lg">Free Trial Active</h3>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mt-1">
                   <span className="flex items-center space-x-1.5">
-                    <Calendar className="w-4 h-4 text-blue-500" />
+                    <Calendar className="w-4 h-4 text-emerald-500" />
                     <span>{getTrialDaysRemaining()} days remaining</span>
                   </span>
                   <span className="flex items-center space-x-1.5">
-                    <Zap className="w-4 h-4 text-purple-500" />
+                    <Zap className="w-4 h-4 text-emerald-600" />
                     <span>{userProfile.trial_credits_remaining} / {userProfile.trial_credits_total} credits left</span>
                   </span>
                 </div>
               </div>
             </div>
-            <button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2.5 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
               Upgrade Now
             </button>
           </div>
@@ -315,18 +315,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       )}
 
       {/* Header Section with Gradient Background */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50/50 to-purple-50/50 rounded-2xl p-6 sm:p-8 border border-gray-100">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-100/40 to-purple-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-purple-100/30 to-blue-100/30 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-emerald-50/30 to-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-100/40 to-green-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-emerald-100/30 to-gray-100/30 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
         <div className="relative">
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
             Dashboard
           </h1>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 gap-4">
             <div>
               <p className="text-lg text-gray-700 font-medium">
-                Welcome back, <span className="text-blue-600">{user.name}</span>
+                Welcome back, <span className="text-emerald-600">{user.name}</span>
               </p>
               <p className="text-gray-500 mt-1">
                 Ready to analyze your next billboard? Upload a creative to get started.
@@ -338,7 +338,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                 onClick={() => setActiveView('analysis')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   activeView === 'analysis'
-                    ? 'bg-blue-500 text-white'
+                    ? 'bg-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -349,7 +349,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                   onClick={() => setActiveView('team')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     activeView === 'team'
-                      ? 'bg-blue-500 text-white'
+                      ? 'bg-emerald-500 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -360,7 +360,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                 onClick={() => setActiveView('client-portal')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   activeView === 'client-portal'
-                    ? 'bg-blue-500 text-white'
+                    ? 'bg-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -370,7 +370,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                 onClick={() => setActiveView('analytics')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   activeView === 'analytics'
-                    ? 'bg-blue-500 text-white'
+                    ? 'bg-emerald-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
@@ -434,9 +434,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
             />
           </div>
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-white to-blue-50/50 rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-                <Upload className="w-10 h-10 text-blue-500" />
+            <div className="bg-gradient-to-br from-white to-emerald-50/30 rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <Upload className="w-10 h-10 text-emerald-500" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">
                 Start Your First Analysis
@@ -446,15 +446,15 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
                   <span>Instant AI analysis</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
                   <span>Distance readability scores</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <div className="w-2 h-2 rounded-full bg-emerald-600"></div>
                   <span>Actionable improvements</span>
                 </div>
               </div>

@@ -301,14 +301,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
 
             {/* Trial banner - compact */}
             {userProfile && userProfile.subscription_status === 'trial' && (
-              <div className="flex items-center space-x-4 bg-slate-100 px-5 py-3">
+              <div className="flex items-center space-x-4 bg-warning-50 border-l-4 border-warning-500 px-5 py-3">
                 <div>
-                  <p className="text-label">Trial</p>
+                  <p className="text-label text-warning-700">Trial</p>
                   <p className="text-sm font-semibold text-navy-950 tabular-nums">
                     {getTrialDaysRemaining()} days, {userProfile.trial_credits_remaining} credits left
                   </p>
                 </div>
-                <button className="bg-navy-950 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors">
+                <button className="bg-warning-500 text-white px-4 py-2 text-sm font-semibold hover:bg-warning-600 transition-colors">
                   Upgrade
                 </button>
               </div>
@@ -373,34 +373,34 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
             />
           </div>
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-white to-emerald-50/30 rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-                <Upload className="w-10 h-10 text-emerald-500" />
+            <div className="bg-white p-8 border-l-4 border-success-500">
+              <div className="w-16 h-16 bg-success-50 flex items-center justify-center mb-6">
+                <Upload className="w-8 h-8 text-success-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
+              <h3 className="text-xl font-bold text-navy-950 mb-3 tracking-tight">
                 Start Your First Analysis
               </h3>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                Upload your first billboard creative to get AI-powered readability insights and optimization recommendations.
+              <p className="text-body mb-6">
+                Upload your first billboard creative to get AI-powered readability insights.
               </p>
               <div className="space-y-3">
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                  <span>Instant AI analysis</span>
+                <div className="flex items-center space-x-3 text-sm">
+                  <div className="w-1.5 h-1.5 bg-success-500"></div>
+                  <span className="text-navy-700">Instant AI analysis</span>
                 </div>
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                  <span>Distance readability scores</span>
+                <div className="flex items-center space-x-3 text-sm">
+                  <div className="w-1.5 h-1.5 bg-info-500"></div>
+                  <span className="text-navy-700">Distance readability scores</span>
                 </div>
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                  <div className="w-2 h-2 rounded-full bg-emerald-600"></div>
-                  <span>Actionable improvements</span>
+                <div className="flex items-center space-x-3 text-sm">
+                  <div className="w-1.5 h-1.5 bg-warning-500"></div>
+                  <span className="text-navy-700">Actionable improvements</span>
                 </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <p className="text-xs text-gray-400 flex items-center justify-center space-x-1">
+              <div className="mt-8 pt-6 border-t border-surface-200">
+                <p className="text-label text-slate-500 flex items-center space-x-2">
                   <ArrowRight className="w-3 h-3" />
-                  <span>Drag & drop or browse to upload</span>
+                  <span>Drag & drop to upload</span>
                 </p>
               </div>
             </div>

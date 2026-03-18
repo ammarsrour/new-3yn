@@ -141,6 +141,86 @@
     font-size: 0.875rem;
     color: #627d98; /* navy-500 */
   }
+
+  /* ============================================
+     COLOR SYSTEM - Semantic & Decorative
+     ============================================ */
+
+  /* Status badges */
+  .badge-success {
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+  }
+
+  .badge-warning {
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+  }
+
+  .badge-danger {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+
+  .badge-info {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+  }
+
+  /* Colored accent borders */
+  .border-accent-success {
+    border-left: 3px solid #10b981;
+  }
+
+  .border-accent-warning {
+    border-left: 3px solid #f59e0b;
+  }
+
+  .border-accent-danger {
+    border-left: 3px solid #ef4444;
+  }
+
+  .border-accent-info {
+    border-left: 3px solid #3b82f6;
+  }
+
+  /* Score color classes */
+  .score-excellent {
+    color: #059669; /* success-600 */
+  }
+
+  .score-good {
+    color: #10b981; /* success-500 */
+  }
+
+  .score-average {
+    color: #f59e0b; /* warning-500 */
+  }
+
+  .score-poor {
+    color: #ef4444; /* danger-500 */
+  }
+
+  /* Subtle colored backgrounds for cards/sections */
+  .bg-surface-warm {
+    background-color: #faf9f7; /* Warm off-white */
+  }
+
+  .bg-surface-success {
+    background-color: #f0fdf4; /* Very light green */
+  }
+
+  .bg-surface-warning {
+    background-color: #fffbeb; /* Very light amber */
+  }
+
+  .bg-surface-info {
+    background-color: #eff6ff; /* Very light blue */
+  }
 }
 
 /* Premium grid pattern background utility */

@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand colors
+        // Brand colors - Navy (primary)
         navy: {
           50: '#f0f4f8',
           100: '#d9e2ec',
@@ -18,9 +18,59 @@ export default {
           900: '#102a43',
           950: '#0f2942',
         },
+        // Semantic colors
+        success: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',  // Primary emerald
+          600: '#059669',
+          700: '#047857',
+        },
+        warning: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',  // Amber
+          600: '#d97706',
+          700: '#b45309',
+        },
+        danger: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',  // Red
+          600: '#dc2626',
+          700: '#b91c1c',
+        },
+        info: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',  // Blue
+          600: '#2563eb',
+          700: '#1d4ed8',
+        },
+        // Gold accent
         gold: {
-          500: '#FFD700'
-        }
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04',
+        },
+        // Warm surface colors (navy-tinted)
+        surface: {
+          50: '#f8fafc',   // Very light navy tint
+          100: '#f1f5f9',  // Light surface
+          200: '#e2e8f0',  // Border/divider
+        },
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],

@@ -40,7 +40,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         {/* Section header */}
         <div className={`max-w-2xl mb-20 ${isArabic ? 'mr-0 ml-auto text-right' : ''}`}>
-          <p className="text-label text-emerald-400 mb-4">
+          <p className="text-label text-success-400 mb-4">
             Pricing
           </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6">
@@ -66,7 +66,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
             <ul className="space-y-3 mb-8 flex-grow">
               {plans[0].features.map((feature, idx) => (
                 <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
-                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-success-400 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -80,13 +80,13 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
           </div>
 
           {/* Professional - featured */}
-          <div className={`bg-white p-8 flex flex-col relative ring-2 ring-emerald-500 ${isArabic ? 'text-right' : ''}`}>
+          <div className={`bg-white p-8 flex flex-col relative ring-2 ring-success-500 ${isArabic ? 'text-right' : ''}`}>
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-              <span className="bg-emerald-500 text-white text-xs font-semibold px-4 py-1.5 uppercase tracking-wide">
+              <span className="bg-success-500 text-white text-xs font-semibold px-4 py-1.5 uppercase tracking-wide">
                 {t('pricing.popular')}
               </span>
             </div>
-            <h3 className="text-base font-semibold text-emerald-600 mb-4 mt-2">{plans[1].name}</h3>
+            <h3 className="text-base font-semibold text-success-600 mb-4 mt-2">{plans[1].name}</h3>
             <div className="mb-6">
               <span className="text-5xl text-stat text-navy-950 tabular-nums">
                 {isArabic ? toArabicNumerals(plans[1].price) : plans[1].price}
@@ -97,7 +97,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
             <ul className="space-y-3 mb-8 flex-grow">
               {plans[1].features.map((feature, idx) => (
                 <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-navy-950`}>
-                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-success-600 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -124,7 +124,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
             <ul className="space-y-3 mb-8 flex-grow">
               {plans[2].features.map((feature, idx) => (
                 <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
-                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-success-400 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}

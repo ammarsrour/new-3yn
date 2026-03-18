@@ -37,7 +37,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
               <span className="block text-display tracking-tighter">
                 {t('hero.title')}
               </span>
-              <span className="block text-display tracking-tighter text-emerald-600 mt-1">
+              <span className="block text-display tracking-tighter text-success-600 mt-1">
                 {t('hero.titleHighlight')}
               </span>
             </h1>
@@ -64,11 +64,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
 
           {/* Right side - score preview on navy background (desktop) */}
           <div className={`lg:col-span-5 hidden lg:flex items-center justify-center relative z-10 ${isArabic ? 'lg:order-1' : ''}`}>
-            {/* Score preview card */}
-            <div className="bg-white p-8 shadow-2xl">
-              <p className="text-label mb-2">Readability Score</p>
-              <p className="text-7xl text-stat text-emerald-600 tabular-nums mb-4">87</p>
-              <p className="text-sm text-slate-500">AI-powered analysis</p>
+            {/* Score preview card with success accent */}
+            <div className="bg-white p-8 shadow-2xl border-l-4 border-success-500">
+              <p className="text-label text-success-600 mb-2">Readability Score</p>
+              <p className="text-7xl text-stat text-success-600 tabular-nums mb-4">87</p>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 rounded-full bg-success-500 animate-pulse" />
+                <p className="text-sm text-navy-600">Excellent visibility</p>
+              </div>
             </div>
           </div>
         </div>

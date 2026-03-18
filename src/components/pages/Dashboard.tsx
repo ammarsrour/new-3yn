@@ -291,11 +291,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0f2942] tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-bold text-navy-950 tracking-tight">
                 Dashboard
               </h1>
-              <p className="text-slate-600 mt-2">
-                Welcome back, <span className="font-semibold text-[#0f2942]">{user.name}</span>
+              <p className="text-body mt-2">
+                Welcome back, <span className="font-semibold text-navy-950">{user.name}</span>
               </p>
             </div>
 
@@ -303,12 +303,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
             {userProfile && userProfile.subscription_status === 'trial' && (
               <div className="flex items-center space-x-4 bg-slate-100 px-5 py-3">
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-slate-500">Trial</p>
-                  <p className="text-sm font-semibold text-[#0f2942]">
-                    <span className="ltr-numbers">{getTrialDaysRemaining()}</span> days, <span className="ltr-numbers">{userProfile.trial_credits_remaining}</span> credits left
+                  <p className="text-label">Trial</p>
+                  <p className="text-sm font-semibold text-navy-950 tabular-nums">
+                    {getTrialDaysRemaining()} days, {userProfile.trial_credits_remaining} credits left
                   </p>
                 </div>
-                <button className="bg-[#0f2942] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1a3d5c] transition-colors">
+                <button className="bg-navy-950 text-white px-4 py-2 text-sm font-semibold hover:bg-navy-800 transition-colors">
                   Upgrade
                 </button>
               </div>

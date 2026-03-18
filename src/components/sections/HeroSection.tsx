@@ -27,37 +27,37 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left content - takes 7 columns */}
           <div className={`lg:col-span-7 ${isArabic ? 'lg:order-2 text-right' : ''}`}>
-            {/* Confident tagline - no pill, just typography */}
-            <p className="text-[#0f2942] font-semibold tracking-[0.2em] uppercase text-sm mb-6">
+            {/* Tagline - label style */}
+            <p className="text-label text-navy-950 mb-6">
               {t('hero.tagline')}
             </p>
 
-            {/* Dramatic headline - much larger, confident spacing */}
-            <h1 className="text-[#0f2942] mb-8">
-              <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[0.9]">
+            {/* Display headline - fluid sizing for marketing page */}
+            <h1 className="text-navy-950 mb-8">
+              <span className="block text-display tracking-tighter">
                 {t('hero.title')}
               </span>
-              <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[0.9] text-emerald-600 mt-2">
+              <span className="block text-display tracking-tighter text-emerald-600 mt-1">
                 {t('hero.titleHighlight')}
               </span>
             </h1>
 
-            {/* Subtitle - generous measure, confident size */}
-            <p className="text-xl sm:text-2xl text-slate-600 mb-12 max-w-xl leading-relaxed font-light">
+            {/* Lead text */}
+            <p className="text-lead mb-12 max-w-xl">
               {t('hero.subtitle')}
             </p>
 
-            {/* Single powerful CTA - no shadow effects, just presence */}
+            {/* CTA button */}
             <button
               onClick={onGetStarted}
-              className={`group inline-flex items-center bg-[#0f2942] text-white px-10 py-5 transition-all duration-300 font-semibold text-lg hover:bg-[#1a3d5c] ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3`}
+              className={`group inline-flex items-center bg-navy-950 text-white px-10 py-5 transition-colors duration-300 font-semibold text-lg hover:bg-navy-800 ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3`}
             >
               <span>{t('hero.uploadButton')}</span>
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
 
-            {/* Trust signal - understated */}
-            <p className="mt-8 text-sm text-slate-500">
+            {/* Trust signal */}
+            <p className="mt-8 text-secondary">
               Trusted by leading agencies across the GCC
             </p>
           </div>
@@ -71,10 +71,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
                 alt="3YN"
                 className="w-48 h-48 xl:w-64 xl:h-64 object-contain filter invert opacity-90"
               />
-              {/* Score preview - bold typography */}
+              {/* Score preview - stat typography */}
               <div className="absolute -bottom-8 -left-8 bg-white p-6 shadow-2xl">
-                <p className="text-xs uppercase tracking-wider text-slate-500 mb-1">Readability Score</p>
-                <p className="text-5xl font-black text-emerald-600">87</p>
+                <p className="text-label mb-1">Readability Score</p>
+                <p className="text-5xl text-stat text-emerald-600 tabular-nums">87</p>
               </div>
             </div>
           </div>

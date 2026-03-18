@@ -287,28 +287,28 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Dashboard Header */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
+      <div className="bg-white border-b border-surface-200">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-navy-950 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-navy-950 tracking-tight">
                 Dashboard
               </h1>
-              <p className="text-body mt-2">
+              <p className="text-sm text-secondary mt-1">
                 Welcome back, <span className="font-semibold text-navy-950">{user.name}</span>
               </p>
             </div>
 
             {/* Trial banner - compact */}
             {userProfile && userProfile.subscription_status === 'trial' && (
-              <div className="flex items-center space-x-4 bg-warning-50 border-l-4 border-warning-500 px-5 py-3">
+              <div className="flex items-center space-x-3 bg-warning-50 border-l-4 border-warning-500 px-4 py-2.5">
                 <div>
                   <p className="text-label text-warning-700">Trial</p>
                   <p className="text-sm font-semibold text-navy-950 tabular-nums">
                     {getTrialDaysRemaining()} days, {userProfile.trial_credits_remaining} credits left
                   </p>
                 </div>
-                <button className="bg-warning-500 text-white px-4 py-2 text-sm font-semibold hover:bg-warning-600 transition-colors">
+                <button className="bg-warning-500 text-white px-3 py-1.5 text-sm font-semibold hover:bg-warning-600 transition-colors">
                   Upgrade
                 </button>
               </div>
@@ -321,7 +321,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       <UsageStats user={user} totalAnalyses={user.totalAnalyses} />
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 lg:py-8">
 
       {activeView === 'analytics' && (user.plan === 'Enterprise' || user.plan === 'Professional') ? (
         <EnterpriseAnalytics />
@@ -364,7 +364,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         />
       ) : user.totalAnalyses === 0 && analysisHistory.length === 0 ? (
         /* Empty State for New Users */
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <UploadSection
               onAnalyze={handleAnalyze}
@@ -373,31 +373,31 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
             />
           </div>
           <div className="lg:col-span-1">
-            <div className="bg-white p-8 border-l-4 border-success-500">
-              <div className="w-16 h-16 bg-success-50 flex items-center justify-center mb-6">
-                <Upload className="w-8 h-8 text-success-600" />
+            <div className="bg-white p-6 border-l-4 border-success-500">
+              <div className="w-12 h-12 bg-success-50 flex items-center justify-center mb-4">
+                <Upload className="w-6 h-6 text-success-600" />
               </div>
-              <h3 className="text-xl font-bold text-navy-950 mb-3 tracking-tight">
+              <h3 className="text-lg font-bold text-navy-950 mb-2 tracking-tight">
                 Start Your First Analysis
               </h3>
-              <p className="text-body mb-6">
+              <p className="text-sm text-secondary mb-5">
                 Upload your first billboard creative to get AI-powered readability insights.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3 text-sm">
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2.5 text-sm">
                   <div className="w-1.5 h-1.5 bg-success-500"></div>
                   <span className="text-navy-700">Instant AI analysis</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm">
+                <div className="flex items-center space-x-2.5 text-sm">
                   <div className="w-1.5 h-1.5 bg-info-500"></div>
                   <span className="text-navy-700">Distance readability scores</span>
                 </div>
-                <div className="flex items-center space-x-3 text-sm">
+                <div className="flex items-center space-x-2.5 text-sm">
                   <div className="w-1.5 h-1.5 bg-warning-500"></div>
                   <span className="text-navy-700">Actionable improvements</span>
                 </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-surface-200">
+              <div className="mt-5 pt-4 border-t border-surface-200">
                 <p className="text-label text-slate-500 flex items-center space-x-2">
                   <ArrowRight className="w-3 h-3" />
                   <span>Drag & drop to upload</span>
@@ -407,7 +407,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
           </div>
         </div>
       ) : (
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <UploadSection
               onAnalyze={handleAnalyze}

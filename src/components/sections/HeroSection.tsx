@@ -23,41 +23,41 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
         }}
       />
 
-      <div className="relative w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-24 lg:py-0">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      <div className="relative w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 lg:py-0">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           {/* Left content - takes 7 columns */}
           <div className={`lg:col-span-7 ${isArabic ? 'lg:order-2 text-right' : ''}`}>
             {/* Tagline - label style */}
-            <p className="text-label text-navy-950 mb-6">
+            <p className="text-label text-navy-950 mb-4">
               {t('hero.tagline')}
             </p>
 
             {/* Display headline - fluid sizing for marketing page */}
-            <h1 className="text-navy-950 mb-8">
+            <h1 className="text-navy-950 mb-6">
               <span className="block text-display tracking-tighter">
                 {t('hero.title')}
               </span>
-              <span className="block text-display tracking-tighter text-success-600 mt-1">
+              <span className="block text-display tracking-tighter text-success-600">
                 {t('hero.titleHighlight')}
               </span>
             </h1>
 
             {/* Lead text */}
-            <p className="text-lead mb-12 max-w-xl">
+            <p className="text-lead mb-10 max-w-xl">
               {t('hero.subtitle')}
             </p>
 
             {/* CTA button */}
             <button
               onClick={onGetStarted}
-              className={`group inline-flex items-center bg-navy-950 text-white px-10 py-5 transition-colors duration-300 font-semibold text-lg hover:bg-navy-800 ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3`}
+              className={`group inline-flex items-center bg-navy-950 text-white px-8 py-4 transition-colors duration-300 font-semibold text-lg hover:bg-navy-800 ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3`}
             >
               <span>{t('hero.uploadButton')}</span>
               <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
 
             {/* Trust signal */}
-            <p className="mt-8 text-secondary">
+            <p className="mt-6 text-secondary">
               Trusted by leading agencies across the GCC
             </p>
           </div>
@@ -65,11 +65,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
           {/* Right side - score preview on navy background (desktop) */}
           <div className={`lg:col-span-5 hidden lg:flex items-center justify-center relative z-10 ${isArabic ? 'lg:order-1' : ''}`}>
             {/* Score preview card with success accent */}
-            <div className="bg-white p-8 shadow-2xl border-l-4 border-success-500">
-              <p className="text-label text-success-600 mb-2">Readability Score</p>
-              <p className="text-7xl text-stat text-success-600 tabular-nums mb-4">87</p>
+            <div className="bg-white p-10 shadow-2xl border-l-4 border-success-500">
+              <p className="text-label text-success-600 mb-3">Readability Score</p>
+              <p className="text-8xl text-stat text-success-600 tabular-nums mb-3">87</p>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 rounded-full bg-success-500 animate-pulse" />
+                <div className="w-2 h-2 bg-success-500 animate-pulse" />
                 <p className="text-sm text-navy-600">Excellent visibility</p>
               </div>
             </div>

@@ -170,10 +170,10 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <img src="/3yn eye.png" alt="3YN" className="w-16 h-16 mx-auto mb-4 animate-pulse" />
+          <p className="text-sm text-slate-500 tracking-wider uppercase">Loading</p>
         </div>
       </div>
     );
@@ -182,7 +182,7 @@ function App() {
   const isAdmin = userProfile?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <Header
         user={user}
         onLogin={() => openAuthModal('login')}

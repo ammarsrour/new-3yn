@@ -1,120 +1,91 @@
 import React from 'react';
-import { Mail, MessageCircle, Send } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 
 const ContactSection: React.FC = () => {
   return (
-    <section id="contact" className="relative py-24 bg-gray-900 overflow-hidden">
-      {/* Grid pattern background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '64px 64px'
-        }}
-      />
+    <section id="contact" className="py-32 bg-slate-100">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+          {/* Left - CTA */}
+          <div>
+            <p className="text-emerald-600 font-semibold tracking-[0.15em] uppercase text-sm mb-4">
+              Contact
+            </p>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#0f2942] tracking-tight leading-[1.1] mb-6">
+              Ready to optimize your billboards?
+            </h2>
+            <p className="text-xl text-slate-600 leading-relaxed mb-10">
+              Get in touch for enterprise solutions, custom integrations, or any questions about our platform.
+            </p>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight">
-            Get in Touch
-          </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Have questions? Need support? We're here to help!
-          </p>
-        </div>
+            {/* Primary contact */}
+            <a
+              href="mailto:contact@3yn.ai"
+              className="group inline-flex items-center space-x-4 mb-12"
+            >
+              <span className="w-16 h-16 bg-[#0f2942] flex items-center justify-center">
+                <Mail className="w-6 h-6 text-white" />
+              </span>
+              <span>
+                <span className="block text-sm text-slate-500 font-medium">Email us</span>
+                <span className="block text-xl font-bold text-[#0f2942] group-hover:text-emerald-600 transition-colors">contact@3yn.ai</span>
+              </span>
+            </a>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden">
-            <div className="grid md:grid-cols-2">
-              {/* Left side - emerald accent panel */}
-              <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 p-12 text-white">
-                <div className="mb-8">
-                  <MessageCircle className="w-16 h-16 mb-4 text-emerald-100" />
-                  <h3 className="text-2xl font-bold mb-2">Let's Talk</h3>
-                  <p className="text-emerald-100">
-                    We'd love to hear from you. Reach out to us for any inquiries, support, or feedback.
-                  </p>
+            {/* Response time */}
+            <p className="text-sm text-slate-500">
+              Typical response time: <span className="font-semibold text-[#0f2942]">within 24 hours</span>
+            </p>
+          </div>
+
+          {/* Right - Quick links */}
+          <div className="bg-white p-10 lg:p-12">
+            <h3 className="text-xl font-bold text-[#0f2942] mb-8">Quick Links</h3>
+
+            <div className="space-y-0">
+              <a
+                href="mailto:contact@3yn.ai?subject=General Inquiry"
+                className="group flex items-center justify-between py-6 border-b border-slate-200 hover:border-emerald-200 transition-colors"
+              >
+                <div>
+                  <h4 className="font-semibold text-[#0f2942] mb-1">General Inquiries</h4>
+                  <p className="text-sm text-slate-500">Questions about our services</p>
                 </div>
+                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+              </a>
 
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <Mail className="w-6 h-6 flex-shrink-0 mt-1 text-emerald-100" />
-                    <div>
-                      <h4 className="font-semibold mb-1">Email Us</h4>
-                      <a
-                        href="mailto:contact@3yn.ai"
-                        className="text-emerald-100 hover:text-white transition-colors"
-                      >
-                        contact@3yn.ai
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <Send className="w-6 h-6 flex-shrink-0 mt-1 text-emerald-100" />
-                    <div>
-                      <h4 className="font-semibold mb-1">Response Time</h4>
-                      <p className="text-emerald-100">
-                        We typically respond within 24 hours
-                      </p>
-                    </div>
-                  </div>
+              <a
+                href="mailto:contact@3yn.ai?subject=Support Request"
+                className="group flex items-center justify-between py-6 border-b border-slate-200 hover:border-emerald-200 transition-colors"
+              >
+                <div>
+                  <h4 className="font-semibold text-[#0f2942] mb-1">Technical Support</h4>
+                  <p className="text-sm text-slate-500">Help with your account or analysis</p>
                 </div>
-              </div>
+                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+              </a>
 
-              {/* Right side - contact info */}
-              <div className="p-12 bg-gray-800/30">
-                <h3 className="text-2xl font-bold text-white mb-6">
-                  Contact Information
-                </h3>
-
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-semibold text-white mb-2">General Inquiries</h4>
-                    <p className="text-gray-400 mb-2">
-                      For general questions about our services and features
-                    </p>
-                    <a
-                      href="mailto:contact@3yn.ai"
-                      className="text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center space-x-2 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>contact@3yn.ai</span>
-                    </a>
-                  </div>
-
-                  <div className="pt-6 border-t border-gray-700">
-                    <h4 className="font-semibold text-white mb-2">Support</h4>
-                    <p className="text-gray-400 mb-2">
-                      Need help with your account or analysis?
-                    </p>
-                    <a
-                      href="mailto:contact@3yn.ai?subject=Support Request"
-                      className="text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center space-x-2 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>contact@3yn.ai</span>
-                    </a>
-                  </div>
-
-                  <div className="pt-6 border-t border-gray-700">
-                    <h4 className="font-semibold text-white mb-2">Partnership</h4>
-                    <p className="text-gray-400 mb-2">
-                      Interested in partnering with us?
-                    </p>
-                    <a
-                      href="mailto:contact@3yn.ai?subject=Partnership Inquiry"
-                      className="text-emerald-400 hover:text-emerald-300 font-medium inline-flex items-center space-x-2 transition-colors"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>contact@3yn.ai</span>
-                    </a>
-                  </div>
+              <a
+                href="mailto:contact@3yn.ai?subject=Partnership Inquiry"
+                className="group flex items-center justify-between py-6 border-b border-slate-200 hover:border-emerald-200 transition-colors"
+              >
+                <div>
+                  <h4 className="font-semibold text-[#0f2942] mb-1">Partnerships</h4>
+                  <p className="text-sm text-slate-500">Explore collaboration opportunities</p>
                 </div>
-              </div>
+                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+              </a>
+
+              <a
+                href="mailto:contact@3yn.ai?subject=Enterprise Demo Request"
+                className="group flex items-center justify-between py-6 hover:border-emerald-200 transition-colors"
+              >
+                <div>
+                  <h4 className="font-semibold text-[#0f2942] mb-1">Enterprise Demo</h4>
+                  <p className="text-sm text-slate-500">See 3YN in action for your team</p>
+                </div>
+                <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all" />
+              </a>
             </div>
           </div>
         </div>

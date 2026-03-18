@@ -285,104 +285,43 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {userProfile && userProfile.subscription_status === 'trial' && (
-        <div className="bg-gradient-to-r from-emerald-50 via-green-50 to-emerald-50 border border-emerald-200/60 rounded-2xl p-5 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <div className="bg-emerald-500 text-white p-3 rounded-xl shadow-md">
-                <Zap className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 text-lg">Free Trial Active</h3>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mt-1">
-                  <span className="flex items-center space-x-1.5">
-                    <Calendar className="w-4 h-4 text-emerald-500" />
-                    <span>{getTrialDaysRemaining()} days remaining</span>
-                  </span>
-                  <span className="flex items-center space-x-1.5">
-                    <Zap className="w-4 h-4 text-emerald-600" />
-                    <span>{userProfile.trial_credits_remaining} / {userProfile.trial_credits_total} credits left</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-              Upgrade Now
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Header Section with Gradient Background */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-emerald-50/30 to-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-100/40 to-green-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-emerald-100/30 to-gray-100/30 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
-
-        <div className="relative">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            Dashboard
-          </h1>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 gap-4">
+    <div className="min-h-screen bg-slate-50">
+      {/* Dashboard Header */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <p className="text-lg text-gray-700 font-medium">
-                Welcome back, <span className="text-emerald-600">{user.name}</span>
-              </p>
-              <p className="text-gray-500 mt-1">
-                Ready to analyze your next billboard? Upload a creative to get started.
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0f2942] tracking-tight">
+                Dashboard
+              </h1>
+              <p className="text-slate-600 mt-2">
+                Welcome back, <span className="font-semibold text-[#0f2942]">{user.name}</span>
               </p>
             </div>
-          {false && (user.plan === 'Enterprise' || user.plan === 'Professional') && (
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setActiveView('analysis')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  activeView === 'analysis'
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Analysis
-              </button>
-              {user.plan === 'Enterprise' && (
-                <button
-                  onClick={() => setActiveView('team')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeView === 'team'
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                >
-                  Team Workspace
+
+            {/* Trial banner - compact */}
+            {userProfile && userProfile.subscription_status === 'trial' && (
+              <div className="flex items-center space-x-4 bg-slate-100 px-5 py-3">
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-slate-500">Trial</p>
+                  <p className="text-sm font-semibold text-[#0f2942]">
+                    <span className="ltr-numbers">{getTrialDaysRemaining()}</span> days, <span className="ltr-numbers">{userProfile.trial_credits_remaining}</span> credits left
+                  </p>
+                </div>
+                <button className="bg-[#0f2942] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1a3d5c] transition-colors">
+                  Upgrade
                 </button>
-              )}
-              <button
-                onClick={() => setActiveView('client-portal')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  activeView === 'client-portal'
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Client Portal
-              </button>
-              <button
-                onClick={() => setActiveView('analytics')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  activeView === 'analytics'
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Enterprise Analytics
-              </button>
-            </div>
-          )}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
+      {/* Stats bar */}
       <UsageStats user={user} totalAnalyses={user.totalAnalyses} />
+
+      {/* Main content */}
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8 space-y-8">
 
       {activeView === 'analytics' && (user.plan === 'Enterprise' || user.plan === 'Professional') ? (
         <EnterpriseAnalytics />
@@ -484,6 +423,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Star } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { toArabicNumerals } from '../../utils/arabicNumbers';
 
 interface PricingSectionProps {
@@ -36,82 +36,106 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
   ];
 
   return (
-    <section id="pricing" className="relative py-24 bg-gray-950 overflow-hidden">
-      {/* Grid pattern background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '64px 64px'
-        }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5 tracking-tight">
+    <section id="pricing" className="py-32 bg-[#0f2942]">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        {/* Header - left aligned for asymmetry */}
+        <div className={`max-w-2xl mb-20 ${isArabic ? 'mr-0 ml-auto text-right' : ''}`}>
+          <p className="text-emerald-400 font-semibold tracking-[0.15em] uppercase text-sm mb-4">
+            Pricing
+          </p>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
             {t('pricing.title')}
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-400 leading-relaxed">
             {t('pricing.subtitle')}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className={`relative bg-gray-900/50 backdrop-blur-sm rounded-2xl border transition-all duration-300 overflow-hidden ${
-                plan.popular
-                  ? 'ring-2 ring-emerald-500 border-emerald-500/50 scale-105'
-                  : 'border-gray-800 hover:border-gray-700'
-              }`}
-            >
-              {plan.popular && (
-                <div className={`bg-emerald-500 text-gray-950 text-center py-3 font-bold text-sm flex items-center justify-center ${isArabic ? 'space-x-reverse' : ''} space-x-2`}>
-                  <Star className="w-4 h-4" />
-                  <span>{t('pricing.popular')}</span>
-                </div>
-              )}
-
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-gray-400 mb-6">{plan.description}</p>
-
-                <div className="mb-8">
-                  <span className="text-5xl font-bold text-white">
-                    {isArabic ? toArabicNumerals(plan.price) : plan.price}
-                  </span>
-                  <span className="text-gray-400 mx-2">
-                    {isArabic ? 'ر.ع' : '$'}
-                  </span>
-                  <span className="text-gray-500">{t('')}</span>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className={`flex items-center ${isArabic ? 'space-x-reverse' : ''} space-x-3`}>
-                      <Check className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  onClick={onGetStarted}
-                  className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 ${
-                    plan.popular
-                      ? 'bg-emerald-500 text-gray-950 hover:bg-emerald-400 shadow-lg shadow-emerald-500/20'
-                      : 'border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
-                >
-                  {t('pricing.getStarted')}
-                </button>
-              </div>
+        {/* Pricing grid - popular plan is larger */}
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 items-end">
+          {/* Starter - compact */}
+          <div className={`lg:col-span-3 bg-[#162d47] p-8 lg:p-10 ${isArabic ? 'text-right' : ''}`}>
+            <h3 className="text-lg font-semibold text-slate-400 mb-4">{plans[0].name}</h3>
+            <div className="mb-6">
+              <span className="text-4xl font-black text-white ltr-numbers">
+                {isArabic ? toArabicNumerals(plans[0].price) : plans[0].price}
+              </span>
+              <span className="text-slate-500 ml-1">/mo</span>
             </div>
-          ))}
+            <p className="text-slate-400 text-sm mb-8">{plans[0].description}</p>
+            <ul className="space-y-3 mb-8">
+              {plans[0].features.map((feature, idx) => (
+                <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
+                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={onGetStarted}
+              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              {t('pricing.getStarted')}
+            </button>
+          </div>
+
+          {/* Professional - hero pricing */}
+          <div className={`lg:col-span-6 bg-white p-10 lg:p-14 lg:-my-8 relative z-10 ${isArabic ? 'text-right' : ''}`}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-emerald-600 uppercase tracking-wider">{plans[1].name}</h3>
+              <span className="bg-emerald-600 text-white text-xs font-bold px-3 py-1 uppercase tracking-wider">
+                {t('pricing.popular')}
+              </span>
+            </div>
+            <div className="mb-6">
+              <span className="text-6xl lg:text-7xl font-black text-[#0f2942] ltr-numbers">
+                {isArabic ? toArabicNumerals(plans[1].price) : plans[1].price}
+              </span>
+              <span className="text-slate-500 ml-2">/mo</span>
+            </div>
+            <p className="text-slate-600 text-lg mb-10">{plans[1].description}</p>
+            <ul className="space-y-4 mb-10">
+              {plans[1].features.map((feature, idx) => (
+                <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3 text-[#0f2942]`}>
+                  <Check className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={onGetStarted}
+              className={`w-full py-4 bg-[#0f2942] text-white font-semibold hover:bg-[#1a3d5c] transition-colors flex items-center justify-center ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 group`}
+            >
+              <span>{t('pricing.getStarted')}</span>
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+
+          {/* Enterprise - compact */}
+          <div className={`lg:col-span-3 bg-[#162d47] p-8 lg:p-10 ${isArabic ? 'text-right' : ''}`}>
+            <h3 className="text-lg font-semibold text-slate-400 mb-4">{plans[2].name}</h3>
+            <div className="mb-6">
+              <span className="text-4xl font-black text-white ltr-numbers">
+                {isArabic ? toArabicNumerals(plans[2].price) : plans[2].price}
+              </span>
+              <span className="text-slate-500 ml-1">/mo</span>
+            </div>
+            <p className="text-slate-400 text-sm mb-8">{plans[2].description}</p>
+            <ul className="space-y-3 mb-8">
+              {plans[2].features.map((feature, idx) => (
+                <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
+                  <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={onGetStarted}
+              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              Contact Sales
+            </button>
+          </div>
         </div>
       </div>
     </section>

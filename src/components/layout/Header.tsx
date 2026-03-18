@@ -16,42 +16,44 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
   const { t } = useTranslation();
 
   return (
-    <header className="bg-gray-950 border-b border-gray-800 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16" dir="ltr">
+    <header className="bg-white border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+        <div className="flex justify-between items-center h-20" dir="ltr">
+          {/* Logo - confident, simple */}
           <div className="flex items-center">
-            <div className="flex items-center space-x-2">
+            <a href="/" className="flex items-center space-x-3 group">
               <img
                 src="/3yn eye.png"
                 alt="3YN Logo"
-                className="w-8 h-8 object-contain brightness-0 invert"
+                className="w-10 h-10 object-contain"
               />
-              <span className="text-xl font-bold text-white ltr-numbers">{t('header.subtitle')}</span>
-            </div>
+              <span className="text-xl font-bold text-[#0f2942] ltr-numbers tracking-tight">{t('header.subtitle')}</span>
+            </a>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          {/* Navigation - clean, understated */}
+          <nav className="hidden md:flex items-center space-x-10">
             {!user && (
               <>
-                <a href="#features" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a href="#features" className="text-slate-600 hover:text-[#0f2942] transition-colors text-sm font-medium">
                   Features
                 </a>
-                <a href="#pricing" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a href="#pricing" className="text-slate-600 hover:text-[#0f2942] transition-colors text-sm font-medium">
                   {t('header.pricing')}
                 </a>
-                <a href="#contact" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a href="#contact" className="text-slate-600 hover:text-[#0f2942] transition-colors text-sm font-medium">
                   Contact
                 </a>
               </>
             )}
             {user && isAdmin && (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
                 <button
                   onClick={() => onViewChange?.('dashboard')}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
                     currentView === 'dashboard'
-                      ? 'bg-emerald-500/10 text-emerald-400'
-                      : 'text-gray-400 hover:text-white'
+                      ? 'text-[#0f2942] bg-slate-100'
+                      : 'text-slate-500 hover:text-[#0f2942]'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" />
@@ -59,10 +61,10 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
                 </button>
                 <button
                   onClick={() => onViewChange?.('admin')}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
                     currentView === 'admin'
-                      ? 'bg-emerald-500/10 text-emerald-400'
-                      : 'text-gray-400 hover:text-white'
+                      ? 'text-[#0f2942] bg-slate-100'
+                      : 'text-slate-500 hover:text-[#0f2942]'
                   }`}
                 >
                   <Shield className="w-4 h-4" />
@@ -72,28 +74,31 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout, isAdmin, curre
             )}
           </nav>
 
+          {/* Actions */}
           <div className="flex items-center space-x-4">
             {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <UserIcon className="w-5 h-5 text-gray-400" />
-                  <span className="text-sm text-gray-300">{user.name}</span>
-                  <span className="px-2 py-1 text-xs bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
-                    {user.plan}
-                  </span>
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-[#0f2942] flex items-center justify-center">
+                    <UserIcon className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="hidden sm:block">
+                    <p className="text-sm font-medium text-[#0f2942]">{user.name}</p>
+                    <p className="text-xs text-emerald-600 font-medium">{user.plan}</p>
+                  </div>
                 </div>
                 <button
                   onClick={onLogout}
-                  className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors duration-200"
+                  className="flex items-center space-x-2 text-slate-500 hover:text-[#0f2942] transition-colors text-sm"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>{t('header.logout')}</span>
+                  <span className="hidden sm:inline">{t('header.logout')}</span>
                 </button>
               </div>
             ) : (
               <button
                 onClick={onLogin}
-                className="text-white px-5 py-2 rounded-lg border border-gray-700 hover:bg-white hover:text-gray-950 transition-all duration-200 font-medium"
+                className="bg-[#0f2942] text-white px-6 py-2.5 text-sm font-semibold hover:bg-[#1a3d5c] transition-colors"
               >
                 {t('header.login')}
               </button>

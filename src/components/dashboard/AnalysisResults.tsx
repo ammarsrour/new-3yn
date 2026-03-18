@@ -20,8 +20,8 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-success-600';
-    if (score >= 70) return 'text-warning-600';
-    if (score >= 50) return 'text-warning-500';
+    if (score >= 70) return 'text-success-500';
+    if (score >= 50) return 'text-warning-600';
     return 'text-danger-600';
   };
 
@@ -29,7 +29,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
     if (score >= 90) return 'Excellent';
     if (score >= 70) return 'Good';
     if (score >= 50) return 'Fair';
-    return 'Poor';
+    return 'Needs Work';
   };
 
   const handleDownloadPDF = async () => {
@@ -84,316 +84,318 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="bg-white border-l-4 border-success-500 p-6 mb-6">
-        <div className="flex justify-between items-start">
+    <div className="space-y-8">
+      {/* Hero: Billboard + Score - Most important content first */}
+      <div className="bg-white p-6 lg:p-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-navy-950 tracking-tight mb-1">Analysis Complete</h2>
-            <p className="text-secondary text-sm">
-              {analysis.location} • {analysis.distance}m • {analysis.timestamp.toLocaleDateString()}
+            <h2 className="text-xl font-bold text-navy-950 tracking-tight">Analysis Complete</h2>
+            <p className="text-sm text-secondary mt-0.5">
+              {analysis.location} · {analysis.distance}m · {analysis.timestamp.toLocaleDateString()}
             </p>
           </div>
-
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button
               onClick={onNewAnalysis}
-              className="flex items-center space-x-2 bg-surface-100 text-navy-700 px-4 py-2 hover:bg-surface-200 transition-colors"
+              className="flex items-center space-x-2 text-navy-600 px-3 py-2 hover:bg-surface-100 transition-colors text-sm"
             >
               <RefreshCw className="w-4 h-4" />
-              <span>New Analysis</span>
+              <span>New</span>
             </button>
-
             <button
               onClick={handleDownloadPDF}
-              className="flex items-center space-x-2 bg-navy-950 text-white px-4 py-2 hover:bg-navy-800 transition-colors"
+              className="flex items-center space-x-2 bg-navy-950 text-white px-4 py-2 hover:bg-navy-800 transition-colors text-sm"
             >
               <Download className="w-4 h-4" />
-              <span>Download PDF</span>
+              <span>Export PDF</span>
             </button>
           </div>
         </div>
-      </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Left Sidebar - Score Display */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white border-l-4 border-navy-950 p-6">
-            <h3 className="text-lg font-semibold text-navy-950 mb-4">Overall Score</h3>
-            <ScoreCircle score={analysis.score} />
-            <div className="mt-4">
-              <div className={`text-3xl font-bold ${getScoreColor(analysis.score)} ltr-numbers`}>
-                {analysis.score.toFixed(2)}/100
-              </div>
-              <div className={`text-lg font-medium ${getScoreColor(analysis.score)} mt-1`}>
-                {getScoreLabel(analysis.score)}
+        {/* Billboard + Score Grid */}
+        <div className="grid lg:grid-cols-[1fr,280px] gap-6">
+          {/* Billboard Preview - HERO */}
+          <div className="bg-navy-950 p-4">
+            <img
+              src={analysis.image}
+              alt="Billboard"
+              className="w-full h-auto max-h-[480px] object-contain mx-auto"
+            />
+          </div>
+
+          {/* Score Panel */}
+          <div className="space-y-6">
+            {/* Overall Score */}
+            <div className="text-center lg:text-left">
+              <ScoreCircle score={analysis.score} />
+              <div className="mt-3">
+                <div className={`text-4xl font-bold tabular-nums ${getScoreColor(analysis.score)}`}>
+                  {Math.round(analysis.score)}
+                </div>
+                <div className={`text-sm font-medium ${getScoreColor(analysis.score)}`}>
+                  {getScoreLabel(analysis.score)}
+                </div>
               </div>
             </div>
 
-            {/* Score Breakdown */}
-            <div className="mt-6 pt-6 border-t border-surface-200 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary">Font Clarity</span>
-                <span className="font-semibold ltr-numbers">{analysis.fontScore.toFixed(2)}/25</span>
+            {/* Score Breakdown - compact */}
+            <div className="space-y-2 pt-4 border-t border-surface-200">
+              <div className="flex justify-between text-sm">
+                <span className="text-secondary">Font</span>
+                <span className="font-medium tabular-nums">{Math.round(analysis.fontScore)}/25</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary">Contrast</span>
-                <span className="font-semibold ltr-numbers">{analysis.contrastScore.toFixed(2)}/25</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-secondary">Contrast</span>
+                <span className="font-medium tabular-nums">{Math.round(analysis.contrastScore)}/25</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary">Layout</span>
-                <span className="font-semibold ltr-numbers">{analysis.layoutScore.toFixed(2)}/25</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-secondary">Layout</span>
+                <span className="font-medium tabular-nums">{Math.round(analysis.layoutScore)}/25</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary">Call-to-Action</span>
-                <span className="font-semibold ltr-numbers">{analysis.ctaScore.toFixed(2)}/25</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-secondary">CTA</span>
+                <span className="font-medium tabular-nums">{Math.round(analysis.ctaScore)}/25</span>
               </div>
             </div>
 
-            {/* Distance Analysis */}
+            {/* Distance Scores - inline */}
             {analysis.distanceAnalysis && (
-              <div className="mt-6 pt-6 border-t border-surface-200">
-                <h4 className="font-semibold text-navy-950 mb-3 text-sm">Distance Readability</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-secondary">50m</span>
-                    <span className="font-semibold text-sm ltr-numbers">{analysis.distanceAnalysis['50m'].toFixed(2)}/100</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-secondary">100m</span>
-                    <span className="font-semibold text-sm ltr-numbers">{analysis.distanceAnalysis['100m'].toFixed(2)}/100</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-secondary">150m</span>
-                    <span className="font-semibold text-sm ltr-numbers">{analysis.distanceAnalysis['150m'].toFixed(2)}/100</span>
-                  </div>
+              <div className="pt-4 border-t border-surface-200">
+                <p className="text-xs text-secondary mb-2">Distance Readability</p>
+                <div className="flex gap-2">
+                  {(['50m', '100m', '150m'] as const).map((dist) => (
+                    <div key={dist} className="flex-1 bg-surface-50 p-2 text-center">
+                      <div className="text-xs text-secondary">{dist}</div>
+                      <div className="font-semibold tabular-nums text-sm">
+                        {Math.round(analysis.distanceAnalysis[dist])}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
-
-          {/* Quick Actions */}
-          <div className="bg-info-50 border-l-4 border-info-500 p-6">
-            <div className="flex items-center space-x-2 mb-3">
-              <Sparkles className="w-5 h-5 text-info-600" />
-              <h3 className="text-lg font-semibold text-navy-950">AI Enhancement</h3>
-            </div>
-            <p className="text-sm text-secondary mb-4">
-              Get AI-powered improvement suggestions for your design
-            </p>
-            <button className="w-full bg-navy-950 text-white px-4 py-2 hover:bg-navy-800 transition-colors text-sm font-medium">
-              Generate Enhanced Version
-            </button>
-          </div>
         </div>
+      </div>
 
-        {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Viewing Conditions Simulator */}
-          <div className="bg-white border-l-4 border-info-500 p-6">
+      {/* Issues Section - Prioritized by severity */}
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Critical Issues */}
+        {analysis.criticalIssues.length > 0 && (
+          <div className="bg-white p-6">
             <div className="flex items-center space-x-2 mb-4">
-              <Eye className="w-5 h-5 text-info-600" />
-              <h3 className="text-lg font-semibold text-navy-950">Real-World Simulator</h3>
+              <AlertTriangle className="w-5 h-5 text-danger-500" />
+              <h3 className="font-semibold text-navy-950">
+                Critical Issues
+              </h3>
+              <span className="text-xs bg-danger-100 text-danger-700 px-2 py-0.5">
+                {analysis.criticalIssues.length}
+              </span>
+            </div>
+            <div className="space-y-3">
+              {analysis.criticalIssues.map((issue) => (
+                <div key={issue.id} className="border-l-4 border-danger-500 pl-4 py-2">
+                  <h4 className="font-medium text-navy-950 text-sm">{issue.title}</h4>
+                  <p className="text-secondary text-sm mt-0.5">{issue.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Quick Wins */}
+        {analysis.quickWins.length > 0 && (
+          <div className="bg-white p-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <Lightbulb className="w-5 h-5 text-success-500" />
+              <h3 className="font-semibold text-navy-950">
+                Quick Wins
+              </h3>
+              <span className="text-xs bg-success-100 text-success-700 px-2 py-0.5">
+                {analysis.quickWins.length}
+              </span>
+            </div>
+            <div className="space-y-3">
+              {analysis.quickWins.map((win) => (
+                <div key={win.id} className="border-l-4 border-success-500 pl-4 py-2">
+                  <h4 className="font-medium text-navy-950 text-sm">{win.title}</h4>
+                  <p className="text-secondary text-sm mt-0.5">{win.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Minor Issues - Full width if exists */}
+      {analysis.minorIssues.length > 0 && (
+        <div className="bg-white p-6">
+          <div className="flex items-center space-x-2 mb-4">
+            <AlertCircle className="w-5 h-5 text-warning-500" />
+            <h3 className="font-semibold text-navy-950">
+              Additional Improvements
+            </h3>
+            <span className="text-xs bg-warning-100 text-warning-700 px-2 py-0.5">
+              {analysis.minorIssues.length}
+            </span>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {analysis.minorIssues.map((issue) => (
+              <div key={issue.id} className="border-l-4 border-warning-400 pl-4 py-2 bg-surface-50">
+                <h4 className="font-medium text-navy-950 text-sm">{issue.title}</h4>
+                <p className="text-secondary text-sm mt-0.5">{issue.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Simulator - Secondary feature, collapsible feel */}
+      <details className="bg-white group">
+        <summary className="p-6 cursor-pointer flex items-center justify-between hover:bg-surface-50 transition-colors">
+          <div className="flex items-center space-x-2">
+            <Eye className="w-5 h-5 text-navy-600" />
+            <h3 className="font-semibold text-navy-950">Real-World Simulator</h3>
+          </div>
+          <span className="text-sm text-secondary group-open:hidden">Click to expand</span>
+        </summary>
+
+        <div className="px-6 pb-6 pt-0 border-t border-surface-100">
+          {/* Simulator Controls - All same accent color */}
+          <div className="grid grid-cols-3 gap-4 mb-6 pt-4">
+            <div>
+              <label className="block text-xs text-secondary mb-2">Distance</label>
+              <div className="flex gap-1">
+                {[50, 100, 150].map((dist) => (
+                  <button
+                    key={dist}
+                    onClick={() => setSimulatorDistance(dist as 50 | 100 | 150)}
+                    className={`flex-1 px-2 py-2 text-sm font-medium transition-colors ${
+                      simulatorDistance === dist
+                        ? 'bg-navy-950 text-white'
+                        : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+                    }`}
+                  >
+                    {dist}m
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Controls */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div>
-                <label className="block text-xs font-medium text-navy-700 mb-2">Distance</label>
-                <div className="flex gap-2">
-                  {[50, 100, 150].map((dist) => (
-                    <button
-                      key={dist}
-                      onClick={() => setSimulatorDistance(dist as 50 | 100 | 150)}
-                      className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
-                        simulatorDistance === dist
-                          ? 'bg-info-500 text-white'
-                          : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-                      }`}
-                    >
-                      {dist}m
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-navy-700 mb-2">Speed</label>
-                <div className="flex gap-2">
-                  {[60, 80, 100].map((speed) => (
-                    <button
-                      key={speed}
-                      onClick={() => setSimulatorSpeed(speed as 60 | 80 | 100)}
-                      className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
-                        simulatorSpeed === speed
-                          ? 'bg-success-500 text-white'
-                          : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-                      }`}
-                    >
-                      {speed}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-medium text-navy-700 mb-2">Weather</label>
-                <div className="flex gap-2">
+            <div>
+              <label className="block text-xs text-secondary mb-2">Speed</label>
+              <div className="flex gap-1">
+                {[60, 80, 100].map((speed) => (
                   <button
-                    onClick={() => setSimulatorWeather('clear')}
-                    className={`flex-1 px-3 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
-                      simulatorWeather === 'clear'
-                        ? 'bg-warning-500 text-white'
+                    key={speed}
+                    onClick={() => setSimulatorSpeed(speed as 60 | 80 | 100)}
+                    className={`flex-1 px-2 py-2 text-sm font-medium transition-colors ${
+                      simulatorSpeed === speed
+                        ? 'bg-navy-950 text-white'
                         : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
                     }`}
                   >
-                    <Sun className="w-4 h-4" />
+                    {speed}
                   </button>
-                  <button
-                    onClick={() => setSimulatorWeather('cloudy')}
-                    className={`flex-1 px-3 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
-                      simulatorWeather === 'cloudy'
-                        ? 'bg-navy-500 text-white'
-                        : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-                    }`}
-                  >
-                    <Cloud className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setSimulatorWeather('rainy')}
-                    className={`flex-1 px-3 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
-                      simulatorWeather === 'rainy'
-                        ? 'bg-info-700 text-white'
-                        : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-                    }`}
-                  >
-                    <CloudRain className="w-4 h-4" />
-                  </button>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Billboard Preview */}
-            <div className="relative bg-surface-100 p-8 overflow-hidden">
-              <div className="relative">
-                {/* Road markers */}
-                <div className="flex justify-center items-end space-x-4 mb-8">
-                  <div className="text-center">
-                    <div className="w-1 h-12 bg-surface-300 mx-auto mb-2"></div>
-                    <span className="text-xs text-secondary font-medium">{simulatorDistance}m</span>
-                  </div>
-                </div>
-
-                {/* Billboard Frame */}
-                <div className="bg-navy-800 p-2 mx-auto max-w-2xl">
-                  <div
-                    className="relative bg-white rounded overflow-hidden"
-                    style={{
-                      opacity: getWeatherOpacity(),
-                      filter: `blur(${getBlurAmount()}px)`,
-                      transition: 'all 0.3s ease-in-out'
-                    }}
-                  >
-                    <img
-                      src={analysis.image}
-                      alt="Billboard preview"
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
-
-                {/* Condition Info */}
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-secondary">
-                    Viewing at <strong>{simulatorSpeed} km/h</strong> • <strong>{simulatorDistance}m</strong> distance • <strong className="capitalize">{simulatorWeather}</strong> conditions
-                  </p>
-                  <div className="mt-2">
-                    <span className={`inline-block px-3 py-1 text-xs font-medium ${
-                      analysis.distanceAnalysis?.[`${simulatorDistance}m`] >= 70
-                        ? 'bg-success-100 text-success-800'
-                        : 'bg-warning-100 text-warning-800'
-                    }`}>
-                      Readability: {(analysis.distanceAnalysis?.[`${simulatorDistance}m`] || 0).toFixed(2)}/100
-                    </span>
-                  </div>
-                </div>
+            <div>
+              <label className="block text-xs text-secondary mb-2">Weather</label>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setSimulatorWeather('clear')}
+                  className={`flex-1 px-2 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
+                    simulatorWeather === 'clear'
+                      ? 'bg-navy-950 text-white'
+                      : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+                  }`}
+                >
+                  <Sun className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSimulatorWeather('cloudy')}
+                  className={`flex-1 px-2 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
+                    simulatorWeather === 'cloudy'
+                      ? 'bg-navy-950 text-white'
+                      : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+                  }`}
+                >
+                  <Cloud className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSimulatorWeather('rainy')}
+                  className={`flex-1 px-2 py-2 text-sm font-medium transition-colors flex items-center justify-center ${
+                    simulatorWeather === 'rainy'
+                      ? 'bg-navy-950 text-white'
+                      : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+                  }`}
+                >
+                  <CloudRain className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Critical Issues */}
-          {analysis.criticalIssues.length > 0 && (
-            <div className="bg-white border-l-4 border-danger-500 p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <AlertTriangle className="w-5 h-5 text-danger-500" />
-                <h3 className="text-lg font-semibold text-navy-950">
-                  Critical Issues ({analysis.criticalIssues.length})
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {analysis.criticalIssues.map((issue) => (
-                  <div key={issue.id} className="bg-danger-50 border-l-4 border-danger-400 p-4">
-                    <h4 className="font-semibold text-danger-900 text-sm mb-1">{issue.title}</h4>
-                    <p className="text-danger-700 text-sm">{issue.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Quick Wins */}
-          {analysis.quickWins.length > 0 && (
-            <div className="bg-white border-l-4 border-info-500 p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <Lightbulb className="w-5 h-5 text-info-500" />
-                <h3 className="text-lg font-semibold text-navy-950">
-                  Quick Wins ({analysis.quickWins.length})
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {analysis.quickWins.map((win) => (
-                  <div key={win.id} className="bg-info-50 border-l-4 border-info-400 p-4">
-                    <h4 className="font-semibold text-info-900 text-sm mb-1">{win.title}</h4>
-                    <p className="text-info-700 text-sm">{win.description}</p>
-                  </div>
-                ))}
+          {/* Billboard in Simulator */}
+          <div className="bg-surface-100 p-6">
+            <div className="bg-navy-800 p-2 mx-auto max-w-xl">
+              <div
+                className="relative overflow-hidden"
+                style={{
+                  opacity: getWeatherOpacity(),
+                  filter: `blur(${getBlurAmount()}px)`,
+                  transition: 'all 0.3s ease-in-out'
+                }}
+              >
+                <img
+                  src={analysis.image}
+                  alt="Billboard preview"
+                  className="w-full h-auto"
+                />
               </div>
             </div>
-          )}
-
-          {/* Minor Issues */}
-          {analysis.minorIssues.length > 0 && (
-            <div className="bg-white border-l-4 border-warning-500 p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <AlertCircle className="w-5 h-5 text-warning-500" />
-                <h3 className="text-lg font-semibold text-navy-950">
-                  Additional Improvements ({analysis.minorIssues.length})
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {analysis.minorIssues.map((issue) => (
-                  <div key={issue.id} className="bg-warning-50 border-l-4 border-warning-400 p-4">
-                    <h4 className="font-semibold text-warning-900 text-sm mb-1">{issue.title}</h4>
-                    <p className="text-warning-700 text-sm">{issue.description}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-4 text-center text-sm text-secondary">
+              {simulatorSpeed} km/h · {simulatorDistance}m · {simulatorWeather}
+              <span className={`ml-3 inline-block px-2 py-0.5 text-xs font-medium ${
+                analysis.distanceAnalysis?.[`${simulatorDistance}m`] >= 70
+                  ? 'bg-success-100 text-success-700'
+                  : 'bg-warning-100 text-warning-700'
+              }`}>
+                Readability: {Math.round(analysis.distanceAnalysis?.[`${simulatorDistance}m`] || 0)}
+              </span>
             </div>
-          )}
-
-          {/* AI Analysis */}
-          {analysis.aiAnalysis && (
-            <div className="bg-white border-l-4 border-navy-950 p-6">
-              <div className="flex items-center space-x-2 mb-4">
-                <Gauge className="w-5 h-5 text-navy-600" />
-                <h3 className="text-lg font-semibold text-navy-950">Detailed Analysis</h3>
-              </div>
-              <div className="prose prose-sm max-w-none text-navy-700 whitespace-pre-wrap">
-                {analysis.aiAnalysis}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
+      </details>
+
+      {/* AI Detailed Analysis - Last, for deep-dive */}
+      {analysis.aiAnalysis && (
+        <div className="bg-white p-6">
+          <div className="flex items-center space-x-2 mb-4">
+            <Gauge className="w-5 h-5 text-navy-600" />
+            <h3 className="font-semibold text-navy-950">Detailed Analysis</h3>
+          </div>
+          <div className="prose prose-sm max-w-none text-navy-700 whitespace-pre-wrap">
+            {analysis.aiAnalysis}
+          </div>
+        </div>
+      )}
+
+      {/* AI Enhancement CTA - Bottom sticky on mobile */}
+      <div className="bg-navy-950 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-3">
+          <Sparkles className="w-6 h-6 text-gold-400" />
+          <div>
+            <p className="text-white font-semibold">Get AI-Enhanced Version</p>
+            <p className="text-navy-300 text-sm">Automatically fix issues and improve readability</p>
+          </div>
+        </div>
+        <button className="bg-white text-navy-950 px-6 py-3 font-semibold hover:bg-surface-100 transition-colors whitespace-nowrap">
+          Generate Enhanced Version
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Upload, Target } from 'lucide-react';
-import LocationInput from './LocationInput';
+import { Upload, Target, ChevronDown, ChevronUp, Building2 } from 'lucide-react';
 import { LocationData } from '../../services/locationService';
 import IntelligentLocationSelector from './IntelligentLocationSelector';
 import { BillboardMetadata } from '../../types/billboard';
@@ -17,25 +16,15 @@ interface UploadSectionProps {
 
 const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, userId }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleBrowseClick = (e: React.MouseEvent) => {
-    console.log('🖱️ handleBrowseClick triggered');
-    e.preventDefault();
-    e.stopPropagation();
-    if (fileInputRef.current) {
-      console.log('📂 Triggering file input click');
-      fileInputRef.current.click();
-    } else {
-      console.error('❌ fileInputRef.current is null!');
-    }
-  };
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [location, setLocation] = useState('');
   const [locationData, setLocationData] = useState<LocationData | null>(null);
   const [billboardMetadata, setBillboardMetadata] = useState<BillboardMetadata | null>(null);
   const [error, setError] = useState('');
   const [locationError, setLocationError] = useState('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [brandData, setBrandData] = useState<BrandAnalysisData>({
     category: '',
     targetAge: '',
@@ -60,41 +49,33 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
     setError('');
 
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) {
-      if (validateFile(droppedFile)) {
-        setFile(droppedFile);
-
-        if (userId) {
-          activityLogger.logUpload(userId, droppedFile.name, droppedFile.size, droppedFile.type);
-        }
+    if (droppedFile && validateFile(droppedFile)) {
+      setFile(droppedFile);
+      if (droppedFile.type.startsWith('image/')) {
+        setPreviewUrl(URL.createObjectURL(droppedFile));
+      }
+      if (userId) {
+        activityLogger.logUpload(userId, droppedFile.name, droppedFile.size, droppedFile.type);
       }
     }
   }, [userId]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('📂 handleFileSelect triggered');
-    console.log('📂 Input files:', e.target.files);
     const selectedFile = e.target.files?.[0];
-    console.log('📂 Selected file:', selectedFile?.name, selectedFile?.size);
-    if (selectedFile) {
-      if (validateFile(selectedFile)) {
-        console.log('✅ File validated successfully');
-        setFile(selectedFile);
-
-        if (userId) {
-          activityLogger.logUpload(userId, selectedFile.name, selectedFile.size, selectedFile.type);
-        }
-      } else {
-        console.log('❌ File validation failed');
+    if (selectedFile && validateFile(selectedFile)) {
+      setFile(selectedFile);
+      if (selectedFile.type.startsWith('image/')) {
+        setPreviewUrl(URL.createObjectURL(selectedFile));
       }
-    } else {
-      console.log('⚠️ No file selected');
+      if (userId) {
+        activityLogger.logUpload(userId, selectedFile.name, selectedFile.size, selectedFile.type);
+      }
     }
   };
 
   const validateFile = (file: File): boolean => {
     const validTypes = ['image/jpeg', 'image/png', 'video/mp4'];
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    const maxSize = 50 * 1024 * 1024;
 
     if (!validTypes.includes(file.type)) {
       setError('Please upload a JPG, PNG, or MP4 file.');
@@ -125,24 +106,15 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
       return;
     }
 
-    // Clear any previous errors
     setError('');
     setLocationError('');
 
-    // Log the analysis activity
     if (userId) {
       activityLogger.logAnalysis(userId, location, 'billboard');
     }
 
-    // Use actual distance from location data, fallback to 100m
     const actualDistance = billboardMetadata?.location.distanceFromRoadM || 100;
     onAnalyze(file, location, actualDistance, locationData || undefined, billboardMetadata || undefined);
-  };
-
-  const handleLocationChange = (newLocation: string, newLocationData?: LocationData) => {
-    setLocation(newLocation);
-    setLocationData(newLocationData || null);
-    setLocationError('');
   };
 
   const handleBillboardLocationChange = (newLocation: string, metadata?: BillboardMetadata) => {
@@ -151,126 +123,107 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
     setLocationError('');
   };
 
+  const clearFile = () => {
+    setFile(null);
+    setPreviewUrl(null);
+  };
+
+  const hasAdvancedData = brandData.category || brandData.targetAge || brandData.campaignGoal || brandData.budgetRange;
+
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Brand Analysis Section */}
-      <div className="mb-8">
-        <BrandAnalysisForm onAnalysisChange={setBrandData} />
-      </div>
-
-      {/* Location Recommendations */}
-      <div className="mb-8">
-        <LocationRecommendations 
-          brandData={brandData}
-          allLocations={BillboardDataService.getAllLocations()}
-        />
-      </div>
-
-      <div className="bg-white border-l-4 border-navy-950 p-6 sm:p-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-navy-950 tracking-tight">Upload Your Billboard Creative</h2>
-          <p className="text-secondary mt-2">Get AI-powered readability analysis in seconds</p>
+    <div className="space-y-8">
+      {/* Primary Upload Card */}
+      <div className="bg-white p-8 lg:p-10">
+        {/* Header - tight spacing */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-navy-950 tracking-tight">Analyze Your Billboard</h2>
+          <p className="text-secondary mt-1">Upload your creative for AI-powered readability scoring</p>
         </div>
 
-        {/* File Upload Area */}
-        <div
-          className={`relative border-2 border-dashed p-8 sm:p-16 text-center transition-all duration-200 ${
-            dragActive
-              ? 'border-success-500 bg-success-50'
-              : file
+        {/* Upload Area or Preview - this is the HERO */}
+        {!file ? (
+          <div
+            className={`relative border-2 border-dashed p-12 lg:p-16 text-center transition-all duration-200 cursor-pointer ${
+              dragActive
                 ? 'border-success-500 bg-success-50'
-                : 'border-surface-300 bg-surface-50 hover:border-success-400 hover:bg-success-50/50'
-          }`}
-          style={{
-            cursor: file ? 'default' : 'pointer'
-          }}
-          onDragEnter={handleDrag}
-          onDragLeave={handleDrag}
-          onDragOver={handleDrag}
-          onDrop={handleDrop}
-          onClick={(e) => {
-            if (!file && e.target === e.currentTarget) {
-              console.log('🖱️ Container clicked, triggering file input');
-              fileInputRef.current?.click();
-            }
-          }}
-        >
+                : 'border-surface-300 bg-surface-50 hover:border-navy-300 hover:bg-surface-100'
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              onChange={handleFileSelect}
+              accept=".jpg,.jpeg,.png,.mp4"
+              className="hidden"
+            />
 
-          <input
-            ref={fileInputRef}
-            id="file-upload-input-unique"
-            type="file"
-            onChange={handleFileSelect}
-            accept=".jpg,.jpeg,.png,.mp4"
-            style={{ display: 'none' }}
-          />
-
-          <div className="flex flex-col items-center space-y-6">
-            <div className={`w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-all duration-200 ${
-              dragActive || file
-                ? 'bg-success-500'
-                : 'bg-success-100'
-            }`}>
-              <Upload className={`w-10 h-10 sm:w-12 sm:h-12 transition-all duration-200 ${
-                dragActive || file ? 'text-white' : 'text-success-600'
-              }`} />
-            </div>
-
-            {file ? (
-              <div className="space-y-2">
-                <p className="text-xl font-bold text-success-700">{file.name}</p>
-                <p className="text-sm text-secondary font-medium">
-                  {(file.size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setFile(null);
-                  }}
-                  className="mt-2 text-sm text-secondary hover:text-danger-600 transition-colors underline"
-                >
-                  Remove and choose another
-                </button>
+            <div className="flex flex-col items-center">
+              <div className={`w-16 h-16 flex items-center justify-center mb-6 transition-colors ${
+                dragActive ? 'bg-success-500' : 'bg-navy-100'
+              }`}>
+                <Upload className={`w-8 h-8 ${dragActive ? 'text-white' : 'text-navy-600'}`} />
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div>
-                  <p className="text-xl sm:text-2xl font-bold text-navy-950 mb-2">
-                    Drag & drop your creative here
-                  </p>
-                  <p className="text-secondary">or</p>
-                </div>
-                <label
-                  htmlFor="file-upload-input-unique"
-                  onClick={() => {
-                    console.log('🖱️ Label clicked - native browser file picker should open');
-                  }}
-                  className="inline-flex items-center space-x-2 bg-success-500 hover:bg-success-600 text-white px-8 py-4 transition-colors cursor-pointer font-semibold text-lg"
-                >
-                  <Upload className="w-5 h-5" />
-                  <span>Browse Files</span>
-                </label>
-                <p className="text-sm text-secondary mt-4">
-                  Supports <span className="font-medium text-navy-600">JPG, PNG, MP4</span> files up to <span className="font-medium text-navy-600">50MB</span>
-                </p>
+
+              <p className="text-xl font-semibold text-navy-950 mb-2">
+                Drop your billboard creative here
+              </p>
+              <p className="text-secondary mb-6">or click to browse</p>
+
+              <span className="inline-flex items-center bg-navy-950 text-white px-6 py-3 font-medium hover:bg-navy-800 transition-colors">
+                <Upload className="w-4 h-4 mr-2" />
+                Choose File
+              </span>
+
+              <p className="text-xs text-secondary mt-6">
+                JPG, PNG, or MP4 up to 50MB
+              </p>
+            </div>
+          </div>
+        ) : (
+          /* File Preview - Billboard is the HERO */
+          <div className="space-y-4">
+            {previewUrl && (
+              <div className="relative bg-navy-950 p-3">
+                <img
+                  src={previewUrl}
+                  alt="Billboard preview"
+                  className="w-full max-h-[400px] object-contain mx-auto"
+                />
               </div>
             )}
-          </div>
-        </div>
-
-        {error && (
-          <div className="mt-6 p-4 bg-danger-50 border-l-4 border-danger-500">
-            <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 bg-danger-500 flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-xs font-bold">!</span>
+            <div className="flex items-center justify-between py-3 border-b border-surface-200">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-success-100 flex items-center justify-center">
+                  <Upload className="w-5 h-5 text-success-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-navy-950">{file.name}</p>
+                  <p className="text-sm text-secondary">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                </div>
               </div>
-              <p className="text-danger-700 text-sm font-medium">{error}</p>
+              <button
+                onClick={clearFile}
+                className="text-sm text-secondary hover:text-danger-600 transition-colors"
+              >
+                Remove
+              </button>
             </div>
           </div>
         )}
 
-        {/* Location Input */}
-        <div className="mt-8">
+        {error && (
+          <div className="mt-4 p-3 bg-danger-50 border-l-4 border-danger-500 flex items-center space-x-2">
+            <span className="text-danger-700 text-sm">{error}</span>
+          </div>
+        )}
+
+        {/* Location Input - Secondary importance */}
+        <div className="mt-8 pt-8 border-t border-surface-200">
           <label className="block text-sm font-semibold text-navy-700 mb-3">
             Billboard Location
           </label>
@@ -282,24 +235,18 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           />
         </div>
 
-        {/* Distance Information */}
+        {/* Distance Info - Contextual, appears when relevant */}
         {billboardMetadata?.location.distanceFromRoadM && (
-          <div className="mt-8 p-4 bg-success-50 border-l-4 border-success-500">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-success-100 flex items-center justify-center">
-                <Target className="w-5 h-5 text-success-600" />
-              </div>
-              <div>
-                <span className="text-sm text-secondary">Viewing Distance</span>
-                <p className="font-bold text-lg text-success-700">
-                  <span className="ltr-numbers">{billboardMetadata.location.distanceFromRoadM}</span>m from road
-                </p>
-              </div>
-            </div>
+          <div className="mt-4 flex items-center space-x-3 text-sm">
+            <Target className="w-4 h-4 text-success-600" />
+            <span className="text-secondary">Viewing distance:</span>
+            <span className="font-semibold text-navy-950 tabular-nums">
+              {billboardMetadata.location.distanceFromRoadM}m from road
+            </span>
           </div>
         )}
 
-        {/* Analyze Button */}
+        {/* Primary CTA - Full prominence */}
         <div className="mt-8">
           <button
             onClick={handleAnalyze}
@@ -312,11 +259,55 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                <span>Analyzing Billboard...</span>
+                <span>Analyzing...</span>
               </span>
             ) : 'Analyze Readability'}
           </button>
         </div>
+      </div>
+
+      {/* Advanced Options - Collapsed by default */}
+      <div className="bg-white">
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="w-full flex items-center justify-between p-5 text-left hover:bg-surface-50 transition-colors"
+        >
+          <div className="flex items-center space-x-3">
+            <Building2 className="w-5 h-5 text-navy-600" />
+            <div>
+              <span className="font-semibold text-navy-950">Advanced Options</span>
+              {hasAdvancedData && (
+                <span className="ml-2 text-xs bg-success-100 text-success-700 px-2 py-0.5">
+                  Configured
+                </span>
+              )}
+            </div>
+          </div>
+          {showAdvanced ? (
+            <ChevronUp className="w-5 h-5 text-navy-400" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-navy-400" />
+          )}
+        </button>
+
+        {showAdvanced && (
+          <div className="border-t border-surface-200">
+            {/* Brand Analysis */}
+            <div className="p-6 border-b border-surface-100">
+              <BrandAnalysisForm onAnalysisChange={setBrandData} />
+            </div>
+
+            {/* Location Recommendations - Only show if brand data exists */}
+            {brandData.category && (
+              <div className="p-6">
+                <LocationRecommendations
+                  brandData={brandData}
+                  allLocations={BillboardDataService.getAllLocations()}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

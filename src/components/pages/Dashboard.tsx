@@ -11,10 +11,9 @@ import TeamWorkspace from '../enterprise/TeamWorkspace';
 import ClientPortal from '../enterprise/ClientPortal';
 import { analyzeBillboardWithAI } from '../../services/openai';
 import { LocationData } from '../../services/locationService';
-import { TeamMember, Organization, Project, ClientPortal as ClientPortalType } from '../../types';
+import { Organization, ClientPortal as ClientPortalType } from '../../types';
 import { UserProfile, supabaseAuthService } from '../../services/supabaseAuth';
 import { activityLogger } from '../../services/activityLogger';
-import { AlertCircle, Lock, Calendar, Zap, Upload, ArrowRight } from 'lucide-react';
 
 interface DashboardProps {
   user: User;
@@ -111,7 +110,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       const accessCheck = supabaseAuthService.canAnalyze(userProfile);
       if (!accessCheck.allowed) {
         const toast = document.createElement('div');
-        toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md';
+        toast.className = 'fixed top-4 right-4 bg-danger-500 text-white px-6 py-3 z-50 max-w-md';
 
         const title = document.createElement('div');
         title.className = 'font-semibold mb-1';
@@ -138,15 +137,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     setAnalysisStage('uploading');
 
     try {
-      // Stage 1: Uploading
       setAnalysisProgress(25);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Stage 2: Analyzing
+
       setAnalysisStage('analyzing');
       setAnalysisProgress(50);
-      
-      // Enhanced location data with billboard metadata
+
       const enhancedLocationData = billboardMetadata ? {
         ...locationData,
         billboardMetadata
@@ -154,15 +150,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
 
       const aiAnalysis = await analyzeBillboardWithAI(file, location, distance, enhancedLocationData);
 
-      // Stage 3: Generating report
       setAnalysisStage('generating');
       setAnalysisProgress(75);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Stage 4: Complete
+
       setAnalysisStage('completed');
       setAnalysisProgress(100);
-      
+
       const analysis: AnalysisResult = {
         id: Date.now().toString(),
         score: aiAnalysis.overallScore,
@@ -196,10 +190,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         aiAnalysis: aiAnalysis.detailedAnalysis,
         status: 'completed'
       };
-      
+
       setCurrentAnalysis(analysis);
 
-      // Log analysis completion for audit trail
       await activityLogger.logAnalysisComplete(user.id, {
         analysisId: analysis.id,
         score: analysis.score,
@@ -215,7 +208,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         await supabaseAuthService.decrementTrialCredit(userProfile.id);
       }
 
-      // Add to history
       const historyItem: AnalysisHistory = {
         id: analysis.id,
         thumbnail: analysis.image,
@@ -225,15 +217,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         status: 'completed'
       };
       setAnalysisHistory(prev => [historyItem, ...prev]);
-      
+
     } catch (error) {
-      // Log analysis failure for audit trail
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       await activityLogger.logAnalysisFailed(user.id, location, errorMessage);
 
-      // Show detailed error message
       const toast = document.createElement('div');
-      toast.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-md relative';
+      toast.className = 'fixed top-4 right-4 bg-danger-500 text-white px-6 py-3 z-50 max-w-md relative';
 
       const title = document.createElement('div');
       title.className = 'font-semibold mb-1';
@@ -263,9 +253,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       setIsAnalyzing(false);
     }
   };
-    
+
   const handleSelectAnalysis = (id: string) => {
-    // In a real app, this would fetch the full analysis from the backend
     // TODO: Implement analysis selection
   };
 
@@ -284,31 +273,35 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     return diffDays;
   };
 
+  // Determine if user has history
+  const hasHistory = analysisHistory.length > 0;
+  const isNewUser = user.totalAnalyses === 0 && !hasHistory;
+
   return (
     <div className="min-h-screen bg-surface-50">
       {/* Dashboard Header */}
       <div className="bg-white border-b border-surface-200">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5">
+          <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-navy-950 tracking-tight">
+              <h1 className="text-xl font-bold text-navy-950 tracking-tight">
                 Dashboard
               </h1>
-              <p className="text-sm text-secondary mt-1">
-                Welcome back, <span className="font-semibold text-navy-950">{user.name}</span>
+              <p className="text-sm text-secondary">
+                Welcome back, {user.name}
               </p>
             </div>
 
-            {/* Trial banner - compact */}
+            {/* Trial banner - minimal */}
             {userProfile && userProfile.subscription_status === 'trial' && (
-              <div className="flex items-center space-x-3 bg-warning-50 border-l-4 border-warning-500 px-4 py-2.5">
-                <div>
-                  <p className="text-label text-warning-700">Trial</p>
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <p className="text-xs text-secondary">Trial</p>
                   <p className="text-sm font-semibold text-navy-950 tabular-nums">
-                    {getTrialDaysRemaining()} days, {userProfile.trial_credits_remaining} credits left
+                    {getTrialDaysRemaining()}d · {userProfile.trial_credits_remaining} credits
                   </p>
                 </div>
-                <button className="bg-warning-500 text-white px-3 py-1.5 text-sm font-semibold hover:bg-warning-600 transition-colors">
+                <button className="bg-navy-950 text-white px-4 py-2 text-sm font-medium hover:bg-navy-800 transition-colors">
                   Upgrade
                 </button>
               </div>
@@ -317,112 +310,75 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         </div>
       </div>
 
-      {/* Stats bar */}
+      {/* Stats bar - compact */}
       <UsageStats user={user} totalAnalyses={user.totalAnalyses} />
 
-      {/* Main content */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 lg:py-8">
+      {/* Main content - varied spacing */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
 
-      {activeView === 'analytics' && (user.plan === 'Enterprise' || user.plan === 'Professional') ? (
-        <EnterpriseAnalytics />
-      ) : activeView === 'team' && user.plan === 'Enterprise' ? (
-        <TeamWorkspace 
-          organization={mockOrganization}
-          currentUser={mockOrganization.members[0]}
-        />
-      ) : activeView === 'client-portal' ? (
-        <ClientPortal 
-          portal={mockClientPortal}
-          projects={[]}
-          analyses={analysisHistory.map(h => ({
-            id: h.id,
-            score: h.score,
-            image: h.thumbnail,
-            location: h.location,
-            distance: 100,
-            timestamp: h.timestamp,
-            criticalIssues: [],
-            minorIssues: [],
-            quickWins: [],
-            distanceAnalysis: { '50m': 85, '100m': h.score, '150m': h.score - 15 },
-            aiAnalysis: 'Mock analysis',
-            status: 'completed',
-            fontScore: Math.floor(h.score * 0.25),
-            contrastScore: Math.floor(h.score * 0.25),
-            layoutScore: Math.floor(h.score * 0.25),
-            ctaScore: Math.floor(h.score * 0.25)
-          }))}
-        />
-      ) : (
-        isAnalyzing ? (
-        <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
-      ) : currentAnalysis ? (
-        <AnalysisResults
-          analysis={currentAnalysis}
-          onNewAnalysis={handleNewAnalysis}
-          userId={user.id}
-        />
-      ) : user.totalAnalyses === 0 && analysisHistory.length === 0 ? (
-        /* Empty State for New Users */
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <UploadSection
-              onAnalyze={handleAnalyze}
-              isAnalyzing={isAnalyzing}
-              userId={user.id}
-            />
+        {activeView === 'analytics' && (user.plan === 'Enterprise' || user.plan === 'Professional') ? (
+          <EnterpriseAnalytics />
+        ) : activeView === 'team' && user.plan === 'Enterprise' ? (
+          <TeamWorkspace
+            organization={mockOrganization}
+            currentUser={mockOrganization.members[0]}
+          />
+        ) : activeView === 'client-portal' ? (
+          <ClientPortal
+            portal={mockClientPortal}
+            projects={[]}
+            analyses={analysisHistory.map(h => ({
+              id: h.id,
+              score: h.score,
+              image: h.thumbnail,
+              location: h.location,
+              distance: 100,
+              timestamp: h.timestamp,
+              criticalIssues: [],
+              minorIssues: [],
+              quickWins: [],
+              distanceAnalysis: { '50m': 85, '100m': h.score, '150m': h.score - 15 },
+              aiAnalysis: 'Mock analysis',
+              status: 'completed',
+              fontScore: Math.floor(h.score * 0.25),
+              contrastScore: Math.floor(h.score * 0.25),
+              layoutScore: Math.floor(h.score * 0.25),
+              ctaScore: Math.floor(h.score * 0.25)
+            }))}
+          />
+        ) : isAnalyzing ? (
+          <div className="max-w-2xl mx-auto">
+            <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
           </div>
-          <div className="lg:col-span-1">
-            <div className="bg-white p-6 border-l-4 border-success-500">
-              <div className="w-12 h-12 bg-success-50 flex items-center justify-center mb-4">
-                <Upload className="w-6 h-6 text-success-600" />
-              </div>
-              <h3 className="text-lg font-bold text-navy-950 mb-2 tracking-tight">
-                Start Your First Analysis
-              </h3>
-              <p className="text-sm text-secondary mb-5">
-                Upload your first billboard creative to get AI-powered readability insights.
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2.5 text-sm">
-                  <div className="w-1.5 h-1.5 bg-success-500"></div>
-                  <span className="text-navy-700">Instant AI analysis</span>
-                </div>
-                <div className="flex items-center space-x-2.5 text-sm">
-                  <div className="w-1.5 h-1.5 bg-info-500"></div>
-                  <span className="text-navy-700">Distance readability scores</span>
-                </div>
-                <div className="flex items-center space-x-2.5 text-sm">
-                  <div className="w-1.5 h-1.5 bg-warning-500"></div>
-                  <span className="text-navy-700">Actionable improvements</span>
-                </div>
-              </div>
-              <div className="mt-5 pt-4 border-t border-surface-200">
-                <p className="text-label text-navy-500 flex items-center space-x-2">
-                  <ArrowRight className="w-3 h-3" />
-                  <span>Drag & drop to upload</span>
-                </p>
-              </div>
+        ) : currentAnalysis ? (
+          <AnalysisResults
+            analysis={currentAnalysis}
+            onNewAnalysis={handleNewAnalysis}
+            userId={user.id}
+          />
+        ) : (
+          /* Upload Flow Layout */
+          <div className={`grid gap-8 ${hasHistory ? 'lg:grid-cols-[1fr,340px]' : 'max-w-3xl mx-auto'}`}>
+            {/* Main Upload Area */}
+            <div>
+              <UploadSection
+                onAnalyze={handleAnalyze}
+                isAnalyzing={isAnalyzing}
+                userId={user.id}
+              />
             </div>
+
+            {/* History Sidebar - only show if user has history */}
+            {hasHistory && (
+              <div className="lg:sticky lg:top-8 lg:self-start">
+                <AnalysisHistoryComponent
+                  history={analysisHistory}
+                  onSelectAnalysis={handleSelectAnalysis}
+                />
+              </div>
+            )}
           </div>
-        </div>
-      ) : (
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <UploadSection
-              onAnalyze={handleAnalyze}
-              isAnalyzing={isAnalyzing}
-              userId={user.id}
-            />
-          </div>
-          <div className="lg:col-span-1">
-            <AnalysisHistoryComponent
-              history={analysisHistory}
-              onSelectAnalysis={handleSelectAnalysis}
-            />
-          </div>
-        </div>
-      ))}
+        )}
       </div>
     </div>
   );

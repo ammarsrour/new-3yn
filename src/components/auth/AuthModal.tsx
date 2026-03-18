@@ -53,13 +53,13 @@ const AuthModal: React.FC<AuthModalProps> = ({
             <h2 className="text-xl font-bold text-white">
               {mode === 'login' ? t('auth.login.title') : t('auth.signup.title')}
             </h2>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-navy-400 text-sm mt-1">
               {mode === 'login' ? t('auth.login.subtitle') : t('auth.signup.subtitle')}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors p-1"
+            className="text-navy-400 hover:text-white transition-colors p-1"
           >
             <X className="w-5 h-5" />
           </button>
@@ -86,12 +86,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
                     {t('auth.fields.name')}
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-navy-400 w-5 h-5" />
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border-2 border-slate-200 focus:border-[#0f2942] focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 border-2 border-surface-200 focus:border-[#0f2942] focus:outline-none transition-colors"
                       placeholder={t('auth.fields.namePlaceholder')}
                       required
                     />
@@ -99,15 +99,15 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#0f2942] mb-2">
-                    Company Name <span className="text-slate-400 font-normal">(Optional)</span>
+                    Company Name <span className="text-navy-400 font-normal">(Optional)</span>
                   </label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                    <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-navy-400 w-5 h-5" />
                     <input
                       type="text"
                       value={company}
                       onChange={(e) => setCompany(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border-2 border-slate-200 focus:border-[#0f2942] focus:outline-none transition-colors"
+                      className="w-full pl-11 pr-4 py-3 border-2 border-surface-200 focus:border-[#0f2942] focus:outline-none transition-colors"
                       placeholder="Your company name"
                     />
                   </div>
@@ -120,12 +120,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 {t('auth.fields.email')}
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-navy-400 w-5 h-5" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-slate-200 focus:border-[#0f2942] focus:outline-none transition-colors"
+                  className="w-full pl-11 pr-4 py-3 border-2 border-surface-200 focus:border-[#0f2942] focus:outline-none transition-colors"
                   placeholder={t('auth.fields.emailPlaceholder')}
                   required
                 />
@@ -137,12 +137,12 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 {t('auth.fields.password')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-navy-400 w-5 h-5" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border-2 border-slate-200 focus:border-[#0f2942] focus:outline-none transition-colors"
+                  className="w-full pl-11 pr-4 py-3 border-2 border-surface-200 focus:border-[#0f2942] focus:outline-none transition-colors"
                   placeholder={t('auth.fields.passwordPlaceholder')}
                   required
                   minLength={6}
@@ -159,8 +159,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
             </button>
           </form>
 
-          <div className="text-center mt-6 pt-6 border-t border-slate-200">
-            <p className="text-slate-600 text-sm">
+          <div className="text-center mt-6 pt-6 border-t border-surface-200">
+            <p className="text-navy-600 text-sm">
               {mode === 'login' ? t('auth.messages.noAccount') : t('auth.messages.hasAccount')}{' '}
               <button
                 onClick={() => onSwitchMode(mode === 'login' ? 'signup' : 'login')}

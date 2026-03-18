@@ -51,7 +51,7 @@ const ContactSection: React.FC = () => {
                   <h4 className="font-semibold text-navy-950 text-sm">General Inquiries</h4>
                   <p className="text-secondary text-sm">Questions about our services</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-success-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                <ArrowRight className="w-4 h-4 text-navy-400 group-hover:text-success-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
               </a>
 
               <a
@@ -62,7 +62,7 @@ const ContactSection: React.FC = () => {
                   <h4 className="font-semibold text-navy-950 text-sm">Technical Support</h4>
                   <p className="text-secondary text-sm">Help with your account or analysis</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-info-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                <ArrowRight className="w-4 h-4 text-navy-400 group-hover:text-info-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
               </a>
 
               <a
@@ -73,7 +73,7 @@ const ContactSection: React.FC = () => {
                   <h4 className="font-semibold text-navy-950 text-sm">Partnerships</h4>
                   <p className="text-secondary text-sm">Explore collaboration opportunities</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-warning-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                <ArrowRight className="w-4 h-4 text-navy-400 group-hover:text-warning-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
               </a>
 
               <a
@@ -84,7 +84,7 @@ const ContactSection: React.FC = () => {
                   <h4 className="font-semibold text-navy-950 text-sm">Enterprise Demo</h4>
                   <p className="text-secondary text-sm">See 3YN in action for your team</p>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-gold-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
+                <ArrowRight className="w-4 h-4 text-navy-400 group-hover:text-gold-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-4" />
               </a>
             </div>
           </div>

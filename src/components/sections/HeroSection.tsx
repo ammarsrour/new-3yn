@@ -11,7 +11,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
   const isArabic = i18n.language === 'ar';
 
   return (
-    <section className="relative bg-slate-50 min-h-[90vh] flex items-center overflow-hidden">
+    <section className="relative bg-surface-50 min-h-[90vh] flex items-center overflow-hidden">
       {/* Dramatic navy accent block - asymmetric */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-[#0f2942] hidden lg:block" />
 

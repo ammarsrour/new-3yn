@@ -10,10 +10,10 @@ const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   const getColor = (score: number) => {
-    if (score >= 90) return '#10B981'; // green
-    if (score >= 70) return '#F97316'; // orange
-    if (score >= 50) return '#EAB308'; // yellow
-    return '#EF4444'; // red
+    if (score >= 90) return 'var(--color-success-500)';
+    if (score >= 70) return 'var(--color-warning-500)';
+    if (score >= 50) return 'var(--color-gold-500)';
+    return 'var(--color-danger-500)';
   };
 
   return (
@@ -24,7 +24,7 @@ const ScoreCircle: React.FC<ScoreCircleProps> = ({ score }) => {
           cx="50"
           cy="50"
           r="45"
-          stroke="#E5E7EB"
+          stroke="var(--color-surface-200)"
           strokeWidth="8"
           fill="transparent"
         />

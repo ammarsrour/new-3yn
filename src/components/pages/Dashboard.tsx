@@ -246,7 +246,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         : 'Please try again or contact support if the issue persists.';
 
       const closeBtn = document.createElement('button');
-      closeBtn.className = 'absolute top-1 right-2 text-white hover:text-gray-200';
+      closeBtn.className = 'absolute top-1 right-2 text-white hover:text-surface-200';
       closeBtn.textContent = '×';
       closeBtn.onclick = () => toast.remove();
 
@@ -285,7 +285,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-surface-50">
       {/* Dashboard Header */}
       <div className="bg-white border-b border-surface-200">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6">
@@ -398,7 +398,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                 </div>
               </div>
               <div className="mt-5 pt-4 border-t border-surface-200">
-                <p className="text-label text-slate-500 flex items-center space-x-2">
+                <p className="text-label text-navy-500 flex items-center space-x-2">
                   <ArrowRight className="w-3 h-3" />
                   <span>Drag & drop to upload</span>
                 </p>

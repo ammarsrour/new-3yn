@@ -9,11 +9,11 @@ interface ComplianceSectionProps {
   location: string;
 }
 
-const ComplianceSection: React.FC<ComplianceSectionProps> = ({ 
-  score, 
-  arabicTextDetected, 
+const ComplianceSection: React.FC<ComplianceSectionProps> = ({
+  score,
+  arabicTextDetected,
   culturalCompliance,
-  location 
+  location
 }) => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
@@ -23,7 +23,7 @@ const ComplianceSection: React.FC<ComplianceSectionProps> = ({
       id: 'mtcit',
       title: t('compliance.mtcit'),
       status: arabicTextDetected ? 'passed' : 'warning',
-      description: arabicTextDetected 
+      description: arabicTextDetected
         ? 'Arabic text detected and analyzed for MTCIT compliance'
         : 'No Arabic text detected - may require Arabic content per MTCIT guidelines'
     },
@@ -31,7 +31,7 @@ const ComplianceSection: React.FC<ComplianceSectionProps> = ({
       id: 'tra',
       title: t('compliance.tra'),
       status: score >= 70 ? 'passed' : 'warning',
-      description: score >= 70 
+      description: score >= 70
         ? 'Billboard meets TRA readability standards'
         : 'Billboard may not meet TRA minimum readability requirements'
     },
@@ -48,51 +48,51 @@ const ComplianceSection: React.FC<ComplianceSectionProps> = ({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'passed':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-success-500" />;
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
+        return <AlertTriangle className="w-5 h-5 text-warning-500" />;
       case 'review':
-        return <FileText className="w-5 h-5 text-blue-500" />;
+        return <FileText className="w-5 h-5 text-info-500" />;
       default:
-        return <AlertTriangle className="w-5 h-5 text-gray-400" />;
+        return <AlertTriangle className="w-5 h-5 text-navy-400" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'passed':
-        return 'bg-green-50 border-green-200';
+        return 'bg-success-50 border-l-4 border-success-500';
       case 'warning':
-        return 'bg-yellow-50 border-yellow-200';
+        return 'bg-warning-50 border-l-4 border-warning-500';
       case 'review':
-        return 'bg-blue-50 border-blue-200';
+        return 'bg-info-50 border-l-4 border-info-500';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-surface-50 border-l-4 border-surface-300';
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <div className="bg-white border-l-4 border-navy-950 p-6">
       <div className="flex items-center space-x-2 mb-6">
-        <Shield className="w-6 h-6 text-blue-500" />
-        <h3 className="text-xl font-semibold text-gray-900">
+        <Shield className="w-6 h-6 text-info-500" />
+        <h3 className="text-xl font-semibold text-navy-950 tracking-tight">
           {t('compliance.title')}
         </h3>
       </div>
 
       <div className="space-y-4">
         {complianceChecks.map((check) => (
-          <div 
+          <div
             key={check.id}
-            className={`border rounded-lg p-4 ${getStatusColor(check.status)}`}
+            className={`p-4 ${getStatusColor(check.status)}`}
           >
             <div className="flex items-start space-x-3">
               {getStatusIcon(check.status)}
               <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 mb-1">
+                <h4 className="font-semibold text-navy-950 mb-1">
                   {check.title}
                 </h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-secondary">
                   {check.description}
                 </p>
               </div>
@@ -102,21 +102,21 @@ const ComplianceSection: React.FC<ComplianceSectionProps> = ({
       </div>
 
       {/* MENA-Specific Recommendations */}
-      <div className="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4">
-        <h4 className="font-semibold text-gray-900 mb-3">
+      <div className="mt-6 bg-surface-50 border-l-4 border-success-500 p-4">
+        <h4 className="font-semibold text-navy-950 mb-3">
           {isArabic ? 'توصيات خاصة بسوق عُمان' : 'Oman Market Recommendations'}
         </h4>
-        <ul className="space-y-2 text-sm text-gray-700">
+        <ul className="space-y-2 text-sm text-navy-700">
           <li className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
+            <span className="w-1.5 h-1.5 bg-success-500 mt-2 flex-shrink-0"></span>
             <span>{t('compliance.recommendations.arabicPercentage')}</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></span>
+            <span className="w-1.5 h-1.5 bg-info-500 mt-2 flex-shrink-0"></span>
             <span>{t('compliance.recommendations.trademark')}</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></span>
+            <span className="w-1.5 h-1.5 bg-navy-500 mt-2 flex-shrink-0"></span>
             <span>{t('compliance.recommendations.culturalSensitivity')}</span>
           </li>
         </ul>
@@ -124,7 +124,7 @@ const ComplianceSection: React.FC<ComplianceSectionProps> = ({
 
       {/* Regional Badge */}
       {location.includes('Oman') || location.includes('عُمان') || location.includes('مسقط') && (
-        <div className="mt-4 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+        <div className="mt-4 inline-flex items-center px-3 py-1 text-sm font-medium bg-success-100 text-success-800">
           <span className="mr-2">🇴🇲</span>
           {isArabic ? 'متخصص في السوق العُماني' : 'Oman Market Specialist'}
         </div>

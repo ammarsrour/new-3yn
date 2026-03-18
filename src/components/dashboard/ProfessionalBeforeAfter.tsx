@@ -32,19 +32,18 @@ interface ProfessionalBeforeAfterProps {
   currentScore: number;
 }
 
-const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({ 
-  originalImage, 
+const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
+  originalImage,
   aiAnalysis,
-  currentScore 
+  currentScore
 }) => {
   const [selectedImprovement, setSelectedImprovement] = useState<string>('all');
   const [showSlider, setShowSlider] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(50);
 
-  // Generate improvements based on AI analysis
   const generateImprovements = (): Improvement[] => {
     const improvements: Improvement[] = [];
-    
+
     if (aiAnalysis) {
       const allText = [
         ...aiAnalysis.criticalIssues.map(i => `${i.title} ${i.description}`),
@@ -53,7 +52,6 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         aiAnalysis.detailedAnalysis
       ].join(' ').toLowerCase();
 
-      // Font improvements
       if (allText.includes('font') || allText.includes('text size') || allText.includes('too small')) {
         improvements.push({
           id: 'font',
@@ -76,7 +74,6 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         });
       }
 
-      // Contrast improvements
       if (allText.includes('contrast') || allText.includes('4.5:1') || allText.includes('darker')) {
         improvements.push({
           id: 'contrast',
@@ -99,7 +96,6 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         });
       }
 
-      // Layout improvements
       if (allText.includes('layout') || allText.includes('simplify') || allText.includes('complex')) {
         improvements.push({
           id: 'layout',
@@ -122,7 +118,6 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         });
       }
 
-      // Arabic text improvements
       if (allText.includes('arabic') || allText.includes('60%') || allText.includes('mtcit')) {
         improvements.push({
           id: 'arabic',
@@ -170,26 +165,26 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'high':
-        return 'text-red-600 bg-red-100';
+        return 'text-danger-600 bg-danger-100';
       case 'medium':
-        return 'text-yellow-600 bg-yellow-100';
+        return 'text-warning-600 bg-warning-100';
       case 'low':
-        return 'text-green-600 bg-green-100';
+        return 'text-success-600 bg-success-100';
       default:
-        return 'text-gray-600 bg-gray-100';
+        return 'text-navy-600 bg-surface-100';
     }
   };
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return 'text-green-600 bg-green-100';
+        return 'text-success-600 bg-success-100';
       case 'medium':
-        return 'text-yellow-600 bg-yellow-100';
+        return 'text-warning-600 bg-warning-100';
       case 'hard':
-        return 'text-red-600 bg-red-100';
+        return 'text-danger-600 bg-danger-100';
       default:
-        return 'text-gray-600 bg-gray-100';
+        return 'text-navy-600 bg-surface-100';
     }
   };
 
@@ -197,8 +192,8 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
   const totalScoreImprovement = improvements.reduce((sum, imp) => sum + (imp.afterMetrics.score - imp.beforeMetrics.score), 0);
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+    <div className="bg-white border-l-4 border-navy-950 p-6">
+      <h3 className="text-xl font-semibold text-navy-950 mb-6 tracking-tight">
         Professional Before/After Analysis
       </h3>
 
@@ -206,10 +201,10 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={() => setSelectedImprovement('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${
             selectedImprovement === 'all'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-navy-950 text-white'
+              : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
           All Improvements
@@ -218,10 +213,10 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
           <button
             key={improvement.id}
             onClick={() => setSelectedImprovement(improvement.id)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors duration-200 ${
               selectedImprovement === improvement.id
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-navy-950 text-white'
+                : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
             {getImprovementIcon(improvement.type)}
@@ -235,41 +230,40 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         {/* Before */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900 flex items-center">
-              <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+            <h4 className="text-lg font-semibold text-navy-950 flex items-center">
+              <div className="w-2 h-2 bg-danger-500 mr-2"></div>
               Current Design
             </h4>
-            <div className="text-sm text-gray-500">Score: {currentScore}/100</div>
+            <div className="text-sm text-secondary tabular-nums">Score: {currentScore}/100</div>
           </div>
-          
+
           <div className="relative group">
             <img
               src={originalImage}
               alt="Original billboard"
-              className="w-full h-64 object-cover rounded-lg border-2 border-red-200"
+              className="w-full h-64 object-cover border-l-4 border-danger-500"
             />
-            
+
             {/* Problem Indicators */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {improvements.map((improvement, index) => (
                 <div
                   key={improvement.id}
-                  className="absolute bg-red-500 text-white px-2 py-1 rounded text-xs font-medium"
+                  className="absolute bg-danger-500 text-white px-2 py-1 text-xs font-medium"
                   style={{
                     top: `${20 + index * 15}%`,
                     left: `${10 + index * 20}%`
                   }}
                 >
-                  ⚠️ {improvement.type}
+                  {improvement.type}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Before Metrics */}
           {selectedImprovementData && (
-            <div className="mt-4 bg-red-50 rounded-lg p-4">
-              <h5 className="font-medium text-red-800 mb-2">Current Issues:</h5>
+            <div className="mt-4 bg-danger-50 border-l-4 border-danger-500 p-4">
+              <h5 className="font-medium text-danger-800 mb-2">Current Issues:</h5>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Readability:</span>
@@ -286,7 +280,7 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
 
         {/* Arrow */}
         <div className="hidden lg:flex items-center justify-center">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg">
+          <div className="bg-navy-950 text-white w-16 h-16 flex items-center justify-center">
             <ArrowRight className="w-8 h-8" />
           </div>
         </div>
@@ -294,28 +288,28 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
         {/* After */}
         <div className="lg:col-start-2">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-gray-900 flex items-center">
-              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+            <h4 className="text-lg font-semibold text-navy-950 flex items-center">
+              <div className="w-2 h-2 bg-success-500 mr-2"></div>
               Optimized Design
             </h4>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-secondary tabular-nums">
               Score: {selectedImprovementData ? selectedImprovementData.afterMetrics.score : Math.min(currentScore + totalScoreImprovement, 95)}/100
             </div>
           </div>
-          
+
           <div className="relative group">
             <img
               src={originalImage}
               alt="Optimized billboard"
-              className="w-full h-64 object-cover rounded-lg border-2 border-green-200"
+              className="w-full h-64 object-cover border-l-4 border-success-500"
             />
-            
+
             {/* Improvement Overlays */}
             <div className="absolute inset-0">
               {(selectedImprovement === 'all' ? improvements : selectedImprovementData ? [selectedImprovementData] : []).map((improvement, index) => (
                 <div
                   key={improvement.id}
-                  className="absolute bg-green-500 bg-opacity-90 text-white px-3 py-2 rounded-lg shadow-lg"
+                  className="absolute bg-success-500 text-white px-3 py-2"
                   style={{
                     top: `${15 + index * 20}%`,
                     right: `${10 + index * 15}%`
@@ -334,19 +328,17 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
               ))}
             </div>
 
-            {/* Before/After Slider Toggle */}
             <button
               onClick={() => setShowSlider(!showSlider)}
-              className="absolute bottom-4 left-4 bg-blue-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-600 transition-colors"
+              className="absolute bottom-4 left-4 bg-navy-950 text-white px-3 py-2 text-sm hover:bg-navy-800 transition-colors"
             >
               {showSlider ? 'Hide Slider' : 'Show Comparison'}
             </button>
           </div>
 
-          {/* After Metrics */}
           {selectedImprovementData && (
-            <div className="mt-4 bg-green-50 rounded-lg p-4">
-              <h5 className="font-medium text-green-800 mb-2">After Improvements:</h5>
+            <div className="mt-4 bg-success-50 border-l-4 border-success-500 p-4">
+              <h5 className="font-medium text-success-800 mb-2">After Improvements:</h5>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Readability:</span>
@@ -364,8 +356,8 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
 
       {/* Interactive Slider */}
       {showSlider && (
-        <div className="mb-6 bg-gray-50 rounded-lg p-4">
-          <h4 className="font-medium text-gray-900 mb-3">Interactive Comparison</h4>
+        <div className="mb-6 bg-surface-50 p-4">
+          <h4 className="font-medium text-navy-950 mb-3">Interactive Comparison</h4>
           <div className="relative">
             <input
               type="range"
@@ -373,11 +365,11 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
               max="100"
               value={sliderPosition}
               onChange={(e) => setSliderPosition(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-2 bg-surface-200 appearance-none cursor-pointer"
             />
-            <div className="flex justify-between text-sm text-gray-600 mt-2">
+            <div className="flex justify-between text-sm text-secondary mt-2">
               <span>Before</span>
-              <span>{sliderPosition}% Improved</span>
+              <span className="tabular-nums">{sliderPosition}% Improved</span>
               <span>After</span>
             </div>
           </div>
@@ -386,33 +378,33 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
 
       {/* Improvement Details */}
       {selectedImprovementData && (
-        <div className="bg-blue-50 rounded-lg p-6 mb-6">
+        <div className="bg-info-50 border-l-4 border-info-500 p-6 mb-6">
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white">
+            <div className="w-12 h-12 bg-info-500 flex items-center justify-center text-white">
               {getImprovementIcon(selectedImprovementData.type)}
             </div>
             <div className="flex-1">
-              <h4 className="text-lg font-semibold text-blue-900 mb-2">
+              <h4 className="text-lg font-semibold text-info-900 mb-2">
                 {selectedImprovementData.title}
               </h4>
-              <p className="text-blue-800 mb-4">
+              <p className="text-info-800 mb-4">
                 {selectedImprovementData.description}
               </p>
-              
+
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(selectedImprovementData.impact)}`}>
+                  <span className={`px-2 py-1 text-xs font-medium ${getImpactColor(selectedImprovementData.impact)}`}>
                     {selectedImprovementData.impact.toUpperCase()} IMPACT
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(selectedImprovementData.difficulty)}`}>
+                  <span className={`px-2 py-1 text-xs font-medium ${getDifficultyColor(selectedImprovementData.difficulty)}`}>
                     {selectedImprovementData.difficulty.toUpperCase()} TO IMPLEMENT
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-4 h-4 text-green-600" />
-                  <span className="text-green-600 font-medium">+{selectedImprovementData.roiEstimate}% ROI</span>
+                  <TrendingUp className="w-4 h-4 text-success-600" />
+                  <span className="text-success-600 font-medium tabular-nums">+{selectedImprovementData.roiEstimate}% ROI</span>
                 </div>
               </div>
             </div>
@@ -422,24 +414,24 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
 
       {/* Overall Impact Summary */}
       <div className="grid md:grid-cols-4 gap-4">
-        <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">+{totalScoreImprovement}</div>
-          <div className="text-sm text-gray-600">Score Improvement</div>
+        <div className="text-center p-4 bg-success-50 border-l-4 border-success-500">
+          <div className="text-2xl font-bold text-success-600 tabular-nums">+{totalScoreImprovement}</div>
+          <div className="text-sm text-secondary">Score Improvement</div>
         </div>
-        <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">+{totalROI}%</div>
-          <div className="text-sm text-gray-600">Expected ROI</div>
+        <div className="text-center p-4 bg-info-50 border-l-4 border-info-500">
+          <div className="text-2xl font-bold text-info-600 tabular-nums">+{totalROI}%</div>
+          <div className="text-sm text-secondary">Expected ROI</div>
         </div>
-        <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-          <div className="text-2xl font-bold text-purple-600 flex items-center justify-center">
+        <div className="text-center p-4 bg-navy-50 border-l-4 border-navy-500">
+          <div className="text-2xl font-bold text-navy-700 flex items-center justify-center">
             <Award className="w-6 h-6 mr-1" />
             A+
           </div>
-          <div className="text-sm text-gray-600">Final Grade</div>
+          <div className="text-sm text-secondary">Final Grade</div>
         </div>
-        <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-          <div className="text-2xl font-bold text-orange-600">2-3 hrs</div>
-          <div className="text-sm text-gray-600">Implementation</div>
+        <div className="text-center p-4 bg-warning-50 border-l-4 border-warning-500">
+          <div className="text-2xl font-bold text-warning-600">2-3 hrs</div>
+          <div className="text-sm text-secondary">Implementation</div>
         </div>
       </div>
     </div>

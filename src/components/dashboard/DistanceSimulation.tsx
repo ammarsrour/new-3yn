@@ -10,9 +10,9 @@ interface DistanceSimulationProps {
   };
 }
 
-const DistanceSimulation: React.FC<DistanceSimulationProps> = ({ 
-  imageUrl, 
-  distanceAnalysis 
+const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
+  imageUrl,
+  distanceAnalysis
 }) => {
   const [selectedDistance, setSelectedDistance] = useState<'50m' | '100m' | '150m'>('100m');
 
@@ -43,9 +43,9 @@ const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
   };
 
   const getReadabilityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return 'text-success-600';
+    if (score >= 60) return 'text-warning-600';
+    return 'text-danger-600';
   };
 
   const getSpeedForDistance = (distance: string) => {
@@ -62,8 +62,8 @@ const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+    <div className="bg-white border-l-4 border-navy-950 p-6">
+      <h3 className="text-xl font-semibold text-navy-950 mb-6 flex items-center tracking-tight">
         <Eye className="w-5 h-5 mr-2" />
         Distance Simulation
       </h3>
@@ -74,14 +74,14 @@ const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
           <button
             key={distance}
             onClick={() => setSelectedDistance(distance)}
-            className={`flex-1 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors duration-200 ${
               selectedDistance === distance
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-navy-950 text-white'
+                : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
             <div className="text-center">
-              <div className="font-bold">{distance}</div>
+              <div className="font-bold tabular-nums">{distance}</div>
               <div className="text-xs opacity-75">
                 {getSpeedForDistance(distance)}
               </div>
@@ -91,24 +91,24 @@ const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
       </div>
 
       {/* Simulation Display */}
-      <div className="relative bg-gradient-to-b from-sky-200 to-gray-300 rounded-lg p-8 mb-6 overflow-hidden">
+      <div className="relative bg-surface-200 p-8 mb-6 overflow-hidden">
         {/* Road/Environment */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gray-600"></div>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-yellow-400 rounded"></div>
-        
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-navy-600"></div>
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-warning-400"></div>
+
         {/* Billboard Simulation */}
         <div className="flex justify-center items-center h-64">
           <div className={`transition-all duration-500 ${getScaleLevel(selectedDistance)}`}>
             <img
               src={imageUrl}
               alt="Billboard at distance"
-              className={`w-80 h-48 object-cover rounded-lg shadow-lg transition-all duration-500 ${getBlurLevel(selectedDistance)}`}
+              className={`w-80 h-48 object-cover transition-all duration-500 ${getBlurLevel(selectedDistance)}`}
             />
           </div>
         </div>
 
         {/* Driver's View Indicator */}
-        <div className="absolute bottom-8 left-8 flex items-center space-x-2 bg-black bg-opacity-50 text-white px-3 py-2 rounded-lg">
+        <div className="absolute bottom-8 left-8 flex items-center space-x-2 bg-navy-950/80 text-white px-3 py-2">
           <Car className="w-4 h-4" />
           <span className="text-sm">Driver's View</span>
         </div>
@@ -116,33 +116,33 @@ const DistanceSimulation: React.FC<DistanceSimulationProps> = ({
 
       {/* Analysis Results */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="text-center p-4 bg-gray-50 rounded-lg">
-          <div className={`text-2xl font-bold ${getReadabilityColor(distanceAnalysis[selectedDistance])}`}>
-            {distanceAnalysis[selectedDistance].toFixed(2)}/100
+        <div className="text-center p-4 bg-surface-50 border-l-4 border-success-500">
+          <div className={`text-2xl font-bold tabular-nums ${getReadabilityColor(distanceAnalysis[selectedDistance])}`}>
+            {distanceAnalysis[selectedDistance].toFixed(0)}/100
           </div>
-          <div className="text-sm text-gray-600">Readability Score</div>
+          <div className="text-sm text-secondary">Readability Score</div>
         </div>
-        <div className="text-center p-4 bg-gray-50 rounded-lg">
-          <div className="text-2xl font-bold text-blue-600">
+        <div className="text-center p-4 bg-surface-50 border-l-4 border-info-500">
+          <div className="text-2xl font-bold text-info-600 tabular-nums">
             {selectedDistance}
           </div>
-          <div className="text-sm text-gray-600">Viewing Distance</div>
+          <div className="text-sm text-secondary">Viewing Distance</div>
         </div>
-        <div className="text-center p-4 bg-gray-50 rounded-lg">
-          <div className="text-2xl font-bold text-purple-600 flex items-center justify-center">
-            <Gauge className="w-6 h-6 mr-1" />
-            {getSpeedForDistance(selectedDistance)}
+        <div className="text-center p-4 bg-surface-50 border-l-4 border-navy-500">
+          <div className="text-2xl font-bold text-navy-700 flex items-center justify-center">
+            <Gauge className="w-5 h-5 mr-1" />
+            <span className="tabular-nums">{getSpeedForDistance(selectedDistance)}</span>
           </div>
-          <div className="text-sm text-gray-600">Traffic Speed</div>
+          <div className="text-sm text-secondary">Traffic Speed</div>
         </div>
       </div>
 
       {/* Distance-Specific Recommendations */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-semibold text-blue-900 mb-2">
+      <div className="bg-info-50 border-l-4 border-info-500 p-4">
+        <h4 className="font-semibold text-info-900 mb-2">
           Recommendations for {selectedDistance} viewing:
         </h4>
-        <ul className="text-blue-800 text-sm space-y-1">
+        <ul className="text-info-800 text-sm space-y-1">
           {selectedDistance === '50m' && (
             <>
               <li>• Current font size is adequate for close viewing</li>

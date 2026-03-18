@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Eye, Car, Gauge, Cloud, Sun, Wind } from 'lucide-react';
 
 interface AdvancedDistanceSimulatorProps {
@@ -10,23 +10,20 @@ interface AdvancedDistanceSimulatorProps {
   };
 }
 
-const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({ 
-  imageUrl, 
-  distanceAnalysis 
+const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
+  imageUrl,
+  distanceAnalysis
 }) => {
   const [selectedDistance, setSelectedDistance] = useState<number>(100);
   const [selectedSpeed, setSelectedSpeed] = useState<number>(45);
   const [weatherCondition, setWeatherCondition] = useState<'clear' | 'fog' | 'sandstorm'>('clear');
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const distances = [50, 75, 100, 125, 150, 200];
-  const speeds = [25, 35, 45, 55, 65, 80];
-
   const getBlurLevel = (distance: number, speed: number, weather: string) => {
-    let baseBlur = Math.max(0, (distance - 50) / 25); // Base blur from distance
-    const speedBlur = Math.max(0, (speed - 25) / 20); // Additional blur from speed
+    let baseBlur = Math.max(0, (distance - 50) / 25);
+    const speedBlur = Math.max(0, (speed - 25) / 20);
     let weatherBlur = 0;
-    
+
     switch (weather) {
       case 'fog':
         weatherBlur = 2;
@@ -35,7 +32,7 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
         weatherBlur = 4;
         break;
     }
-    
+
     return Math.min(baseBlur + speedBlur + weatherBlur, 8);
   };
 
@@ -64,17 +61,15 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
       const ratio = (distance - 100) / 50;
       return Math.round(distanceAnalysis['100m'] * (1 - ratio) + distanceAnalysis['150m'] * ratio);
     }
-    // Extrapolate for distances > 150m
     const decline = (distanceAnalysis['100m'] - distanceAnalysis['150m']) / 50;
     return Math.max(20, Math.round(distanceAnalysis['150m'] - decline * (distance - 150)));
   };
 
   const getViewingTime = (speed: number) => {
-    // Approximate viewing time based on billboard size and speed
-    const billboardWidth = 14; // meters (standard billboard)
-    const viewingAngle = 60; // degrees
+    const billboardWidth = 14;
+    const viewingAngle = 60;
     const viewingDistance = billboardWidth / Math.tan((viewingAngle * Math.PI) / 360);
-    return (viewingDistance * 2) / (speed * 0.44704); // Convert mph to m/s
+    return (viewingDistance * 2) / (speed * 0.44704);
   };
 
   const getWeatherIcon = (weather: string) => {
@@ -91,9 +86,9 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
   const getWeatherOverlay = (weather: string) => {
     switch (weather) {
       case 'fog':
-        return 'bg-gradient-to-b from-gray-300/30 to-gray-500/20';
+        return 'bg-surface-300/30';
       case 'sandstorm':
-        return 'bg-gradient-to-b from-yellow-300/40 to-orange-400/30';
+        return 'bg-warning-300/40';
       default:
         return '';
     }
@@ -108,8 +103,8 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
   const viewingTime = getViewingTime(selectedSpeed);
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+    <div className="bg-white border-l-4 border-navy-950 p-6">
+      <h3 className="text-xl font-semibold text-navy-950 mb-6 flex items-center tracking-tight">
         <Eye className="w-5 h-5 mr-2" />
         Advanced Distance Simulation
       </h3>
@@ -118,8 +113,8 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
       <div className="grid md:grid-cols-3 gap-6 mb-6">
         {/* Distance Control */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Viewing Distance: {selectedDistance}m
+          <label className="block text-sm font-medium text-navy-700 mb-3">
+            Viewing Distance: <span className="tabular-nums">{selectedDistance}m</span>
           </label>
           <input
             type="range"
@@ -128,9 +123,9 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
             step="25"
             value={selectedDistance}
             onChange={(e) => setSelectedDistance(parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 bg-surface-200 appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-secondary mt-1 tabular-nums">
             <span>50m</span>
             <span>125m</span>
             <span>200m</span>
@@ -139,8 +134,8 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
 
         {/* Speed Control */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Traffic Speed: {selectedSpeed} mph
+          <label className="block text-sm font-medium text-navy-700 mb-3">
+            Traffic Speed: <span className="tabular-nums">{selectedSpeed} mph</span>
           </label>
           <input
             type="range"
@@ -149,9 +144,9 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
             step="5"
             value={selectedSpeed}
             onChange={(e) => setSelectedSpeed(parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            className="w-full h-2 bg-surface-200 appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-secondary mt-1 tabular-nums">
             <span>25mph</span>
             <span>55mph</span>
             <span>80mph</span>
@@ -160,7 +155,7 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
 
         {/* Weather Control */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-navy-700 mb-3">
             Weather Conditions
           </label>
           <div className="flex space-x-2">
@@ -168,10 +163,10 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
               <button
                 key={weather}
                 onClick={() => setWeatherCondition(weather)}
-                className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-1 ${
+                className={`flex-1 px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center justify-center space-x-1 ${
                   weatherCondition === weather
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-navy-950 text-white'
+                    : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
                 }`}
               >
                 {getWeatherIcon(weather)}
@@ -183,26 +178,26 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
       </div>
 
       {/* Simulation Display */}
-      <div className="relative bg-gradient-to-b from-sky-200 to-gray-300 rounded-lg p-8 mb-6 overflow-hidden min-h-[400px]">
+      <div className="relative bg-surface-200 p-8 mb-6 overflow-hidden min-h-[400px]">
         {/* Weather Overlay */}
         {weatherCondition !== 'clear' && (
           <div className={`absolute inset-0 ${getWeatherOverlay(weatherCondition)} pointer-events-none`}></div>
         )}
 
         {/* Road Environment */}
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gray-600"></div>
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-yellow-400 rounded"></div>
-        
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-navy-600"></div>
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-40 h-1 bg-warning-400"></div>
+
         {/* Distance Markers */}
-        <div className="absolute bottom-24 left-4 text-white text-sm bg-black bg-opacity-50 px-2 py-1 rounded">
+        <div className="absolute bottom-24 left-4 text-white text-sm bg-navy-950/80 px-2 py-1 tabular-nums">
           {selectedDistance}m
         </div>
 
         {/* Billboard Simulation */}
         <div className="flex justify-center items-center h-80">
-          <div 
+          <div
             className={`transition-all duration-500 ${isAnimating ? 'animate-pulse' : ''}`}
-            style={{ 
+            style={{
               transform: `scale(${getScaleLevel(selectedDistance)})`,
               filter: `blur(${getBlurLevel(selectedDistance, selectedSpeed, weatherCondition)}px)`,
               opacity: getOpacity(weatherCondition)
@@ -211,23 +206,23 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
             <img
               src={imageUrl}
               alt="Billboard at distance"
-              className="w-96 h-60 object-cover rounded-lg shadow-2xl"
+              className="w-96 h-60 object-cover"
             />
           </div>
         </div>
 
         {/* Driver's View Indicator */}
-        <div className="absolute bottom-8 left-8 flex items-center space-x-2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg">
+        <div className="absolute bottom-8 left-8 flex items-center space-x-2 bg-navy-950/80 text-white px-4 py-2">
           <Car className="w-5 h-5" />
           <span className="text-sm font-medium">Driver's View</span>
           <Gauge className="w-4 h-4 ml-2" />
-          <span className="text-sm">{selectedSpeed} mph</span>
+          <span className="text-sm tabular-nums">{selectedSpeed} mph</span>
         </div>
 
         {/* Movement Simulation Button */}
         <button
           onClick={simulateMovement}
-          className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
+          className="absolute top-4 right-4 bg-navy-950 text-white px-4 py-2 hover:bg-navy-800 transition-colors flex items-center space-x-2"
         >
           <Car className="w-4 h-4" />
           <span>Simulate Movement</span>
@@ -236,48 +231,48 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
 
       {/* Analysis Results */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-          <div className={`text-3xl font-bold ${
-            currentScore >= 80 ? 'text-green-600' :
-            currentScore >= 60 ? 'text-yellow-600' : 'text-red-600'
+        <div className="text-center p-4 bg-info-50 border-l-4 border-info-500">
+          <div className={`text-3xl font-bold tabular-nums ${
+            currentScore >= 80 ? 'text-success-600' :
+            currentScore >= 60 ? 'text-warning-600' : 'text-danger-600'
           }`}>
-            {currentScore.toFixed(2)}/100
+            {currentScore}/100
           </div>
-          <div className="text-sm text-gray-600 mt-1">Readability Score</div>
+          <div className="text-sm text-secondary mt-1">Readability Score</div>
         </div>
-        
-        <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-          <div className="text-3xl font-bold text-purple-600">
+
+        <div className="text-center p-4 bg-navy-50 border-l-4 border-navy-500">
+          <div className="text-3xl font-bold text-navy-700 tabular-nums">
             {viewingTime.toFixed(1)}s
           </div>
-          <div className="text-sm text-gray-600 mt-1">Viewing Time</div>
+          <div className="text-sm text-secondary mt-1">Viewing Time</div>
         </div>
-        
-        <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-          <div className="text-3xl font-bold text-green-600">
+
+        <div className="text-center p-4 bg-success-50 border-l-4 border-success-500">
+          <div className="text-3xl font-bold text-success-600 tabular-nums">
             {Math.round(getScaleLevel(selectedDistance) * 100)}%
           </div>
-          <div className="text-sm text-gray-600 mt-1">Apparent Size</div>
+          <div className="text-sm text-secondary mt-1">Apparent Size</div>
         </div>
-        
-        <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-          <div className="text-3xl font-bold text-orange-600 flex items-center justify-center">
+
+        <div className="text-center p-4 bg-warning-50 border-l-4 border-warning-500">
+          <div className="text-3xl font-bold text-warning-600 flex items-center justify-center">
             {getWeatherIcon(weatherCondition)}
             <span className="ml-2 capitalize">{weatherCondition}</span>
           </div>
-          <div className="text-sm text-gray-600 mt-1">Conditions</div>
+          <div className="text-sm text-secondary mt-1">Conditions</div>
         </div>
       </div>
 
       {/* Professional Insights */}
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6">
-        <h4 className="font-semibold text-gray-900 mb-4">
+      <div className="bg-surface-50 border-l-4 border-info-500 p-6">
+        <h4 className="font-semibold text-navy-950 mb-4">
           Professional Viewing Analysis
         </h4>
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h5 className="font-medium text-indigo-700 mb-2">Current Conditions Impact:</h5>
-            <ul className="space-y-1 text-sm text-gray-700">
+            <h5 className="font-medium text-info-700 mb-2">Current Conditions Impact:</h5>
+            <ul className="space-y-1 text-sm text-navy-700">
               <li>• Distance reduces apparent size by {Math.round((1 - getScaleLevel(selectedDistance)) * 100)}%</li>
               <li>• Speed creates {getBlurLevel(selectedDistance, selectedSpeed, weatherCondition).toFixed(1)}px motion blur</li>
               <li>• Weather reduces visibility by {Math.round((1 - getOpacity(weatherCondition)) * 100)}%</li>
@@ -285,8 +280,8 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
             </ul>
           </div>
           <div>
-            <h5 className="font-medium text-purple-700 mb-2">Optimization Recommendations:</h5>
-            <ul className="space-y-1 text-sm text-gray-700">
+            <h5 className="font-medium text-navy-700 mb-2">Optimization Recommendations:</h5>
+            <ul className="space-y-1 text-sm text-navy-700">
               {currentScore < 70 && (
                 <li>• Increase font size by {Math.round((70 - currentScore) * 0.8)}% for this distance</li>
               )}
@@ -303,11 +298,11 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
       </div>
 
       {/* Oman-Specific Conditions */}
-      <div className="mt-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-4">
-        <h5 className="font-medium text-orange-800 mb-2 flex items-center">
-          🇴🇲 Oman-Specific Considerations
+      <div className="mt-4 bg-warning-50 border-l-4 border-warning-500 p-4">
+        <h5 className="font-medium text-warning-800 mb-2 flex items-center">
+          Oman-Specific Considerations
         </h5>
-        <div className="grid md:grid-cols-3 gap-4 text-sm text-orange-700">
+        <div className="grid md:grid-cols-3 gap-4 text-sm text-warning-700">
           <div>
             <span className="font-medium">Desert Conditions:</span>
             <p>High ambient light requires 20% higher contrast</p>

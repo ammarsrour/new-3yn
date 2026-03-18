@@ -51,10 +51,10 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
           </p>
         </div>
 
-        {/* Pricing grid - popular plan is larger */}
-        <div className="grid lg:grid-cols-12 gap-6 lg:gap-0 items-end">
-          {/* Starter - compact */}
-          <div className={`lg:col-span-3 bg-navy-800 p-8 lg:p-10 ${isArabic ? 'text-right' : ''}`}>
+        {/* Pricing grid - clean 3-column layout */}
+        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+          {/* Starter */}
+          <div className={`bg-navy-800 p-8 flex flex-col ${isArabic ? 'text-right' : ''}`}>
             <h3 className="text-base font-semibold text-slate-400 mb-4">{plans[0].name}</h3>
             <div className="mb-6">
               <span className="text-4xl text-stat text-white tabular-nums">
@@ -62,8 +62,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
               </span>
               <span className="text-slate-500 text-sm ml-1">/mo</span>
             </div>
-            <p className="text-secondary text-slate-400 mb-8 max-w-none">{plans[0].description}</p>
-            <ul className="space-y-3 mb-8">
+            <p className="text-sm text-slate-400 mb-8">{plans[0].description}</p>
+            <ul className="space-y-3 mb-8 flex-grow">
               {plans[0].features.map((feature, idx) => (
                 <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
                   <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -73,46 +73,46 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
             </ul>
             <button
               onClick={onGetStarted}
-              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors"
+              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors mt-auto"
             >
               {t('pricing.getStarted')}
             </button>
           </div>
 
-          {/* Professional - hero pricing */}
-          <div className={`lg:col-span-6 bg-white p-10 lg:p-14 lg:-my-8 relative z-10 ${isArabic ? 'text-right' : ''}`}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-label text-emerald-600">{plans[1].name}</h3>
-              <span className="bg-emerald-600 text-white text-xs font-semibold px-3 py-1 uppercase tracking-wide">
+          {/* Professional - featured */}
+          <div className={`bg-white p-8 flex flex-col relative ring-2 ring-emerald-500 ${isArabic ? 'text-right' : ''}`}>
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+              <span className="bg-emerald-500 text-white text-xs font-semibold px-4 py-1.5 uppercase tracking-wide">
                 {t('pricing.popular')}
               </span>
             </div>
+            <h3 className="text-base font-semibold text-emerald-600 mb-4 mt-2">{plans[1].name}</h3>
             <div className="mb-6">
-              <span className="text-6xl lg:text-7xl text-stat text-navy-950 tabular-nums">
+              <span className="text-5xl text-stat text-navy-950 tabular-nums">
                 {isArabic ? toArabicNumerals(plans[1].price) : plans[1].price}
               </span>
-              <span className="text-slate-500 ml-2">/mo</span>
+              <span className="text-slate-500 ml-1">/mo</span>
             </div>
-            <p className="text-lg text-body mb-10 max-w-none">{plans[1].description}</p>
-            <ul className="space-y-4 mb-10">
+            <p className="text-sm text-slate-600 mb-8">{plans[1].description}</p>
+            <ul className="space-y-3 mb-8 flex-grow">
               {plans[1].features.map((feature, idx) => (
-                <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-3 text-navy-950`}>
-                  <Check className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-navy-950`}>
+                  <Check className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
             <button
               onClick={onGetStarted}
-              className={`w-full py-4 bg-navy-950 text-white font-semibold hover:bg-navy-800 transition-colors flex items-center justify-center ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 group`}
+              className={`w-full py-3 bg-navy-950 text-white font-semibold hover:bg-navy-800 transition-colors flex items-center justify-center ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 group mt-auto`}
             >
               <span>{t('pricing.getStarted')}</span>
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </div>
 
-          {/* Enterprise - compact */}
-          <div className={`lg:col-span-3 bg-navy-800 p-8 lg:p-10 ${isArabic ? 'text-right' : ''}`}>
+          {/* Enterprise */}
+          <div className={`bg-navy-800 p-8 flex flex-col ${isArabic ? 'text-right' : ''}`}>
             <h3 className="text-base font-semibold text-slate-400 mb-4">{plans[2].name}</h3>
             <div className="mb-6">
               <span className="text-4xl text-stat text-white tabular-nums">
@@ -120,8 +120,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
               </span>
               <span className="text-slate-500 text-sm ml-1">/mo</span>
             </div>
-            <p className="text-secondary text-slate-400 mb-8 max-w-none">{plans[2].description}</p>
-            <ul className="space-y-3 mb-8">
+            <p className="text-sm text-slate-400 mb-8">{plans[2].description}</p>
+            <ul className="space-y-3 mb-8 flex-grow">
               {plans[2].features.map((feature, idx) => (
                 <li key={idx} className={`flex items-start ${isArabic ? 'flex-row-reverse space-x-reverse' : ''} space-x-2 text-sm text-slate-300`}>
                   <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -131,7 +131,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ onGetStarted }) => {
             </ul>
             <button
               onClick={onGetStarted}
-              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors"
+              className="w-full py-3 border border-slate-600 text-slate-300 font-medium hover:bg-slate-700 hover:text-white transition-colors mt-auto"
             >
               Contact Sales
             </button>

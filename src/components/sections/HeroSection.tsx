@@ -62,20 +62,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
             </p>
           </div>
 
-          {/* Right side - visual element on navy background (desktop) */}
+          {/* Right side - score preview on navy background (desktop) */}
           <div className={`lg:col-span-5 hidden lg:flex items-center justify-center relative z-10 ${isArabic ? 'lg:order-1' : ''}`}>
-            {/* The eye logo as a bold graphic element */}
-            <div className="relative">
-              <img
-                src="/3yn eye.png"
-                alt="3YN"
-                className="w-48 h-48 xl:w-64 xl:h-64 object-contain filter invert opacity-90"
-              />
-              {/* Score preview - stat typography */}
-              <div className="absolute -bottom-8 -left-8 bg-white p-6 shadow-2xl">
-                <p className="text-label mb-1">Readability Score</p>
-                <p className="text-5xl text-stat text-emerald-600 tabular-nums">87</p>
-              </div>
+            {/* Score preview card */}
+            <div className="bg-white p-8 shadow-2xl">
+              <p className="text-label mb-2">Readability Score</p>
+              <p className="text-7xl text-stat text-emerald-600 tabular-nums mb-4">87</p>
+              <p className="text-sm text-slate-500">AI-powered analysis</p>
             </div>
           </div>
         </div>

@@ -78,19 +78,19 @@ const EnterpriseAnalytics: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
+      <div className="bg-white p-6 border-b border-surface-200">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Enterprise Analytics</h2>
-            <p className="text-gray-600 mt-1">Comprehensive performance insights across all campaigns</p>
+            <h2 className="text-2xl font-bold text-navy-950 tracking-tight">Enterprise Analytics</h2>
+            <p className="text-secondary mt-1">Comprehensive performance insights across all campaigns</p>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <Filter className="w-4 h-4 text-navy-500" />
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value as any)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="border border-surface-200 px-3 py-2 text-sm focus:ring-2 focus:ring-navy-500 focus:border-transparent"
               >
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
@@ -99,32 +99,32 @@ const EnterpriseAnalytics: React.FC = () => {
               </select>
             </div>
             <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-600">Updated 5 min ago</span>
+              <Calendar className="w-4 h-4 text-navy-500" />
+              <span className="text-sm text-secondary">Updated 5 min ago</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-surface-200">
         {kpiCards.map((kpi, index) => (
-          <div key={index} className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <kpi.icon className="w-6 h-6 text-blue-600" />
+          <div key={index} className="bg-white p-6">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-info-50 flex items-center justify-center">
+                <kpi.icon className="w-5 h-5 text-info-600" />
               </div>
-              <span className={`text-sm font-medium px-2 py-1 rounded-full ${
-                kpi.changeType === 'positive' 
-                  ? 'text-green-700 bg-green-100' 
-                  : 'text-red-700 bg-red-100'
+              <span className={`text-xs font-semibold px-2 py-0.5 ${
+                kpi.changeType === 'positive'
+                  ? 'text-success-700 bg-success-50'
+                  : 'text-danger-700 bg-danger-50'
               }`}>
                 {kpi.change}
               </span>
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{kpi.value}</p>
-              <p className="text-sm text-gray-600">{kpi.title}</p>
+              <p className="text-2xl text-stat text-navy-950">{kpi.value}</p>
+              <p className="text-label mt-1">{kpi.title}</p>
             </div>
           </div>
         ))}
@@ -133,18 +133,18 @@ const EnterpriseAnalytics: React.FC = () => {
       {/* Charts Section */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Performance Trends */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white p-6 border-l-4 border-info-500">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Performance Trends</h3>
-            <div className="flex space-x-2">
+            <h3 className="text-lg font-bold text-navy-950 tracking-tight">Performance Trends</h3>
+            <div className="flex">
               {['analyses', 'scores', 'clients'].map((metric) => (
                 <button
                   key={metric}
                   onClick={() => setSelectedMetric(metric as any)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
                     selectedMetric === metric
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-navy-950 text-white'
+                      : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
                   }`}
                 >
                   {metric.charAt(0).toUpperCase() + metric.slice(1)}
@@ -152,23 +152,23 @@ const EnterpriseAnalytics: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
           {/* Simple Chart Representation */}
-          <div className="space-y-4">
-            {analyticsData.monthlyTrends.map((trend, index) => (
+          <div className="space-y-3">
+            {analyticsData.monthlyTrends.map((trend) => (
               <div key={trend.month} className="flex items-center space-x-4">
-                <div className="w-8 text-sm text-gray-600">{trend.month}</div>
-                <div className="flex-1 bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-1000"
-                    style={{ 
-                      width: selectedMetric === 'analyses' 
+                <div className="w-8 text-sm text-secondary">{trend.month}</div>
+                <div className="flex-1 bg-surface-100 h-2">
+                  <div
+                    className="bg-info-500 h-2 transition-all duration-700"
+                    style={{
+                      width: selectedMetric === 'analyses'
                         ? `${(trend.analyses / 200) * 100}%`
                         : `${trend.score}%`
                     }}
                   ></div>
                 </div>
-                <div className="w-12 text-sm text-gray-900 font-medium">
+                <div className="w-12 text-sm text-navy-950 font-semibold tabular-nums">
                   {selectedMetric === 'analyses' ? trend.analyses : trend.score}
                 </div>
               </div>
@@ -177,21 +177,21 @@ const EnterpriseAnalytics: React.FC = () => {
         </div>
 
         {/* Top Locations */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-            <MapPin className="w-5 h-5 mr-2" />
+        <div className="bg-white p-6 border-l-4 border-success-500">
+          <h3 className="text-lg font-bold text-navy-950 tracking-tight mb-6 flex items-center">
+            <MapPin className="w-5 h-5 mr-2 text-success-600" />
             Top Performing Locations
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {analyticsData.topLocations.map((location, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-surface-50 border-l-2 border-surface-200">
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{location.location}</h4>
-                  <p className="text-sm text-gray-600">{location.count} analyses</p>
+                  <h4 className="font-semibold text-navy-950 text-sm">{location.location}</h4>
+                  <p className="text-xs text-secondary">{location.count} analyses</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-lg font-bold text-blue-600">{location.averageScore}/100</div>
-                  <div className="text-xs text-gray-500">Avg Score</div>
+                  <div className="text-lg text-stat text-success-600">{location.averageScore}</div>
+                  <div className="text-label">Avg Score</div>
                 </div>
               </div>
             ))}
@@ -200,12 +200,12 @@ const EnterpriseAnalytics: React.FC = () => {
       </div>
 
       {/* Geographic Performance Map Placeholder */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-6">Geographic Performance</h3>
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-12 text-center">
-          <MapPin className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-          <h4 className="text-xl font-semibold text-gray-700 mb-2">Interactive Map Coming Soon</h4>
-          <p className="text-gray-600">Visualize billboard performance across Oman with heat maps and location insights</p>
+      <div className="bg-white p-6 border-l-4 border-navy-950">
+        <h3 className="text-lg font-bold text-navy-950 tracking-tight mb-6">Geographic Performance</h3>
+        <div className="bg-surface-50 p-12 text-center">
+          <MapPin className="w-12 h-12 text-navy-300 mx-auto mb-4" />
+          <h4 className="text-xl font-bold text-navy-950 mb-2">Interactive Map Coming Soon</h4>
+          <p className="text-secondary">Visualize billboard performance across Oman with heat maps and location insights</p>
         </div>
       </div>
     </div>

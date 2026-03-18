@@ -5,29 +5,29 @@ interface SummaryCardProps {
   title: string;
   value: number;
   icon: LucideIcon;
-  color: 'blue' | 'purple' | 'green' | 'orange';
+  color: 'info' | 'success' | 'warning' | 'danger';
 }
 
 const colorClasses = {
-  blue: {
-    bg: 'bg-blue-100',
-    text: 'text-blue-600',
-    border: 'border-blue-200'
+  info: {
+    bg: 'bg-info-50',
+    text: 'text-info-600',
+    border: 'border-info-500'
   },
-  purple: {
-    bg: 'bg-purple-100',
-    text: 'text-purple-600',
-    border: 'border-purple-200'
+  success: {
+    bg: 'bg-success-50',
+    text: 'text-success-600',
+    border: 'border-success-500'
   },
-  green: {
-    bg: 'bg-green-100',
-    text: 'text-green-600',
-    border: 'border-green-200'
+  warning: {
+    bg: 'bg-warning-50',
+    text: 'text-warning-600',
+    border: 'border-warning-500'
   },
-  orange: {
-    bg: 'bg-orange-100',
-    text: 'text-orange-600',
-    border: 'border-orange-200'
+  danger: {
+    bg: 'bg-danger-50',
+    text: 'text-danger-600',
+    border: 'border-danger-500'
   }
 };
 
@@ -35,14 +35,14 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ title, value, icon: Icon, col
   const colors = colorClasses[color];
 
   return (
-    <div className={`bg-white rounded-lg shadow-md p-6 border-l-4 ${colors.border}`}>
+    <div className={`bg-white p-6 border-l-4 ${colors.border}`}>
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value.toLocaleString()}</p>
+          <p className="text-label mb-1">{title}</p>
+          <p className="text-3xl text-stat text-navy-950">{value.toLocaleString()}</p>
         </div>
-        <div className={`${colors.bg} p-3 rounded-lg`}>
-          <Icon className={`w-8 h-8 ${colors.text}`} />
+        <div className={`${colors.bg} p-3`}>
+          <Icon className={`w-6 h-6 ${colors.text}`} />
         </div>
       </div>
     </div>

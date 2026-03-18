@@ -81,7 +81,6 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
 
   const handleAddComment = () => {
     if (newComment.trim()) {
-      // In real app, this would add to comments array
       setNewComment('');
     }
   };
@@ -89,18 +88,18 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
   const getCommentIcon = (type: string) => {
     switch (type) {
       case 'approval':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <CheckCircle className="w-4 h-4 text-success-500" />;
       case 'revision':
-        return <AlertCircle className="w-4 h-4 text-blue-500" />;
+        return <AlertCircle className="w-4 h-4 text-info-500" />;
       default:
-        return <MessageCircle className="w-4 h-4 text-gray-500" />;
+        return <MessageCircle className="w-4 h-4 text-navy-500" />;
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <div className="bg-white p-6 border-l-4 border-navy-950">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+        <h3 className="text-lg font-bold text-navy-950 tracking-tight flex items-center">
           <Users className="w-5 h-5 mr-2" />
           Team Collaboration
         </h3>
@@ -110,19 +109,19 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
               <img
                 src={member.avatar}
                 alt={member.name}
-                className="w-8 h-8 rounded-full border-2 border-white"
+                className="w-8 h-8 border-2 border-white"
               />
-              <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${
-                member.status === 'online' ? 'bg-green-500' : 'bg-gray-400'
+              <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 border-2 border-white ${
+                member.status === 'online' ? 'bg-success-500' : 'bg-navy-300'
               }`}></div>
             </div>
           ))}
-          <span className="text-sm text-gray-500 ml-2">+2 more</span>
+          <span className="text-sm text-secondary ml-2">+2 more</span>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1">
+      <div className="flex mb-6 bg-surface-100 p-1">
         {[
           { key: 'comments', label: 'Comments', count: comments.length },
           { key: 'approvals', label: 'Approvals', count: 2 },
@@ -131,10 +130,10 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as any)}
-            className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-navy-950'
+                : 'text-navy-600 hover:text-navy-950'
             }`}
           >
             {tab.label} ({tab.count})
@@ -150,21 +149,21 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
             <img
               src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100"
               alt="You"
-              className="w-8 h-8 rounded-full"
+              className="w-8 h-8"
             />
             <div className="flex-1">
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full p-3 border border-surface-200 focus:ring-2 focus:ring-navy-500 focus:border-transparent resize-none"
                 rows={3}
               />
               <div className="flex justify-end mt-2">
                 <button
                   onClick={handleAddComment}
                   disabled={!newComment.trim()}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-navy-950 text-white text-sm font-semibold hover:bg-navy-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Comment
                 </button>
@@ -179,18 +178,18 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
                 <img
                   src={comment.author.avatar}
                   alt={comment.author.name}
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8"
                 />
                 <div className="flex-1">
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="bg-surface-50 p-3">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="font-semibold text-gray-900">{comment.author.name}</span>
-                      <span className="text-sm text-gray-500">{comment.author.role}</span>
+                      <span className="font-semibold text-navy-950">{comment.author.name}</span>
+                      <span className="text-sm text-secondary">{comment.author.role}</span>
                       {getCommentIcon(comment.type)}
                     </div>
-                    <p className="text-gray-700 text-sm">{comment.content}</p>
+                    <p className="text-sm text-navy-700">{comment.content}</p>
                   </div>
-                  <div className="flex items-center space-x-2 mt-1 text-xs text-gray-500">
+                  <div className="flex items-center space-x-2 mt-1 text-xs text-secondary">
                     <Clock className="w-3 h-3" />
                     <span>{comment.timestamp.toLocaleTimeString()}</span>
                   </div>
@@ -203,38 +202,38 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
 
       {/* Approvals Tab */}
       {activeTab === 'approvals' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {approvalStatus.map((approval, index) => (
-            <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+            <div key={index} className="flex items-center justify-between p-4 border border-surface-200">
               <div className="flex items-center space-x-3">
                 {approval.user ? (
                   <img
                     src={approval.user.avatar}
                     alt={approval.user.name}
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10"
                   />
                 ) : (
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-gray-500" />
+                  <div className="w-10 h-10 bg-surface-100 flex items-center justify-center">
+                    <User className="w-5 h-5 text-navy-400" />
                   </div>
                 )}
                 <div>
-                  <h4 className="font-semibold text-gray-900">{approval.name}</h4>
+                  <h4 className="font-semibold text-navy-950">{approval.name}</h4>
                   {approval.user && (
-                    <p className="text-sm text-gray-500">{approval.user.role}</p>
+                    <p className="text-sm text-secondary">{approval.user.role}</p>
                   )}
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 {approval.status === 'approved' ? (
                   <>
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                    <span className="text-green-600 font-medium">Approved</span>
+                    <CheckCircle className="w-5 h-5 text-success-500" />
+                    <span className="text-success-600 font-medium">Approved</span>
                   </>
                 ) : (
                   <>
-                    <Clock className="w-5 h-5 text-yellow-500" />
-                    <span className="text-yellow-600 font-medium">Pending</span>
+                    <Clock className="w-5 h-5 text-warning-500" />
+                    <span className="text-warning-600 font-medium">Pending</span>
                   </>
                 )}
               </div>
@@ -245,11 +244,9 @@ const TeamCollaboration: React.FC<TeamCollaborationProps> = ({ analysisId }) => 
 
       {/* History Tab */}
       {activeTab === 'history' && (
-        <div className="space-y-4">
-          <div className="text-center text-gray-500 py-8">
-            <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p>Version history and activity timeline will appear here</p>
-          </div>
+        <div className="text-center py-8">
+          <Clock className="w-10 h-10 mx-auto mb-4 text-navy-300" />
+          <p className="text-secondary">Version history and activity timeline will appear here</p>
         </div>
       )}
     </div>

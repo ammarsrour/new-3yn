@@ -182,11 +182,11 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
   const getDifficultyColor = (difficulty?: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-orange-100 text-orange-800';
-      case 'extreme': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy': return 'bg-success-100 text-success-800';
+      case 'medium': return 'bg-warning-100 text-warning-800';
+      case 'hard': return 'bg-warning-200 text-warning-900';
+      case 'extreme': return 'bg-danger-100 text-danger-800';
+      default: return 'bg-surface-100 text-navy-800';
     }
   };
 
@@ -201,11 +201,11 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
   };
 
   const getROIColor = (score?: number) => {
-    if (!score) return 'text-gray-500';
-    if (score >= 85) return 'text-green-600';
-    if (score >= 70) return 'text-blue-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (!score) return 'text-secondary';
+    if (score >= 85) return 'text-success-600';
+    if (score >= 70) return 'text-info-600';
+    if (score >= 60) return 'text-warning-600';
+    return 'text-danger-600';
   };
 
   const filteredSuggestions = filterDifficulty === 'all' 
@@ -221,10 +221,10 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
         <button
           type="button"
           onClick={() => setInputMode('billboard')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-2 text-sm font-medium transition-colors ${
             inputMode === 'billboard'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-navy-950 text-white'
+              : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
           <MapPin className="w-4 h-4 inline mr-2" />
@@ -233,10 +233,10 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
         <button
           type="button"
           onClick={() => setInputMode('address')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-2 text-sm font-medium transition-colors ${
             inputMode === 'address'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-navy-950 text-white'
+              : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
           <Search className="w-4 h-4 inline mr-2" />
@@ -245,10 +245,10 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
         <button
           type="button"
           onClick={() => setInputMode('coordinates')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+          className={`px-4 py-2 text-sm font-medium transition-colors ${
             inputMode === 'coordinates'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-navy-950 text-white'
+              : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
           <Globe className="w-4 h-4 inline mr-2" />
@@ -259,11 +259,11 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
       {/* Difficulty Filter (Billboard Mode Only) */}
       {inputMode === 'billboard' && (
         <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600">Filter by difficulty:</span>
+          <span className="text-sm text-secondary">Filter by difficulty:</span>
           <select
             value={filterDifficulty}
             onChange={(e) => setFilterDifficulty(e.target.value)}
-            className="text-sm border border-gray-300 rounded px-2 py-1"
+            className="text-sm border border-surface-300 px-2 py-1"
           >
             <option value="all">All Locations</option>
             <option value="easy">Easy (Low Speed)</option>
@@ -273,16 +273,16 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </select>
           <button
             onClick={() => setShowMap(!showMap)}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-              showMap ? 'bg-purple-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            className={`px-3 py-1 text-sm font-medium transition-colors ${
+              showMap ? 'bg-info-500 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
             {showMap ? 'Hide Map' : 'Show Map'}
           </button>
           <button
             onClick={() => setShowComparison(!showComparison)}
-            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-              showComparison ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            className={`px-3 py-1 text-sm font-medium transition-colors ${
+              showComparison ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
             Compare ({comparisonLocations.length})
@@ -294,9 +294,9 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
       <div className="relative">
         <div className="relative">
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-            <Search className="w-4 h-4 text-gray-400" />
+            <Search className="w-4 h-4 text-navy-400" />
           </div>
-          
+
           <input
             ref={inputRef}
             type="text"
@@ -309,22 +309,22 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
               }
             }}
             placeholder={
-              inputMode === 'billboard' 
+              inputMode === 'billboard'
                 ? 'Search billboard locations (e.g., Sultan Qaboos, OOMCO, Al Mouj)'
                 : inputMode === 'address'
                 ? 'Enter custom address'
                 : 'Enter coordinates (e.g., 23.5880, 58.3829)'
             }
-            className={`w-full pl-10 pr-20 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-              error ? 'border-red-300 bg-red-50' : 'border-gray-300'
+            className={`w-full pl-10 pr-20 py-3 border focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors ${
+              error ? 'border-danger-300 bg-danger-50' : 'border-surface-300'
             }`}
           />
-          
+
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
             {isValidating && (
-              <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-navy-500 border-t-transparent animate-spin"></div>
             )}
-            
+
             {value && (
               <button
                 type="button"
@@ -332,7 +332,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                   onChange('');
                   setSelectedLocation(null);
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-navy-400 hover:text-navy-600 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -342,12 +342,12 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
         {/* Suggestions Dropdown */}
         {showSuggestions && inputMode === 'billboard' && (
-          <div 
+          <div
             ref={suggestionsRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto"
+            className="absolute z-10 w-full mt-1 bg-white border border-surface-200 max-h-96 overflow-y-auto"
           >
             <div className="p-2">
-              <div className="text-xs text-gray-500 mb-2 flex items-center justify-between">
+              <div className="text-xs text-secondary mb-2 flex items-center justify-between">
                 <span>🇴🇲 Muscat Billboard Locations ({filteredSuggestions.length})</span>
                 <span>ROI Score</span>
               </div>
@@ -356,13 +356,13 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                   key={location.id}
                   type="button"
                   onClick={() => handleLocationSelect(location)}
-                  className="w-full text-left p-3 hover:bg-blue-50 rounded-lg border border-transparent hover:border-blue-200 transition-all duration-200"
+                  className="w-full text-left p-3 hover:bg-info-50 border border-transparent hover:border-info-200 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                        <span className="font-medium text-gray-900 truncate">
+                        <MapPin className="w-4 h-4 text-info-500 flex-shrink-0" />
+                        <span className="font-medium text-navy-950 truncate">
                           {location.locationName}
                         </span>
                         <button
@@ -370,37 +370,37 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                             e.stopPropagation();
                             addToComparison(location);
                           }}
-                          className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 bg-blue-100 rounded"
+                          className="text-xs text-info-600 hover:text-info-800 px-2 py-1 bg-info-100"
                         >
                           + Compare
                         </button>
                       </div>
-                      <div className="text-sm text-gray-600 mb-2">
+                      <div className="text-sm text-secondary mb-2">
                         {location.addressLandmark}
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 ${getDifficultyColor(location.readabilityDifficulty)}`}>
+                        <span className={`px-2 py-1 text-xs font-medium flex items-center space-x-1 ${getDifficultyColor(location.readabilityDifficulty)}`}>
                           {getDifficultyIcon(location.readabilityDifficulty)}
                           <span>{location.readabilityDifficulty?.toUpperCase()}</span>
                         </span>
-                        
-                        <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+
+                        <span className="px-2 py-1 bg-surface-100 text-navy-700 text-xs">
                           {location.boardType}
                         </span>
-                        
-                        <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs flex items-center space-x-1">
+
+                        <span className="px-2 py-1 bg-info-100 text-info-700 text-xs flex items-center space-x-1">
                           <Gauge className="w-3 h-3" />
                           <span>{location.speedLimitKmh} km/h</span>
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className="text-right ml-3">
                       <div className={`text-lg font-bold ${getROIColor(location.roiScore)}`}>
                         {location.roiScore || 'N/A'}
                       </div>
-                      <div className="text-xs text-gray-500">ROI Score</div>
+                      <div className="text-xs text-secondary">ROI Score</div>
                     </div>
                   </div>
                 </button>
@@ -412,8 +412,8 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
       {/* Map View */}
       {showMap && inputMode === 'billboard' && (
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-6 border-2 border-blue-200">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="bg-info-50 border-l-4 border-info-500 p-6">
+          <h4 className="font-semibold text-navy-950 mb-4 flex items-center">
             <MapPin className="w-5 h-5 mr-2" />
             Muscat Billboard Locations Map
           </h4>
@@ -433,20 +433,20 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
             })}
           </div>
           
-          <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+          <div className="overflow-hidden border border-surface-200">
             {loadError || mapError ? (
-              <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
+              <div className="w-full h-[350px] bg-surface-100 flex items-center justify-center">
                 <div className="text-center">
-                  <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-600 font-medium">Map unavailable</p>
-                  <p className="text-gray-500 text-sm mt-1">Please check your API key or try again later</p>
+                  <MapPin className="w-12 h-12 text-navy-400 mx-auto mb-3" />
+                  <p className="text-navy-600 font-medium">Map unavailable</p>
+                  <p className="text-secondary text-sm mt-1">Please check your API key or try again later</p>
                 </div>
               </div>
             ) : !isLoaded ? (
-              <div className="w-full h-[350px] bg-gray-100 flex items-center justify-center">
+              <div className="w-full h-[350px] bg-surface-100 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-                  <p className="text-gray-500 text-sm">Loading map...</p>
+                  <div className="w-8 h-8 border-4 border-navy-500 border-t-transparent animate-spin mx-auto mb-3"></div>
+                  <p className="text-secondary text-sm">Loading map...</p>
                 </div>
               </div>
             ) : (
@@ -484,26 +484,26 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                     onCloseClick={() => setSelectedMapMarker(null)}
                   >
                     <div className="p-2 max-w-xs" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      <h4 className="font-bold text-gray-900 text-sm mb-2">
+                      <h4 className="font-bold text-navy-950 text-sm mb-2">
                         {selectedMapMarker.locationName}
                       </h4>
 
                       <div className="space-y-1 text-xs mb-3">
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center text-navy-600">
                           <span className="font-medium w-20">District:</span>
                           <span>{selectedMapMarker.district}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center text-navy-600">
                           <span className="font-medium w-20">Board:</span>
                           <span>{selectedMapMarker.boardType}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center text-navy-600">
                           <span className="font-medium w-20">Speed:</span>
                           <span>{selectedMapMarker.speedLimitKmh} km/h</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
+                        <div className="flex items-center text-navy-600">
                           <span className="font-medium w-20">Difficulty:</span>
-                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${getDifficultyColor(selectedMapMarker.readabilityDifficulty)}`}>
+                          <span className={`px-2 py-0.5 text-xs font-medium ${getDifficultyColor(selectedMapMarker.readabilityDifficulty)}`}>
                             {selectedMapMarker.readabilityDifficulty?.toUpperCase() || 'N/A'}
                           </span>
                         </div>
@@ -514,7 +514,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                           handleLocationSelect(selectedMapMarker);
                           setSelectedMapMarker(null);
                         }}
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-2 px-3 rounded transition-colors"
+                        className="w-full bg-navy-950 hover:bg-navy-800 text-white text-xs font-medium py-2 px-3 transition-colors"
                       >
                         Select This Location
                       </button>
@@ -529,13 +529,13 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
       {/* Selected Location Details */}
       {selectedLocation && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div className="bg-info-50 border-l-4 border-info-500 p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h4 className="font-bold text-blue-900 text-lg mb-1">
+              <h4 className="font-bold text-info-900 text-lg mb-1">
                 {selectedLocation.locationName}
               </h4>
-              <p className="text-blue-700 text-sm">
+              <p className="text-info-700 text-sm">
                 {selectedLocation.addressLandmark}
               </p>
             </div>
@@ -544,27 +544,27 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                 <div className={`text-2xl font-bold ${getROIColor(selectedLocation.roiScore)}`}>
                   {selectedLocation.roiScore.toFixed(2)}/100
                 </div>
-                <div className="text-xs text-gray-600">ROI Score</div>
+                <div className="text-xs text-secondary">ROI Score</div>
 
                 {selectedLocation.roiBreakdown && (
-                  <div className="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-3 right-0 top-full mt-2 w-64 z-10 shadow-xl">
-                    <div className="font-semibold mb-2 border-b border-gray-700 pb-2">ROI Breakdown:</div>
+                  <div className="absolute hidden group-hover:block bg-navy-900 text-white text-xs p-3 right-0 top-full mt-2 w-64 z-10">
+                    <div className="font-semibold mb-2 border-b border-navy-700 pb-2">ROI Breakdown:</div>
                     <div className="space-y-1.5">
                       <div className="flex justify-between">
-                        <span className="text-gray-300">Daily impressions:</span>
+                        <span className="text-navy-300">Daily impressions:</span>
                         <span className="font-medium">{selectedLocation.roiBreakdown.dailyImpressions.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-300">Monthly cost:</span>
+                        <span className="text-navy-300">Monthly cost:</span>
                         <span className="font-medium">{selectedLocation.roiBreakdown.monthlyCost} OMR</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-300">CPM:</span>
+                        <span className="text-navy-300">CPM:</span>
                         <span className="font-medium">{selectedLocation.roiBreakdown.cpm} OMR</span>
                       </div>
-                      <div className="pt-2 mt-2 border-t border-gray-700 flex justify-between">
-                        <span className="text-gray-300">Position:</span>
-                        <span className="font-semibold text-blue-400">{selectedLocation.roiBreakdown.marketPosition}</span>
+                      <div className="pt-2 mt-2 border-t border-navy-700 flex justify-between">
+                        <span className="text-navy-300">Position:</span>
+                        <span className="font-semibold text-info-400">{selectedLocation.roiBreakdown.marketPosition}</span>
                       </div>
                     </div>
                   </div>
@@ -574,27 +574,27 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </div>
 
           {/* Location Profile Section */}
-          <div className="bg-white rounded-lg p-4 mb-4">
-            <h5 className="font-semibold text-gray-900 mb-3">Location Profile</h5>
+          <div className="bg-white p-4 mb-4">
+            <h5 className="font-semibold text-navy-950 mb-3">Location Profile</h5>
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <div className="text-sm text-gray-500 mb-1">Traffic Type</div>
-                <div className="font-medium text-gray-900">
+                <div className="text-sm text-secondary mb-1">Traffic Type</div>
+                <div className="font-medium text-navy-950">
                   {BillboardDataService.getTrafficType(selectedLocation)}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500 mb-1">Primary Audience</div>
-                <div className="font-medium text-gray-900">
+                <div className="text-sm text-secondary mb-1">Primary Audience</div>
+                <div className="font-medium text-navy-950">
                   {BillboardDataService.getAudienceEstimate(selectedLocation)}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500 mb-1">Competition Level</div>
+                <div className="text-sm text-secondary mb-1">Competition Level</div>
                 <div className={`font-medium ${
-                  BillboardDataService.getCompetitionLevel(selectedLocation) === 'High' ? 'text-red-600' :
-                  BillboardDataService.getCompetitionLevel(selectedLocation) === 'Medium' ? 'text-yellow-600' :
-                  'text-green-600'
+                  BillboardDataService.getCompetitionLevel(selectedLocation) === 'High' ? 'text-danger-600' :
+                  BillboardDataService.getCompetitionLevel(selectedLocation) === 'Medium' ? 'text-warning-600' :
+                  'text-success-600'
                 }`}>
                   {BillboardDataService.getCompetitionLevel(selectedLocation)}
                 </div>
@@ -603,44 +603,44 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </div>
 
           {/* Location Scoring */}
-          <div className="bg-white rounded-lg p-4 mb-4">
-            <h5 className="font-semibold text-gray-900 mb-3">Location Scoring</h5>
+          <div className="bg-white p-4 mb-4">
+            <h5 className="font-semibold text-navy-950 mb-3">Location Scoring</h5>
             {(() => {
               const score = BillboardDataService.calculateLocationScore(selectedLocation);
               return (
                 <div className="space-y-3">
                   {/* Three Main Scores */}
-                  <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="grid grid-cols-3 gap-4 mb-4 p-4 bg-surface-50">
                     <div className="text-center relative group">
                       <div className={`text-2xl font-bold ${
-                        score.roiScore >= 80 ? 'text-green-600' :
-                        score.roiScore >= 60 ? 'text-blue-600' :
-                        score.roiScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                        score.roiScore >= 80 ? 'text-success-600' :
+                        score.roiScore >= 60 ? 'text-info-600' :
+                        score.roiScore >= 40 ? 'text-warning-600' : 'text-danger-600'
                       }`}>
                         {score.roiScore.toFixed(2)}/100
                       </div>
-                      <div className="text-xs text-gray-600">ROI Score</div>
-                      <div className="text-xs text-gray-500 mt-1">Business value & impressions</div>
+                      <div className="text-xs text-secondary">ROI Score</div>
+                      <div className="text-xs text-secondary mt-1">Business value & impressions</div>
 
                       {selectedLocation.roiBreakdown && (
-                        <div className="absolute hidden group-hover:block bg-gray-900 text-white text-xs rounded-lg p-3 left-1/2 -translate-x-1/2 top-full mt-2 w-64 z-10 shadow-xl">
-                          <div className="font-semibold mb-2 border-b border-gray-700 pb-2">ROI Breakdown:</div>
+                        <div className="absolute hidden group-hover:block bg-navy-900 text-white text-xs p-3 left-1/2 -translate-x-1/2 top-full mt-2 w-64 z-10">
+                          <div className="font-semibold mb-2 border-b border-navy-700 pb-2">ROI Breakdown:</div>
                           <div className="space-y-1.5">
                             <div className="flex justify-between">
-                              <span className="text-gray-300">Daily impressions:</span>
+                              <span className="text-navy-300">Daily impressions:</span>
                               <span className="font-medium">{selectedLocation.roiBreakdown.dailyImpressions.toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-gray-300">Monthly cost:</span>
+                              <span className="text-navy-300">Monthly cost:</span>
                               <span className="font-medium">{selectedLocation.roiBreakdown.monthlyCost} OMR</span>
                             </div>
                             <div className="flex justify-between">
-                              <span className="text-gray-300">CPM:</span>
+                              <span className="text-navy-300">CPM:</span>
                               <span className="font-medium">{selectedLocation.roiBreakdown.cpm} OMR</span>
                             </div>
-                            <div className="pt-2 mt-2 border-t border-gray-700 flex justify-between">
-                              <span className="text-gray-300">Position:</span>
-                              <span className="font-semibold text-blue-400">{selectedLocation.roiBreakdown.marketPosition}</span>
+                            <div className="pt-2 mt-2 border-t border-navy-700 flex justify-between">
+                              <span className="text-navy-300">Position:</span>
+                              <span className="font-semibold text-info-400">{selectedLocation.roiBreakdown.marketPosition}</span>
                             </div>
                           </div>
                         </div>
@@ -648,51 +648,51 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                     </div>
                     <div className="text-center">
                       <div className={`text-2xl font-bold ${
-                        score.readabilityScore >= 80 ? 'text-green-600' :
-                        score.readabilityScore >= 60 ? 'text-blue-600' :
-                        score.readabilityScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                        score.readabilityScore >= 80 ? 'text-success-600' :
+                        score.readabilityScore >= 60 ? 'text-info-600' :
+                        score.readabilityScore >= 40 ? 'text-warning-600' : 'text-danger-600'
                       }`}>
                         {score.readabilityScore.toFixed(2)}/100
                       </div>
-                      <div className="text-xs text-gray-600">Readability Score</div>
-                      <div className="text-xs text-gray-500 mt-1">Speed & distance factors</div>
+                      <div className="text-xs text-secondary">Readability Score</div>
+                      <div className="text-xs text-secondary mt-1">Speed & distance factors</div>
                     </div>
                     <div className="text-center">
                       <div className={`text-2xl font-bold ${
-                        score.suitabilityScore >= 80 ? 'text-green-600' :
-                        score.suitabilityScore >= 60 ? 'text-blue-600' :
-                        score.suitabilityScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                        score.suitabilityScore >= 80 ? 'text-success-600' :
+                        score.suitabilityScore >= 60 ? 'text-info-600' :
+                        score.suitabilityScore >= 40 ? 'text-warning-600' : 'text-danger-600'
                       }`}>
                         {score.suitabilityScore.toFixed(2)}/100
                       </div>
-                      <div className="text-xs text-gray-600">Suitability Score</div>
-                      <div className="text-xs text-gray-500 mt-1">Overall strategic fit</div>
+                      <div className="text-xs text-secondary">Suitability Score</div>
+                      <div className="text-xs text-secondary mt-1">Overall strategic fit</div>
                     </div>
                   </div>
-                  
+
                   {/* Component Breakdown */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Speed Score (30%)</span>
+                    <span className="text-sm text-secondary">Speed Score (30%)</span>
                     <span className="font-medium">{score.speedScore.toFixed(2)}/30</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Distance Score (25%)</span>
+                    <span className="text-sm text-secondary">Distance Score (25%)</span>
                     <span className="font-medium">{score.distanceScore.toFixed(2)}/25</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Size Score (20%)</span>
+                    <span className="text-sm text-secondary">Size Score (20%)</span>
                     <span className="font-medium">{score.sizeScore.toFixed(2)}/20</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Cost Efficiency (25%)</span>
+                    <span className="text-sm text-secondary">Cost Efficiency (25%)</span>
                     <span className="font-medium">{score.costScore.toFixed(2)}/25</span>
                   </div>
-                  <div className="border-t pt-2 flex justify-between items-center">
-                    <span className="font-semibold text-gray-900">Total Score</span>
+                  <div className="border-t border-surface-200 pt-2 flex justify-between items-center">
+                    <span className="font-semibold text-navy-950">Total Score</span>
                     <span className={`text-xl font-bold ${
-                      score.totalScore >= 80 ? 'text-green-600' :
-                      score.totalScore >= 60 ? 'text-blue-600' :
-                      score.totalScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                      score.totalScore >= 80 ? 'text-success-600' :
+                      score.totalScore >= 60 ? 'text-info-600' :
+                      score.totalScore >= 40 ? 'text-warning-600' : 'text-danger-600'
                     }`}>
                       {score.totalScore.toFixed(2)}/100
                     </span>
@@ -703,70 +703,70 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </div>
 
           {/* Dynamic Recommendations */}
-          <div className="bg-white rounded-lg p-4 mb-4">
-            <h5 className="font-semibold text-gray-900 mb-3">Strategic Recommendations</h5>
+          <div className="bg-white p-4 mb-4">
+            <h5 className="font-semibold text-navy-950 mb-3">Strategic Recommendations</h5>
             {(() => {
               const recommendations = BillboardDataService.getLocationRecommendations(selectedLocation);
               return (
                 <div className="space-y-4">
-                  <div className="bg-blue-50 rounded-lg p-3">
-                    <h6 className="font-medium text-blue-900 mb-2 flex items-center">
+                  <div className="bg-info-50 border-l-4 border-info-400 p-3">
+                    <h6 className="font-medium text-info-900 mb-2 flex items-center">
                       <Gauge className="w-4 h-4 mr-2" />
                       Speed-Based Strategy
                     </h6>
-                    <p className="text-blue-800 text-sm">{recommendations.speedRecommendation}</p>
+                    <p className="text-info-800 text-sm">{recommendations.speedRecommendation}</p>
                   </div>
-                  
-                  <div className="bg-green-50 rounded-lg p-3">
-                    <h6 className="font-medium text-green-900 mb-2 flex items-center">
+
+                  <div className="bg-success-50 border-l-4 border-success-400 p-3">
+                    <h6 className="font-medium text-success-900 mb-2 flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
                       Location Intelligence
                     </h6>
-                    <p className="text-green-800 text-sm">{recommendations.locationInsight}</p>
+                    <p className="text-success-800 text-sm">{recommendations.locationInsight}</p>
                   </div>
-                  
-                  <div className="bg-purple-50 rounded-lg p-3">
-                    <h6 className="font-medium text-purple-900 mb-2 flex items-center">
+
+                  <div className="bg-info-50 border-l-4 border-info-400 p-3">
+                    <h6 className="font-medium text-info-900 mb-2 flex items-center">
                       <Target className="w-4 h-4 mr-2" />
                       Creative Strategy
                     </h6>
-                    <p className="text-purple-800 text-sm">{recommendations.creativeStrategy}</p>
+                    <p className="text-info-800 text-sm">{recommendations.creativeStrategy}</p>
                   </div>
                 </div>
               );
             })()}
           </div>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
-            <div className="bg-white rounded-lg p-3">
+            <div className="bg-white p-3">
               <div className="flex items-center space-x-2 mb-2">
-                <Eye className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-gray-900">Viewing</span>
+                <Eye className="w-4 h-4 text-info-600" />
+                <span className="font-medium text-navy-950">Viewing</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 <div>Distance: {selectedLocation.distanceFromRoadM || 'Est. 75'}m</div>
                 <div>Direction: {selectedLocation.trafficDirectionVisibility}</div>
                 <div>Lighting: {selectedLocation.lighting}</div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-3">
+            <div className="bg-white p-3">
               <div className="flex items-center space-x-2 mb-2">
-                <Gauge className="w-4 h-4 text-purple-600" />
-                <span className="font-medium text-gray-900">Traffic</span>
+                <Gauge className="w-4 h-4 text-info-600" />
+                <span className="font-medium text-navy-950">Traffic</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 <div>Speed: {selectedLocation.speedLimitKmh} km/h</div>
                 <div>Road: {selectedLocation.roadType}</div>
                 <div>Type: {selectedLocation.boardType}</div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-3">
+            <div className="bg-white p-3">
               <div className="flex items-center space-x-2 mb-2">
-                <Users className="w-4 h-4 text-green-600" />
-                <span className="font-medium text-gray-900">Business</span>
+                <Users className="w-4 h-4 text-success-600" />
+                <span className="font-medium text-navy-950">Business</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 <div>Format: {selectedLocation.format}</div>
                 <div>Owner: {selectedLocation.ownershipManagement.split(' ')[0]}</div>
                 <div>District: {selectedLocation.district}</div>
@@ -774,20 +774,20 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-4">
-            <h5 className="font-medium text-gray-900 mb-2">AI Analysis Context</h5>
+          <div className="bg-white p-4">
+            <h5 className="font-medium text-navy-950 mb-2">AI Analysis Context</h5>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="font-medium text-blue-700">Readability Factors:</span>
-                <ul className="text-gray-600 mt-1 space-y-1">
+                <span className="font-medium text-info-700">Readability Factors:</span>
+                <ul className="text-secondary mt-1 space-y-1">
                   <li>• Speed-based font size requirements</li>
                   <li>• Distance-optimized contrast ratios</li>
                   <li>• Traffic flow visibility patterns</li>
                 </ul>
               </div>
               <div>
-                <span className="font-medium text-green-700">Business Intelligence:</span>
-                <ul className="text-gray-600 mt-1 space-y-1">
+                <span className="font-medium text-success-700">Business Intelligence:</span>
+                <ul className="text-secondary mt-1 space-y-1">
                   <li>• Estimated monthly impressions</li>
                   <li>• Competitive landscape analysis</li>
                   <li>• ROI optimization recommendations</li>
@@ -811,8 +811,8 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
       {/* Error Display */}
       {error && (
-        <div className="text-red-600 text-sm flex items-center space-x-2">
-          <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+        <div className="text-danger-600 text-sm flex items-center space-x-2">
+          <div className="w-4 h-4 bg-danger-500 flex items-center justify-center">
             <span className="text-white text-xs">!</span>
           </div>
           <span>{error}</span>

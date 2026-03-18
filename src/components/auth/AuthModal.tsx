@@ -46,7 +46,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-[#0f2942]/80 flex items-center justify-center z-50 p-4">
-      <div className="bg-white max-w-md w-full relative shadow-2xl">
+      <div className="bg-white max-w-md w-full relative">
         {/* Header bar */}
         <div className="bg-[#0f2942] px-8 py-6 flex items-center justify-between">
           <div>
@@ -67,15 +67,15 @@ const AuthModal: React.FC<AuthModalProps> = ({
 
         <div className="p-8">
           {mode === 'signup' && (
-            <div className="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4">
-              <p className="text-sm text-emerald-800 font-medium">7-day free trial with 3 analyses included</p>
+            <div className="mb-6 bg-success-50 border-l-4 border-success-500 p-4">
+              <p className="text-sm text-success-700 font-medium">7-day free trial with 3 analyses included</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-500 p-4">
-                <p className="text-sm text-red-800">{error}</p>
+              <div className="bg-danger-50 border-l-4 border-danger-500 p-4">
+                <p className="text-sm text-danger-700">{error}</p>
               </div>
             )}
 
@@ -164,7 +164,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
               {mode === 'login' ? t('auth.messages.noAccount') : t('auth.messages.hasAccount')}{' '}
               <button
                 onClick={() => onSwitchMode(mode === 'login' ? 'signup' : 'login')}
-                className="text-emerald-600 hover:text-emerald-700 font-semibold transition-colors"
+                className="text-success-600 hover:text-success-700 font-semibold transition-colors"
               >
                 {mode === 'login' ? t('auth.buttons.switchToSignup') : t('auth.buttons.switchToLogin')}
               </button>

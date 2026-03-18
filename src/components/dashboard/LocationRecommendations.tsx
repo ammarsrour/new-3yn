@@ -346,14 +346,14 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
 
   if (recommendations.length === 0) {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-          <Star className="w-5 h-5 mr-2 text-emerald-500" />
+      <div className="bg-white border-l-4 border-navy-950 p-6">
+        <h3 className="text-xl font-semibold text-navy-950 mb-4 flex items-center tracking-tight">
+          <Star className="w-5 h-5 mr-2 text-success-500" />
           Location Recommendations
         </h3>
         <div className="text-center py-8">
-          <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500">Complete the brand analysis form to see personalized location recommendations</p>
+          <MapPin className="w-12 h-12 text-navy-300 mx-auto mb-4" />
+          <p className="text-secondary">Complete the brand analysis form to see personalized location recommendations</p>
         </div>
       </div>
     );
@@ -365,21 +365,21 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <div className="bg-white border-l-4 border-navy-950 p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h3 className="text-xl font-semibold text-gray-900 flex items-center">
-          <Star className="w-5 h-5 mr-2 text-emerald-500" />
+        <h3 className="text-xl font-semibold text-navy-950 flex items-center tracking-tight">
+          <Star className="w-5 h-5 mr-2 text-success-500" />
           Top Location Recommendations
         </h3>
 
         {/* View Mode Toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
+        <div className="flex bg-surface-100 p-1">
           <button
             onClick={() => setViewMode('map')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
               viewMode === 'map'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-success-600'
+                : 'text-navy-600 hover:text-navy-950'
             }`}
           >
             <Map className="w-4 h-4" />
@@ -387,10 +387,10 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors ${
               viewMode === 'list'
-                ? 'bg-white text-emerald-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-success-600'
+                : 'text-navy-600 hover:text-navy-950'
             }`}
           >
             <List className="w-4 h-4" />
@@ -401,7 +401,7 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
 
       {/* Map View */}
       {viewMode === 'map' && (
-        <div className="mb-6 rounded-xl overflow-hidden border border-gray-200 shadow-sm h-[250px] md:h-[400px]">
+        <div className="mb-6 overflow-hidden border border-surface-200 h-[250px] md:h-[400px]">
           <MapContainer
             center={MUSCAT_CENTER}
             zoom={11}
@@ -424,28 +424,28 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
                 >
                   <Popup>
                     <div className="p-1 min-w-[200px]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      <h4 className="font-bold text-gray-900 text-base mb-2">
+                      <h4 className="font-bold text-navy-950 text-base mb-2">
                         {rec.location.locationName}
                       </h4>
 
                       <div className="space-y-1.5 text-sm mb-3">
-                        <div className="flex items-center text-gray-600">
-                          <span className="font-medium text-gray-700 w-24">Board Type:</span>
+                        <div className="flex items-center text-navy-600">
+                          <span className="font-medium text-navy-700 w-24">Board Type:</span>
                           <span>{rec.location.boardType}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
-                          <span className="font-medium text-gray-700 w-24">Format:</span>
+                        <div className="flex items-center text-navy-600">
+                          <span className="font-medium text-navy-700 w-24">Format:</span>
                           <span>{rec.location.format}</span>
                         </div>
-                        <div className="flex items-center text-gray-600">
-                          <span className="font-medium text-gray-700 w-24">Impressions:</span>
-                          <span className="text-emerald-600 font-semibold">
+                        <div className="flex items-center text-navy-600">
+                          <span className="font-medium text-navy-700 w-24">Impressions:</span>
+                          <span className="text-success-600 font-semibold">
                             {rec.estimatedImpressions.toLocaleString()}/mo
                           </span>
                         </div>
-                        <div className="flex items-center text-gray-600">
-                          <span className="font-medium text-gray-700 w-24">Rental:</span>
-                          <span className="text-emerald-600 font-semibold">
+                        <div className="flex items-center text-navy-600">
+                          <span className="font-medium text-navy-700 w-24">Rental:</span>
+                          <span className="text-success-600 font-semibold">
                             {rec.rentalCost.includes('OMR')
                               ? rec.rentalCost
                               : `OMR ${rec.rentalCost}`}
@@ -453,13 +453,13 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                        <span className="text-emerald-600 font-bold text-lg">
+                      <div className="flex items-center justify-between pt-2 border-t border-surface-100">
+                        <span className="text-success-600 font-bold text-lg">
                           {rec.matchPercentage}% Match
                         </span>
                         <button
                           onClick={() => handleViewDetails(rec.location.id)}
-                          className="text-emerald-600 hover:text-emerald-700 font-medium text-sm hover:underline"
+                          className="text-success-600 hover:text-success-700 font-medium text-sm hover:underline"
                         >
                           View Details →
                         </button>
@@ -479,68 +479,68 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
           <div
             key={rec.location.id}
             ref={(el) => (cardRefs.current[rec.location.id] = el)}
-            className={`border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-300 ${
+            className={`border-l-4 p-6 transition-colors ${
               highlightedCardId === rec.location.id
-                ? 'ring-2 ring-emerald-400 ring-offset-2 animate-pulse'
-                : ''
+                ? 'border-success-500 bg-success-50'
+                : index === 0 ? 'border-success-500 bg-surface-50' : index === 1 ? 'border-navy-400 bg-surface-50' : 'border-warning-500 bg-surface-50'
             }`}
           >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center space-x-3 mb-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                    index === 0 ? 'bg-emerald-500' : index === 1 ? 'bg-gray-400' : 'bg-orange-400'
+                  <div className={`w-8 h-8 flex items-center justify-center text-white font-bold ${
+                    index === 0 ? 'bg-success-500' : index === 1 ? 'bg-navy-400' : 'bg-warning-500'
                   }`}>
                     {index + 1}
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-900">
+                  <h4 className="text-lg font-semibold text-navy-950">
                     {rec.location.locationName}
                   </h4>
                 </div>
-                <p className="text-gray-600 text-sm mb-3">
+                <p className="text-secondary text-sm mb-3">
                   {rec.location.addressLandmark}
                 </p>
               </div>
 
               <div className="text-right">
-                <div className="text-2xl font-bold text-emerald-600">
+                <div className="text-2xl font-bold text-success-600">
                   {rec.matchPercentage}%
                 </div>
-                <div className="text-sm text-gray-500">Match</div>
+                <div className="text-sm text-secondary">Match</div>
               </div>
             </div>
 
-            <div className="bg-emerald-50 rounded-lg p-4 mb-4">
-              <h5 className="font-medium text-emerald-900 mb-2">Why This Location:</h5>
-              <p className="text-emerald-800 text-sm">{rec.reason}</p>
+            <div className="bg-success-50 border-l-4 border-success-400 p-4 mb-4">
+              <h5 className="font-medium text-success-900 mb-2">Why This Location:</h5>
+              <p className="text-success-800 text-sm">{rec.reason}</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4">
               <div className="flex items-center space-x-2">
-                <DollarSign className="w-4 h-4 text-emerald-600" />
+                <DollarSign className="w-4 h-4 text-success-600" />
                 <div>
-                  <div className="text-sm text-gray-500">Monthly Cost</div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="text-sm text-secondary">Monthly Cost</div>
+                  <div className="font-semibold text-navy-950">
                     {rec.rentalCost.includes('OMR') ? rec.rentalCost : `OMR ${rec.rentalCost}`}
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-2">
-                <Eye className="w-4 h-4 text-emerald-600" />
+                <Eye className="w-4 h-4 text-success-600" />
                 <div>
-                  <div className="text-sm text-gray-500">Est. Impressions</div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="text-sm text-secondary">Est. Impressions</div>
+                  <div className="font-semibold text-navy-950">
                     {rec.estimatedImpressions.toLocaleString()}/mo
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center space-x-2">
-                <TrendingUp className="w-4 h-4 text-emerald-600" />
+                <TrendingUp className="w-4 h-4 text-success-600" />
                 <div>
-                  <div className="text-sm text-gray-500">Board Type</div>
-                  <div className="font-semibold text-gray-900">
+                  <div className="text-sm text-secondary">Board Type</div>
+                  <div className="font-semibold text-navy-950">
                     {rec.location.boardType}
                   </div>
                 </div>
@@ -548,17 +548,17 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+              <span className="px-2 py-1 bg-surface-100 text-navy-700 text-xs">
                 {rec.location.roadType}
               </span>
-              <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs">
+              <span className="px-2 py-1 bg-success-100 text-success-700 text-xs">
                 {rec.location.speedLimitKmh} km/h
               </span>
-              <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs">
+              <span className="px-2 py-1 bg-success-100 text-success-700 text-xs">
                 {rec.location.format}
               </span>
               {rec.location.lighting !== 'TBD' && (
-                <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">
+                <span className="px-2 py-1 bg-warning-100 text-warning-700 text-xs">
                   {rec.location.lighting}
                 </span>
               )}
@@ -567,9 +567,9 @@ const LocationRecommendations: React.FC<LocationRecommendationsProps> = ({
         ))}
       </div>
 
-      <div className="mt-6 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg p-4">
-        <h5 className="font-medium text-gray-900 mb-2">Pro Tip:</h5>
-        <p className="text-gray-700 text-sm">
+      <div className="mt-6 bg-success-50 border-l-4 border-success-500 p-4">
+        <h5 className="font-medium text-navy-950 mb-2">Pro Tip:</h5>
+        <p className="text-navy-700 text-sm">
           These recommendations are based on your brand profile. Consider running A/B tests across multiple locations
           to optimize your campaign performance. Digital billboards offer more flexibility for testing different messages.
         </p>

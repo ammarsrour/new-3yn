@@ -59,19 +59,20 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
   ];
 
   return (
-    <div>
-      <h4 className="text-sm font-semibold text-navy-950 mb-4">Brand Analysis</h4>
+    <fieldset>
+      <legend className="text-sm font-semibold text-navy-950 mb-4">Brand Analysis</legend>
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* Brand Category */}
         <div>
-          <label className="block text-xs text-secondary mb-1.5">
+          <label htmlFor="brand-category" className="block text-xs text-secondary mb-1.5">
             Brand Category
           </label>
           <select
+            id="brand-category"
             value={formData.category}
             onChange={(e) => handleChange('category', e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-surface-200 focus:ring-1 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+            className="w-full px-3 py-2 text-sm border border-surface-200 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors min-h-[44px]"
           >
             <option value="">Select...</option>
             {categories.map((category) => (
@@ -84,13 +85,14 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
 
         {/* Target Age Group */}
         <div>
-          <label className="block text-xs text-secondary mb-1.5">
+          <label htmlFor="target-age" className="block text-xs text-secondary mb-1.5">
             Target Age
           </label>
           <select
+            id="target-age"
             value={formData.targetAge}
             onChange={(e) => handleChange('targetAge', e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-surface-200 focus:ring-1 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+            className="w-full px-3 py-2 text-sm border border-surface-200 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors min-h-[44px]"
           >
             <option value="">Select...</option>
             {ageGroups.map((age) => (
@@ -103,13 +105,14 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
 
         {/* Campaign Goal */}
         <div>
-          <label className="block text-xs text-secondary mb-1.5">
+          <label htmlFor="campaign-goal" className="block text-xs text-secondary mb-1.5">
             Campaign Goal
           </label>
           <select
+            id="campaign-goal"
             value={formData.campaignGoal}
             onChange={(e) => handleChange('campaignGoal', e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-surface-200 focus:ring-1 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+            className="w-full px-3 py-2 text-sm border border-surface-200 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors min-h-[44px]"
           >
             <option value="">Select...</option>
             {campaignGoals.map((goal) => (
@@ -122,13 +125,14 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
 
         {/* Budget Range */}
         <div>
-          <label className="block text-xs text-secondary mb-1.5">
+          <label htmlFor="budget-range" className="block text-xs text-secondary mb-1.5">
             Budget Range
           </label>
           <select
+            id="budget-range"
             value={formData.budgetRange}
             onChange={(e) => handleChange('budgetRange', e.target.value)}
-            className="w-full px-3 py-2 text-sm border border-surface-200 focus:ring-1 focus:ring-navy-500 focus:border-navy-500 transition-colors"
+            className="w-full px-3 py-2 text-sm border border-surface-200 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors min-h-[44px]"
           >
             <option value="">Select...</option>
             {budgetRanges.map((budget) => (
@@ -142,17 +146,18 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
 
       {/* Summary - subtle, inline */}
       {formData.category && formData.targetAge && formData.campaignGoal && formData.budgetRange && (
-        <div className="mt-4 pt-4 border-t border-surface-200 text-sm text-secondary">
+        <div className="mt-4 pt-4 border-t border-surface-200 text-sm text-secondary" role="status" aria-live="polite">
+          <span className="sr-only">Selected options: </span>
           <span className="font-medium text-navy-700">{formData.category}</span>
-          <span className="mx-1.5">·</span>
+          <span className="mx-1.5" aria-hidden="true">·</span>
           <span>{formData.targetAge}</span>
-          <span className="mx-1.5">·</span>
+          <span className="mx-1.5" aria-hidden="true">·</span>
           <span>{formData.campaignGoal}</span>
-          <span className="mx-1.5">·</span>
+          <span className="mx-1.5" aria-hidden="true">·</span>
           <span>{formData.budgetRange}</span>
         </div>
       )}
-    </div>
+    </fieldset>
   );
 };
 

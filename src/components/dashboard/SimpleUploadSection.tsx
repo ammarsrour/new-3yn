@@ -155,7 +155,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         {/* Upload Area */}
         {!file ? (
           <div
-            className={`border-2 border-dashed p-8 text-center transition-colors cursor-pointer ${
+            className={`border-2 border-dashed p-6 sm:p-8 text-center transition-colors cursor-pointer focus-within:ring-2 focus-within:ring-navy-500 focus-within:ring-offset-2 ${
               dragActive
                 ? 'border-navy-400 bg-navy-50'
                 : 'border-surface-300 bg-surface-50 hover:border-navy-300'
@@ -165,27 +165,37 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
             onDragOver={handleDrag}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Upload billboard image. Drop file here or press Enter to browse"
           >
             <input
               ref={fileInputRef}
               type="file"
               onChange={handleFileSelect}
               accept=".jpg,.jpeg,.png,.mp4"
-              className="hidden"
+              className="sr-only"
+              aria-describedby="file-requirements"
             />
 
-            <div className="w-10 h-10 bg-surface-100 flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 bg-surface-100 flex items-center justify-center mx-auto mb-3" aria-hidden="true">
               <Upload className="w-5 h-5 text-navy-500" />
             </div>
 
             <p className="font-medium text-navy-950 mb-1">Drop billboard here</p>
             <p className="text-sm text-secondary mb-4">or click to browse</p>
 
-            <span className="inline-block bg-navy-950 text-white px-4 py-2 text-sm font-medium">
+            <span className="inline-block bg-navy-950 text-white px-4 py-2 text-sm font-medium" aria-hidden="true">
               Choose File
             </span>
 
-            <p className="text-xs text-secondary mt-4">JPG, PNG, MP4 up to 50MB</p>
+            <p id="file-requirements" className="text-xs text-secondary mt-4">JPG, PNG, MP4 up to 50MB</p>
           </div>
         ) : (
           /* Preview */
@@ -194,22 +204,23 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
               <div className="bg-navy-900 p-2">
                 <img
                   src={previewUrl}
-                  alt="Preview"
+                  alt={`Preview of uploaded billboard: ${file.name}`}
                   className="w-full max-h-72 object-contain mx-auto"
                 />
               </div>
             )}
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center space-x-2 min-w-0">
-                <Upload className="w-4 h-4 text-navy-500 flex-shrink-0" />
-                <span className="text-sm font-medium text-navy-950 truncate">{file.name}</span>
-                <span className="text-xs text-secondary">
+            <div className="flex items-center justify-between py-2 gap-2">
+              <div className="flex items-center space-x-2 min-w-0 flex-1">
+                <Upload className="w-4 h-4 text-navy-500 flex-shrink-0" aria-hidden="true" />
+                <span className="text-sm font-medium text-navy-950 truncate max-w-[200px] sm:max-w-none" title={file.name}>{file.name}</span>
+                <span className="text-xs text-secondary flex-shrink-0">
                   {(file.size / (1024 * 1024)).toFixed(1)} MB
                 </span>
               </div>
               <button
                 onClick={clearFile}
-                className="text-xs text-secondary hover:text-navy-700 flex-shrink-0"
+                className="text-xs text-secondary hover:text-navy-700 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-navy-500 rounded px-2 py-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                aria-label={`Remove uploaded file: ${file.name}`}
               >
                 Remove
               </button>
@@ -218,7 +229,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         )}
 
         {error && (
-          <div className="mt-3 p-2 bg-danger-50 border-l-2 border-danger-400">
+          <div className="mt-3 p-2 bg-danger-50 border-l-2 border-danger-400" role="alert" aria-live="polite">
             <span className="text-danger-600 text-sm">{error}</span>
           </div>
         )}
@@ -227,7 +238,9 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         <button
           onClick={handleAnalyze}
           disabled={isAnalyzing || !file}
-          className="w-full mt-6 bg-navy-950 text-white py-3 font-medium hover:bg-navy-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-6 bg-navy-950 text-white py-3 font-medium hover:bg-navy-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[48px]"
+          aria-busy={isAnalyzing}
+          aria-disabled={!file}
         >
           {isAnalyzing ? (
             <span className="flex items-center justify-center space-x-2">
@@ -260,34 +273,38 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         <div className="bg-white">
           <button
             onClick={() => setShowCampaignDetails(!showCampaignDetails)}
-            className="w-full flex items-center justify-between p-4 hover:bg-surface-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-surface-50 transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset"
+            aria-expanded={showCampaignDetails}
+            aria-controls="campaign-details-panel"
           >
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-4 h-4 text-navy-500" />
-              <span className="text-sm text-navy-700">
+            <div className="flex items-center space-x-2 min-w-0">
+              <Sparkles className="w-4 h-4 text-navy-500 flex-shrink-0" aria-hidden="true" />
+              <span className="text-sm text-navy-700 truncate">
                 Add campaign details for deeper insights
               </span>
-              <span className="text-xs text-secondary">(optional)</span>
+              <span className="text-xs text-secondary flex-shrink-0">(optional)</span>
               {hasCampaignData && (
-                <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5">
+                <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 flex-shrink-0">
                   Configured
                 </span>
               )}
             </div>
             {showCampaignDetails ? (
-              <ChevronUp className="w-4 h-4 text-navy-400" />
+              <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0" aria-hidden="true" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-navy-400" />
+              <ChevronDown className="w-4 h-4 text-navy-400 flex-shrink-0" aria-hidden="true" />
             )}
           </button>
 
-          {showCampaignDetails && (
-            <div className="px-4 pb-4 border-t border-surface-100">
-              <div className="pt-4">
-                <BrandAnalysisForm onAnalysisChange={setBrandData} />
-              </div>
+          <div
+            id="campaign-details-panel"
+            className={showCampaignDetails ? 'px-4 pb-4 border-t border-surface-100' : 'hidden'}
+            aria-hidden={!showCampaignDetails}
+          >
+            <div className="pt-4">
+              <BrandAnalysisForm onAnalysisChange={setBrandData} />
             </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -296,39 +313,43 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         <div className="bg-white">
           <button
             onClick={() => setShowLocationMap(!showLocationMap)}
-            className="w-full flex items-center justify-between p-4 hover:bg-surface-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-surface-50 transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset"
+            aria-expanded={showLocationMap}
+            aria-controls="location-panel"
           >
-            <div className="flex items-center space-x-2">
-              <MapPin className="w-4 h-4 text-navy-500" />
-              <span className="text-sm text-navy-700">
+            <div className="flex items-center space-x-2 min-w-0">
+              <MapPin className="w-4 h-4 text-navy-500 flex-shrink-0" aria-hidden="true" />
+              <span className="text-sm text-navy-700 truncate">
                 Select a billboard location
               </span>
-              <span className="text-xs text-secondary">(optional)</span>
+              <span className="text-xs text-secondary flex-shrink-0">(optional)</span>
               {location && (
-                <span className="text-xs text-navy-600 bg-surface-100 px-2 py-0.5 truncate max-w-48">
+                <span className="text-xs text-navy-600 bg-surface-100 px-2 py-0.5 truncate max-w-32 sm:max-w-48" title={location}>
                   {location}
                 </span>
               )}
             </div>
             {showLocationMap ? (
-              <ChevronUp className="w-4 h-4 text-navy-400" />
+              <ChevronUp className="w-4 h-4 text-navy-400 flex-shrink-0" aria-hidden="true" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-navy-400" />
+              <ChevronDown className="w-4 h-4 text-navy-400 flex-shrink-0" aria-hidden="true" />
             )}
           </button>
 
-          {showLocationMap && (
-            <div className="px-4 pb-4 border-t border-surface-100">
-              <div className="pt-4">
-                <IntelligentLocationSelector
-                  value={location}
-                  onChange={handleLocationChange}
-                  error={locationError}
-                  brandCategory={brandData.category}
-                />
-              </div>
+          <div
+            id="location-panel"
+            className={showLocationMap ? 'px-4 pb-4 border-t border-surface-100' : 'hidden'}
+            aria-hidden={!showLocationMap}
+          >
+            <div className="pt-4">
+              <IntelligentLocationSelector
+                value={location}
+                onChange={handleLocationChange}
+                error={locationError}
+                brandCategory={brandData.category}
+              />
             </div>
-          )}
+          </div>
         </div>
       )}
     </div>

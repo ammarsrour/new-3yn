@@ -3,16 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { GoogleMap, MarkerF, InfoWindowF, useJsApiLoader } from '@react-google-maps/api';
 import {
   MapPin,
-  Navigation,
   Search,
   X,
-  Clock,
   Globe,
   Eye,
   Gauge,
-  DollarSign,
   Users,
-  Zap,
   AlertTriangle,
   CheckCircle,
   Info,
@@ -218,53 +214,61 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
   return (
     <div className="space-y-4">
       {/* Mode Toggle */}
-      <div className="flex space-x-2">
+      <fieldset className="flex flex-wrap gap-2" role="radiogroup" aria-label="Location input mode">
+        <legend className="sr-only">Select input mode</legend>
         <button
           type="button"
           onClick={() => setInputMode('billboard')}
-          className={`px-4 py-2 text-sm font-medium transition-colors ${
+          role="radio"
+          aria-checked={inputMode === 'billboard'}
+          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'billboard'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <MapPin className="w-4 h-4 inline mr-2" />
+          <MapPin className="w-4 h-4 inline mr-2" aria-hidden="true" />
           Billboard Locations
         </button>
         <button
           type="button"
           onClick={() => setInputMode('address')}
-          className={`px-4 py-2 text-sm font-medium transition-colors ${
+          role="radio"
+          aria-checked={inputMode === 'address'}
+          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'address'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <Search className="w-4 h-4 inline mr-2" />
+          <Search className="w-4 h-4 inline mr-2" aria-hidden="true" />
           Custom Address
         </button>
         <button
           type="button"
           onClick={() => setInputMode('coordinates')}
-          className={`px-4 py-2 text-sm font-medium transition-colors ${
+          role="radio"
+          aria-checked={inputMode === 'coordinates'}
+          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'coordinates'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <Globe className="w-4 h-4 inline mr-2" />
+          <Globe className="w-4 h-4 inline mr-2" aria-hidden="true" />
           Coordinates
         </button>
-      </div>
+      </fieldset>
 
       {/* Difficulty Filter (Billboard Mode Only) */}
       {inputMode === 'billboard' && (
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-secondary">Filter by difficulty:</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="difficulty-filter" className="text-sm text-secondary">Filter by difficulty:</label>
           <select
+            id="difficulty-filter"
             value={filterDifficulty}
             onChange={(e) => setFilterDifficulty(e.target.value)}
-            className="text-sm border border-surface-300 px-2 py-1"
+            className="text-sm border border-surface-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
           >
             <option value="all">All Locations</option>
             <option value="easy">Easy (Low Speed)</option>
@@ -274,7 +278,8 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </select>
           <button
             onClick={() => setShowMap(!showMap)}
-            className={`px-3 py-1 text-sm font-medium transition-colors ${
+            aria-pressed={showMap}
+            className={`px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
               showMap ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
@@ -282,7 +287,9 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           </button>
           <button
             onClick={() => setShowComparison(!showComparison)}
-            className={`px-3 py-1 text-sm font-medium transition-colors ${
+            aria-pressed={showComparison}
+            aria-label={`Compare locations (${comparisonLocations.length} selected)`}
+            className={`px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
               showComparison ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
@@ -294,11 +301,19 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
       {/* Input Field */}
       <div className="relative">
         <div className="relative">
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+          <label htmlFor="location-search" className="sr-only">
+            {inputMode === 'billboard'
+              ? 'Search billboard locations'
+              : inputMode === 'address'
+              ? 'Enter custom address'
+              : 'Enter coordinates'}
+          </label>
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2" aria-hidden="true">
             <Search className="w-4 h-4 text-navy-400" />
           </div>
 
           <input
+            id="location-search"
             ref={inputRef}
             type="text"
             value={value}
@@ -316,7 +331,11 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
                 ? 'Enter custom address'
                 : 'Enter coordinates (e.g., 23.5880, 58.3829)'
             }
-            className={`w-full pl-10 pr-20 py-3 border focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors ${
+            aria-describedby={error ? 'location-error' : undefined}
+            aria-invalid={!!error}
+            aria-autocomplete="list"
+            aria-expanded={showSuggestions && inputMode === 'billboard'}
+            className={`w-full pl-10 pr-20 py-3 border focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent transition-colors min-h-[48px] ${
               error ? 'border-danger-300 bg-danger-50' : 'border-surface-300'
             }`}
           />
@@ -349,7 +368,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
           >
             <div className="p-2">
               <div className="text-xs text-secondary mb-2 flex items-center justify-between">
-                <span>🇴🇲 Muscat Billboard Locations ({filteredSuggestions.length})</span>
+                <span>Muscat Billboard Locations ({filteredSuggestions.length})</span>
                 <span>ROI Score</span>
               </div>
               {filteredSuggestions.map((location) => (
@@ -804,8 +823,8 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
       {/* Error Display */}
       {error && (
-        <div className="text-danger-600 text-sm flex items-center space-x-2">
-          <div className="w-4 h-4 bg-danger-500 flex items-center justify-center">
+        <div id="location-error" className="text-danger-600 text-sm flex items-center space-x-2" role="alert" aria-live="polite">
+          <div className="w-4 h-4 bg-danger-500 flex items-center justify-center flex-shrink-0" aria-hidden="true">
             <span className="text-white text-xs">!</span>
           </div>
           <span>{error}</span>

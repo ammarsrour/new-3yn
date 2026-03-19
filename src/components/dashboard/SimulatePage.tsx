@@ -17,7 +17,7 @@ const SimulatePage: React.FC = () => {
     <div className="max-w-2xl mx-auto text-center py-12">
       {/* Coming Soon Badge */}
       <div className="inline-flex items-center space-x-1.5 bg-navy-100 text-navy-700 px-3 py-1 text-sm font-medium mb-6">
-        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+        <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse motion-reduce:animate-none" aria-hidden="true" />
         <span>Coming Soon</span>
       </div>
 
@@ -62,34 +62,34 @@ const SimulatePage: React.FC = () => {
       </p>
 
       {/* Feature Bullets */}
-      <div className="flex justify-center space-x-8 mb-12">
-        <div className="flex items-center space-x-2 text-sm">
-          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center">
+      <ul className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-12" aria-label="Features">
+        <li className="flex items-center space-x-2 text-sm">
+          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center flex-shrink-0" aria-hidden="true">
             <MapPin className="w-4 h-4 text-navy-600" />
           </div>
           <span className="text-navy-700">Real billboard locations</span>
-        </div>
+        </li>
 
-        <div className="flex items-center space-x-2 text-sm">
-          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center">
+        <li className="flex items-center space-x-2 text-sm">
+          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center flex-shrink-0" aria-hidden="true">
             <Sun className="w-4 h-4 text-navy-600" />
           </div>
           <span className="text-navy-700">Time-of-day simulation</span>
-        </div>
+        </li>
 
-        <div className="flex items-center space-x-2 text-sm">
-          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center">
+        <li className="flex items-center space-x-2 text-sm">
+          <div className="w-8 h-8 bg-surface-100 flex items-center justify-center flex-shrink-0" aria-hidden="true">
             <Eye className="w-4 h-4 text-navy-600" />
           </div>
           <span className="text-navy-700">Drive-by perspective</span>
-        </div>
-      </div>
+        </li>
+      </ul>
 
       {/* Notify Form */}
-      <div className="bg-white border border-surface-200 p-6 max-w-md mx-auto">
+      <div className="bg-white border border-surface-200 p-4 sm:p-6 max-w-md mx-auto">
         {submitted ? (
-          <div className="flex items-center justify-center space-x-2 text-navy-700">
-            <div className="w-8 h-8 bg-emerald-100 flex items-center justify-center">
+          <div className="flex items-center justify-center space-x-2 text-navy-700" role="status" aria-live="polite">
+            <div className="w-8 h-8 bg-emerald-100 flex items-center justify-center" aria-hidden="true">
               <Check className="w-4 h-4 text-emerald-600" />
             </div>
             <span className="font-medium">We'll notify you when this launches!</span>
@@ -97,21 +97,26 @@ const SimulatePage: React.FC = () => {
         ) : (
           <>
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <Bell className="w-4 h-4 text-navy-600" />
-              <span className="font-medium text-navy-950">Notify me when this launches</span>
+              <Bell className="w-4 h-4 text-navy-600" aria-hidden="true" />
+              <span className="font-medium text-navy-950" id="notify-form-label">Notify me when this launches</span>
             </div>
-            <form onSubmit={handleSubmit} className="flex space-x-2">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2" aria-labelledby="notify-form-label">
+              <label htmlFor="notify-email" className="sr-only">Email address</label>
               <input
+                id="notify-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="flex-1 px-3 py-2 border border-surface-300 text-sm focus:ring-2 focus:ring-navy-500 focus:border-transparent"
+                className="flex-1 px-3 py-2 border border-surface-300 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
                 required
+                autoComplete="email"
+                aria-describedby="email-hint"
               />
+              <span id="email-hint" className="sr-only">Enter your email to be notified when billboard simulation launches</span>
               <button
                 type="submit"
-                className="bg-navy-950 text-white px-4 py-2 text-sm font-medium hover:bg-navy-800 transition-colors"
+                className="bg-navy-950 text-white px-4 py-2 text-sm font-medium hover:bg-navy-800 transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px]"
               >
                 Notify Me
               </button>

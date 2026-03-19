@@ -74,26 +74,30 @@ const SimpleAnalysisResults: React.FC<SimpleAnalysisResultsProps> = ({
       {/* Hero: Billboard + Score */}
       <div className="bg-white p-6">
         {/* Header */}
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
           <div>
             <h2 className="text-lg font-bold text-navy-950">Analysis Complete</h2>
             <p className="text-sm text-secondary mt-0.5">
-              {analysis.location} · {analysis.timestamp.toLocaleDateString()}
+              <span className="truncate max-w-[200px] inline-block align-bottom" title={analysis.location}>{analysis.location}</span>
+              <span aria-hidden="true"> · </span>
+              <time dateTime={analysis.timestamp.toISOString()}>{analysis.timestamp.toLocaleDateString()}</time>
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <button
               onClick={onNewAnalysis}
-              className="flex items-center space-x-1.5 text-navy-600 px-3 py-1.5 hover:bg-surface-100 text-sm"
+              className="flex items-center space-x-1.5 text-navy-600 px-3 py-1.5 hover:bg-surface-100 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 rounded min-h-[44px]"
+              aria-label="Start new analysis"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4" aria-hidden="true" />
               <span>New</span>
             </button>
             <button
               onClick={handleDownloadPDF}
-              className="flex items-center space-x-1.5 bg-navy-950 text-white px-3 py-1.5 hover:bg-navy-800 text-sm"
+              className="flex items-center space-x-1.5 bg-navy-950 text-white px-3 py-1.5 hover:bg-navy-800 text-sm focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px]"
+              aria-label="Download analysis as PDF"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4" aria-hidden="true" />
               <span>PDF</span>
             </button>
           </div>
@@ -105,14 +109,14 @@ const SimpleAnalysisResults: React.FC<SimpleAnalysisResultsProps> = ({
           <div className="bg-navy-950 p-3">
             <img
               src={analysis.image}
-              alt="Billboard"
+              alt={`Analyzed billboard at ${analysis.location}`}
               className="w-full h-auto max-h-96 object-contain mx-auto"
             />
           </div>
 
           {/* Score - simple */}
-          <div className="text-center lg:text-left">
-            <div className={`text-5xl font-bold tabular-nums ${getScoreColor(analysis.score)}`}>
+          <div className="text-center lg:text-left" aria-label="Analysis scores">
+            <div className={`text-5xl font-bold tabular-nums ${getScoreColor(analysis.score)}`} aria-label={`Overall score: ${Math.round(analysis.score)} out of 100`}>
               {Math.round(analysis.score)}
             </div>
             <div className={`text-sm font-medium ${getScoreColor(analysis.score)} mb-4`}>
@@ -120,24 +124,24 @@ const SimpleAnalysisResults: React.FC<SimpleAnalysisResultsProps> = ({
             </div>
 
             {/* Breakdown - inline */}
-            <div className="space-y-1.5 text-sm">
+            <dl className="space-y-1.5 text-sm">
               <div className="flex justify-between">
-                <span className="text-secondary">Font</span>
-                <span className="tabular-nums">{Math.round(analysis.fontScore)}/25</span>
+                <dt className="text-secondary">Font</dt>
+                <dd className="tabular-nums">{Math.round(analysis.fontScore)}/25</dd>
               </div>
               <div className="flex justify-between">
-                <span className="text-secondary">Contrast</span>
-                <span className="tabular-nums">{Math.round(analysis.contrastScore)}/25</span>
+                <dt className="text-secondary">Contrast</dt>
+                <dd className="tabular-nums">{Math.round(analysis.contrastScore)}/25</dd>
               </div>
               <div className="flex justify-between">
-                <span className="text-secondary">Layout</span>
-                <span className="tabular-nums">{Math.round(analysis.layoutScore)}/25</span>
+                <dt className="text-secondary">Layout</dt>
+                <dd className="tabular-nums">{Math.round(analysis.layoutScore)}/25</dd>
               </div>
               <div className="flex justify-between">
-                <span className="text-secondary">CTA</span>
-                <span className="tabular-nums">{Math.round(analysis.ctaScore)}/25</span>
+                <dt className="text-secondary">CTA</dt>
+                <dd className="tabular-nums">{Math.round(analysis.ctaScore)}/25</dd>
               </div>
-            </div>
+            </dl>
           </div>
         </div>
       </div>

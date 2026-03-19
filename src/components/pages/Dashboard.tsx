@@ -161,17 +161,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   return (
     <div className="min-h-screen bg-surface-50">
       {/* Header */}
-      <div className="bg-white border-b border-surface-200">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+      <header className="bg-white border-b border-surface-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
           <h1 className="text-lg font-bold text-navy-950">3YN</h1>
 
           {/* Trial indicator */}
           {userProfile && userProfile.subscription_status === 'trial' && (
             <div className="flex items-center space-x-3">
               <span className="text-sm text-secondary tabular-nums">
+                <span className="sr-only">Remaining credits: </span>
                 {userProfile.trial_credits_remaining} credits
               </span>
-              <button className="text-sm text-navy-600 hover:text-navy-800">
+              <button
+                className="text-sm text-navy-600 hover:text-navy-800 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 rounded px-2 py-1"
+                aria-label="Upgrade subscription plan"
+              >
                 Upgrade
               </button>
             </div>
@@ -179,14 +183,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="max-w-5xl mx-auto px-6">
-          <nav className="flex space-x-1">
+        <nav className="max-w-5xl mx-auto px-4 sm:px-6" aria-label="Dashboard navigation">
+          <div className="flex space-x-1" role="tablist">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeView === tab.id;
               return (
                 <button
                   key={tab.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`panel-${tab.id}`}
                   onClick={() => {
                     setActiveView(tab.id);
                     // Reset analysis view when switching to analyze tab
@@ -194,27 +201,27 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                       // Keep current analysis visible
                     }
                   }}
-                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors relative ${
+                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors relative focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset ${
                     isActive
                       ? 'text-navy-950'
                       : 'text-secondary hover:text-navy-700'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4" aria-hidden="true" />
                   <span>{tab.label}</span>
                   {/* Active indicator */}
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" aria-hidden="true" />
                   )}
                 </button>
               );
             })}
-          </nav>
-        </div>
-      </div>
+          </div>
+        </nav>
+      </header>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8" id={`panel-${activeView}`} role="tabpanel" aria-label={`${activeView} content`}>
         {activeView === 'analyze' && (
           <>
             {isAnalyzing ? (
@@ -255,7 +262,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         {activeView === 'account' && (
           <AccountPage user={user} userProfile={userProfile} />
         )}
-      </div>
+      </main>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Upload, ChevronDown, ChevronUp } from 'lucide-react';
+import { Upload, ChevronDown, ChevronUp, Lightbulb } from 'lucide-react';
 import { LocationData } from '../../services/locationService';
 import IntelligentLocationSelector from './IntelligentLocationSelector';
 import { BillboardMetadata } from '../../types/billboard';
@@ -7,6 +7,7 @@ import BrandAnalysisForm, { BrandAnalysisData } from './BrandAnalysisForm';
 import LocationRecommendations from './LocationRecommendations';
 import { BillboardDataService } from '../../services/billboardDataService';
 import { activityLogger } from '../../services/activityLogger';
+import FeatureTooltip from './FeatureTooltip';
 
 interface UploadSectionProps {
   onAnalyze: (file: File, location: string, distance: number, locationData?: LocationData, billboardMetadata?: BillboardMetadata) => void;
@@ -263,22 +264,30 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
 
       {/* Advanced Options - Collapsed by default */}
       <div className="bg-white">
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between p-4 text-left hover:bg-surface-50 transition-colors"
+        <FeatureTooltip
+          id="advanced-options"
+          title="Brand Analysis"
+          description="Add brand context for smarter location recommendations and tailored analysis."
+          position="top"
+          delay={2000}
         >
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-navy-700">Advanced Options</span>
-            {hasAdvancedData && (
-              <span className="text-xs text-secondary">Configured</span>
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="w-full flex items-center justify-between p-4 text-left hover:bg-surface-50 transition-colors"
+          >
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium text-navy-700">Advanced Options</span>
+              {hasAdvancedData && (
+                <span className="text-xs text-secondary">Configured</span>
+              )}
+            </div>
+            {showAdvanced ? (
+              <ChevronUp className="w-4 h-4 text-navy-400" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-navy-400" />
             )}
-          </div>
-          {showAdvanced ? (
-            <ChevronUp className="w-4 h-4 text-navy-400" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-navy-400" />
-          )}
-        </button>
+          </button>
+        </FeatureTooltip>
 
         {showAdvanced && (
           <div className="border-t border-surface-200">

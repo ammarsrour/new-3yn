@@ -5,6 +5,7 @@ import { Download, RefreshCw, Eye, Sun, Cloud, CloudRain, Gauge } from 'lucide-r
 import ScoreCircle from './ScoreCircle';
 import { generatePDFReport } from '../../services/pdfGenerator';
 import { activityLogger } from '../../services/activityLogger';
+import FeatureTooltip from './FeatureTooltip';
 
 interface AnalysisResultsProps {
   analysis: AnalysisResult;
@@ -250,13 +251,21 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
 
       {/* Simulator - Secondary feature, collapsible feel */}
       <details className="bg-white group">
-        <summary className="p-6 cursor-pointer flex items-center justify-between hover:bg-surface-50 transition-colors">
-          <div className="flex items-center space-x-2">
-            <Eye className="w-5 h-5 text-navy-600" />
-            <h3 className="font-semibold text-navy-950">Real-World Simulator</h3>
-          </div>
-          <span className="text-sm text-secondary group-open:hidden">Click to expand</span>
-        </summary>
+        <FeatureTooltip
+          id="real-world-simulator"
+          title="Test at Different Distances"
+          description="See how your billboard looks from 50m, 100m, and 150m with weather and speed conditions."
+          position="bottom"
+          delay={1500}
+        >
+          <summary className="p-6 cursor-pointer flex items-center justify-between hover:bg-surface-50 transition-colors">
+            <div className="flex items-center space-x-2">
+              <Eye className="w-5 h-5 text-navy-600" />
+              <h3 className="font-semibold text-navy-950">Real-World Simulator</h3>
+            </div>
+            <span className="text-sm text-secondary group-open:hidden">Click to expand</span>
+          </summary>
+        </FeatureTooltip>
 
         <div className="px-6 pb-6 pt-0 border-t border-surface-100">
           {/* Simulator Controls - All same accent color */}

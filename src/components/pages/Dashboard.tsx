@@ -5,6 +5,10 @@ import AnalysisResults from '../dashboard/AnalysisResults';
 import AnalysisProgress from '../dashboard/AnalysisProgress';
 import AnalysisHistoryComponent from '../dashboard/AnalysisHistory';
 import UsageStats from '../dashboard/UsageStats';
+import OnboardingWelcome from '../dashboard/OnboardingWelcome';
+import FirstAnalysisSuccess from '../dashboard/FirstAnalysisSuccess';
+import EmptyStateUpload from '../dashboard/EmptyStateUpload';
+import { useOnboarding } from '../../hooks/useOnboarding';
 import { BillboardMetadata } from '../../types/billboard';
 import EnterpriseAnalytics from '../enterprise/EnterpriseAnalytics';
 import TeamWorkspace from '../enterprise/TeamWorkspace';
@@ -27,6 +31,18 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   const [analysisStage, setAnalysisStage] = useState<'uploading' | 'analyzing' | 'generating' | 'completed'>('uploading');
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [analysisHistory, setAnalysisHistory] = useState<AnalysisHistory[]>([]);
+  const [showFirstAnalysisCelebration, setShowFirstAnalysisCelebration] = useState(false);
+
+  // Onboarding state
+  const {
+    shouldShowWelcome,
+    isNewUser,
+    dismissWelcome,
+    skipWelcome,
+    completeFirstAnalysis,
+    acknowledgeFirstAnalysis,
+    state: onboardingState
+  } = useOnboarding(user.id);
 
   // Mock enterprise data
   const mockOrganization: Organization = {
@@ -218,6 +234,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       };
       setAnalysisHistory(prev => [historyItem, ...prev]);
 
+      // First analysis celebration
+      if (onboardingState.totalAnalyses === 0) {
+        completeFirstAnalysis();
+        setShowFirstAnalysisCelebration(true);
+      }
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       await activityLogger.logAnalysisFailed(user.id, location, errorMessage);
@@ -275,10 +297,39 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
 
   // Determine if user has history
   const hasHistory = analysisHistory.length > 0;
-  const isNewUser = user.totalAnalyses === 0 && !hasHistory;
+  const isFirstTimeUser = user.totalAnalyses === 0 && !hasHistory && isNewUser;
+
+  const handleFirstAnalysisContinue = () => {
+    setShowFirstAnalysisCelebration(false);
+    acknowledgeFirstAnalysis();
+  };
+
+  const handleExploreFeatures = () => {
+    setShowFirstAnalysisCelebration(false);
+    acknowledgeFirstAnalysis();
+    // Could navigate to a features tour or expand advanced options
+  };
 
   return (
     <div className="min-h-screen bg-surface-50">
+      {/* First Analysis Celebration Modal */}
+      {showFirstAnalysisCelebration && currentAnalysis && (
+        <FirstAnalysisSuccess
+          score={currentAnalysis.score}
+          onContinue={handleFirstAnalysisContinue}
+          onExploreFeatures={handleExploreFeatures}
+        />
+      )}
+
+      {/* Onboarding Welcome Banner */}
+      {shouldShowWelcome && (
+        <OnboardingWelcome
+          userName={user.name}
+          onDismiss={dismissWelcome}
+          onSkip={skipWelcome}
+        />
+      )}
+
       {/* Dashboard Header */}
       <div className="bg-white border-b border-surface-200">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5">
@@ -361,6 +412,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
           <div className={`grid gap-8 ${hasHistory ? 'lg:grid-cols-[1fr,340px]' : 'max-w-3xl mx-auto'}`}>
             {/* Main Upload Area */}
             <div>
+              {/* New user contextual help */}
+              <EmptyStateUpload isNewUser={isFirstTimeUser} />
+
               <UploadSection
                 onAnalyze={handleAnalyze}
                 isAnalyzing={isAnalyzing}

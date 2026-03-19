@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnalysisHistory as AnalysisHistoryType } from '../../types';
-import { MapPin, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 
 interface AnalysisHistoryProps {
   history: AnalysisHistoryType[];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, Cloud, Sun, Wind } from 'lucide-react';
+import { Car, Cloud, Sun, Wind, Gauge } from 'lucide-react';
 
 interface AdvancedDistanceSimulatorProps {
   imageUrl: string;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, Car, Gauge, Cloud, Sun, Wind } from 'lucide-react';
+import { Car, Cloud, Sun, Wind } from 'lucide-react';
 
 interface AdvancedDistanceSimulatorProps {
   imageUrl: string;
@@ -103,10 +103,9 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
   const viewingTime = getViewingTime(selectedSpeed);
 
   return (
-    <div className="bg-white border-l-4 border-navy-950 p-6">
-      <h3 className="text-xl font-semibold text-navy-950 mb-6 flex items-center tracking-tight">
-        <Eye className="w-5 h-5 mr-2" />
-        Advanced Distance Simulation
+    <div className="bg-white p-6">
+      <h3 className="text-sm font-semibold text-navy-950 mb-6">
+        Distance Simulation
       </h3>
 
       {/* Control Panel */}
@@ -229,91 +228,60 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
         </button>
       </div>
 
-      {/* Analysis Results */}
+      {/* Analysis Results - Quieter grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="text-center p-4 bg-info-50 border-l-4 border-info-500">
-          <div className={`text-3xl font-bold tabular-nums ${
-            currentScore >= 80 ? 'text-success-600' :
-            currentScore >= 60 ? 'text-warning-600' : 'text-danger-600'
-          }`}>
-            {currentScore}/100
+        <div className="text-center p-3 bg-surface-50">
+          <div className="text-2xl font-semibold text-navy-950 tabular-nums">
+            {currentScore}
           </div>
-          <div className="text-sm text-secondary mt-1">Readability Score</div>
+          <div className="text-xs text-secondary mt-1">Readability</div>
         </div>
 
-        <div className="text-center p-4 bg-navy-50 border-l-4 border-navy-500">
-          <div className="text-3xl font-bold text-navy-700 tabular-nums">
+        <div className="text-center p-3 bg-surface-50">
+          <div className="text-2xl font-semibold text-navy-950 tabular-nums">
             {viewingTime.toFixed(1)}s
           </div>
-          <div className="text-sm text-secondary mt-1">Viewing Time</div>
+          <div className="text-xs text-secondary mt-1">View Time</div>
         </div>
 
-        <div className="text-center p-4 bg-success-50 border-l-4 border-success-500">
-          <div className="text-3xl font-bold text-success-600 tabular-nums">
+        <div className="text-center p-3 bg-surface-50">
+          <div className="text-2xl font-semibold text-navy-950 tabular-nums">
             {Math.round(getScaleLevel(selectedDistance) * 100)}%
           </div>
-          <div className="text-sm text-secondary mt-1">Apparent Size</div>
+          <div className="text-xs text-secondary mt-1">Apparent Size</div>
         </div>
 
-        <div className="text-center p-4 bg-warning-50 border-l-4 border-warning-500">
-          <div className="text-3xl font-bold text-warning-600 flex items-center justify-center">
+        <div className="text-center p-3 bg-surface-50">
+          <div className="text-2xl font-semibold text-navy-950 flex items-center justify-center">
             {getWeatherIcon(weatherCondition)}
-            <span className="ml-2 capitalize">{weatherCondition}</span>
+            <span className="ml-1.5 capitalize text-lg">{weatherCondition}</span>
           </div>
-          <div className="text-sm text-secondary mt-1">Conditions</div>
+          <div className="text-xs text-secondary mt-1">Conditions</div>
         </div>
       </div>
 
-      {/* Professional Insights */}
-      <div className="bg-surface-50 border-l-4 border-info-500 p-6">
-        <h4 className="font-semibold text-navy-950 mb-4">
-          Professional Viewing Analysis
-        </h4>
+      {/* Insights - Quieter */}
+      <div className="bg-surface-50 p-4 text-sm">
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h5 className="font-medium text-info-700 mb-2">Current Conditions Impact:</h5>
-            <ul className="space-y-1 text-sm text-navy-700">
-              <li>• Distance reduces apparent size by {Math.round((1 - getScaleLevel(selectedDistance)) * 100)}%</li>
-              <li>• Speed creates {getBlurLevel(selectedDistance, selectedSpeed, weatherCondition).toFixed(1)}px motion blur</li>
-              <li>• Weather reduces visibility by {Math.round((1 - getOpacity(weatherCondition)) * 100)}%</li>
-              <li>• Effective viewing time: {viewingTime.toFixed(1)} seconds</li>
+            <h5 className="font-medium text-navy-950 mb-2">Conditions Impact</h5>
+            <ul className="space-y-1 text-secondary">
+              <li>Distance reduces size by {Math.round((1 - getScaleLevel(selectedDistance)) * 100)}%</li>
+              <li>Motion blur: {getBlurLevel(selectedDistance, selectedSpeed, weatherCondition).toFixed(1)}px</li>
+              <li>Viewing time: {viewingTime.toFixed(1)}s</li>
             </ul>
           </div>
           <div>
-            <h5 className="font-medium text-navy-700 mb-2">Optimization Recommendations:</h5>
-            <ul className="space-y-1 text-sm text-navy-700">
+            <h5 className="font-medium text-navy-950 mb-2">Recommendations</h5>
+            <ul className="space-y-1 text-secondary">
               {currentScore < 70 && (
-                <li>• Increase font size by {Math.round((70 - currentScore) * 0.8)}% for this distance</li>
+                <li>Increase font size by {Math.round((70 - currentScore) * 0.8)}%</li>
               )}
               {selectedSpeed > 55 && (
-                <li>• Simplify message for high-speed viewing</li>
+                <li>Simplify message for high-speed viewing</li>
               )}
-              {weatherCondition !== 'clear' && (
-                <li>• Use higher contrast colors for weather conditions</li>
-              )}
-              <li>• Target 6 words or less for {viewingTime.toFixed(1)}s viewing time</li>
+              <li>Target 6 words or less</li>
             </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Oman-Specific Conditions */}
-      <div className="mt-4 bg-warning-50 border-l-4 border-warning-500 p-4">
-        <h5 className="font-medium text-warning-800 mb-2 flex items-center">
-          Oman-Specific Considerations
-        </h5>
-        <div className="grid md:grid-cols-3 gap-4 text-sm text-warning-700">
-          <div>
-            <span className="font-medium">Desert Conditions:</span>
-            <p>High ambient light requires 20% higher contrast</p>
-          </div>
-          <div>
-            <span className="font-medium">Sandstorm Season:</span>
-            <p>Visibility can drop to 50m during peak conditions</p>
-          </div>
-          <div>
-            <span className="font-medium">Highway Speeds:</span>
-            <p>Sultan Qaboos Street: 80-120 km/h typical speeds</p>
           </div>
         </div>
       </div>

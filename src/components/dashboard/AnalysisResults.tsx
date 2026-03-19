@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnalysisResult } from '../../types';
-import { Download, RefreshCw, AlertTriangle, AlertCircle, Lightbulb, Gauge, Eye, Sparkles, Sun, Cloud, CloudRain } from 'lucide-react';
+import { Download, RefreshCw, Eye, Sun, Cloud, CloudRain, Gauge } from 'lucide-react';
 import ScoreCircle from './ScoreCircle';
 import { generatePDFReport } from '../../services/pdfGenerator';
 import { activityLogger } from '../../services/activityLogger';
@@ -18,11 +18,11 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
   const [simulatorWeather, setSimulatorWeather] = useState<'clear' | 'cloudy' | 'rainy'>('clear');
   const [simulatorSpeed, setSimulatorSpeed] = useState<60 | 80 | 100>(80);
 
+  // Score color - only use semantic color for poor scores
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-success-600';
-    if (score >= 70) return 'text-success-500';
-    if (score >= 50) return 'text-warning-600';
-    return 'text-danger-600';
+    if (score >= 70) return 'text-navy-950';
+    if (score >= 50) return 'text-navy-700';
+    return 'text-danger-600'; // Only red for truly poor
   };
 
   const getScoreLabel = (score: number) => {
@@ -179,23 +179,22 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
         </div>
       </div>
 
-      {/* Issues Section - Prioritized by severity */}
+      {/* Issues Section - Quieter, unified styling */}
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Critical Issues */}
+        {/* Critical Issues - Only these get accent color */}
         {analysis.criticalIssues.length > 0 && (
           <div className="bg-white p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <AlertTriangle className="w-5 h-5 text-danger-500" />
-              <h3 className="font-semibold text-navy-950">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-navy-950">
                 Critical Issues
               </h3>
-              <span className="text-xs bg-danger-100 text-danger-700 px-2 py-0.5">
+              <span className="text-xs text-danger-600 tabular-nums">
                 {analysis.criticalIssues.length}
               </span>
             </div>
             <div className="space-y-3">
               {analysis.criticalIssues.map((issue) => (
-                <div key={issue.id} className="border-l-4 border-danger-500 pl-4 py-2">
+                <div key={issue.id} className="border-l-2 border-danger-400 pl-4 py-1">
                   <h4 className="font-medium text-navy-950 text-sm">{issue.title}</h4>
                   <p className="text-secondary text-sm mt-0.5">{issue.description}</p>
                 </div>
@@ -204,21 +203,20 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
           </div>
         )}
 
-        {/* Quick Wins */}
+        {/* Quick Wins - Neutral styling */}
         {analysis.quickWins.length > 0 && (
           <div className="bg-white p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <Lightbulb className="w-5 h-5 text-success-500" />
-              <h3 className="font-semibold text-navy-950">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-navy-950">
                 Quick Wins
               </h3>
-              <span className="text-xs bg-success-100 text-success-700 px-2 py-0.5">
+              <span className="text-xs text-secondary tabular-nums">
                 {analysis.quickWins.length}
               </span>
             </div>
             <div className="space-y-3">
               {analysis.quickWins.map((win) => (
-                <div key={win.id} className="border-l-4 border-success-500 pl-4 py-2">
+                <div key={win.id} className="border-l-2 border-navy-200 pl-4 py-1">
                   <h4 className="font-medium text-navy-950 text-sm">{win.title}</h4>
                   <p className="text-secondary text-sm mt-0.5">{win.description}</p>
                 </div>
@@ -228,21 +226,20 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
         )}
       </div>
 
-      {/* Minor Issues - Full width if exists */}
+      {/* Minor Issues - Subtle treatment */}
       {analysis.minorIssues.length > 0 && (
         <div className="bg-white p-6">
-          <div className="flex items-center space-x-2 mb-4">
-            <AlertCircle className="w-5 h-5 text-warning-500" />
-            <h3 className="font-semibold text-navy-950">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-navy-950">
               Additional Improvements
             </h3>
-            <span className="text-xs bg-warning-100 text-warning-700 px-2 py-0.5">
+            <span className="text-xs text-secondary tabular-nums">
               {analysis.minorIssues.length}
             </span>
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             {analysis.minorIssues.map((issue) => (
-              <div key={issue.id} className="border-l-4 border-warning-400 pl-4 py-2 bg-surface-50">
+              <div key={issue.id} className="border-l-2 border-surface-200 pl-4 py-1">
                 <h4 className="font-medium text-navy-950 text-sm">{issue.title}</h4>
                 <p className="text-secondary text-sm mt-0.5">{issue.description}</p>
               </div>
@@ -340,8 +337,8 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
           </div>
 
           {/* Billboard in Simulator */}
-          <div className="bg-surface-100 p-6">
-            <div className="bg-navy-800 p-2 mx-auto max-w-xl">
+          <div className="bg-surface-50 p-6">
+            <div className="bg-navy-900 p-2 mx-auto max-w-xl">
               <div
                 className="relative overflow-hidden"
                 style={{
@@ -359,11 +356,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
             </div>
             <div className="mt-4 text-center text-sm text-secondary">
               {simulatorSpeed} km/h · {simulatorDistance}m · {simulatorWeather}
-              <span className={`ml-3 inline-block px-2 py-0.5 text-xs font-medium ${
-                analysis.distanceAnalysis?.[`${simulatorDistance}m`] >= 70
-                  ? 'bg-success-100 text-success-700'
-                  : 'bg-warning-100 text-warning-700'
-              }`}>
+              <span className="ml-3 text-navy-700 font-medium tabular-nums">
                 Readability: {Math.round(analysis.distanceAnalysis?.[`${simulatorDistance}m`] || 0)}
               </span>
             </div>
@@ -384,16 +377,13 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
         </div>
       )}
 
-      {/* AI Enhancement CTA - Bottom sticky on mobile */}
-      <div className="bg-navy-950 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center space-x-3">
-          <Sparkles className="w-6 h-6 text-gold-400" />
-          <div>
-            <p className="text-white font-semibold">Get AI-Enhanced Version</p>
-            <p className="text-navy-300 text-sm">Automatically fix issues and improve readability</p>
-          </div>
+      {/* AI Enhancement CTA - Quieter, still prominent */}
+      <div className="bg-surface-50 border border-surface-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <p className="font-medium text-navy-950">Get AI-Enhanced Version</p>
+          <p className="text-secondary text-sm">Automatically fix issues and improve readability</p>
         </div>
-        <button className="bg-white text-navy-950 px-6 py-3 font-semibold hover:bg-surface-100 transition-colors whitespace-nowrap">
+        <button className="bg-navy-950 text-white px-5 py-2.5 text-sm font-medium hover:bg-navy-800 transition-colors whitespace-nowrap">
           Generate Enhanced Version
         </button>
       </div>

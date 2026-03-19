@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Palette, Type, Layout, Zap, TrendingUp, Award } from 'lucide-react';
+import { ArrowRight, Palette, Type, Layout, Zap } from 'lucide-react';
 
 interface Improvement {
   id: string;
@@ -162,14 +162,15 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
     }
   };
 
+  // Quieter - use navy tints instead of semantic colors
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'high':
-        return 'text-danger-600 bg-danger-100';
+        return 'text-navy-700 bg-navy-100';
       case 'medium':
-        return 'text-warning-600 bg-warning-100';
+        return 'text-navy-600 bg-surface-100';
       case 'low':
-        return 'text-success-600 bg-success-100';
+        return 'text-navy-500 bg-surface-50';
       default:
         return 'text-navy-600 bg-surface-100';
     }
@@ -178,11 +179,11 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy':
-        return 'text-success-600 bg-success-100';
+        return 'text-navy-600 bg-surface-100';
       case 'medium':
-        return 'text-warning-600 bg-warning-100';
+        return 'text-navy-600 bg-surface-100';
       case 'hard':
-        return 'text-danger-600 bg-danger-100';
+        return 'text-navy-700 bg-navy-100';
       default:
         return 'text-navy-600 bg-surface-100';
     }
@@ -192,163 +193,94 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
   const totalScoreImprovement = improvements.reduce((sum, imp) => sum + (imp.afterMetrics.score - imp.beforeMetrics.score), 0);
 
   return (
-    <div className="bg-white border-l-4 border-navy-950 p-6">
-      <h3 className="text-xl font-semibold text-navy-950 mb-6 tracking-tight">
-        Professional Before/After Analysis
+    <div className="bg-white p-6">
+      <h3 className="text-sm font-semibold text-navy-950 mb-4">
+        Before/After Analysis
       </h3>
 
-      {/* Improvement Selector */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* Improvement Selector - Smaller, quieter */}
+      <div className="flex flex-wrap gap-1 mb-6">
         <button
           onClick={() => setSelectedImprovement('all')}
-          className={`px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+          className={`px-3 py-1.5 text-xs font-medium transition-colors ${
             selectedImprovement === 'all'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          All Improvements
+          All
         </button>
         {improvements.map((improvement) => (
           <button
             key={improvement.id}
             onClick={() => setSelectedImprovement(improvement.id)}
-            className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
               selectedImprovement === improvement.id
                 ? 'bg-navy-950 text-white'
                 : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
             }`}
           >
             {getImprovementIcon(improvement.type)}
-            <span>{improvement.title}</span>
+            <span>{improvement.type}</span>
           </button>
         ))}
       </div>
 
-      {/* Before/After Comparison */}
-      <div className="grid lg:grid-cols-2 gap-8 mb-6">
+      {/* Before/After Comparison - Quieter */}
+      <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Before */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-navy-950 flex items-center">
-              <div className="w-2 h-2 bg-danger-500 mr-2"></div>
-              Current Design
-            </h4>
-            <div className="text-sm text-secondary tabular-nums">Score: {currentScore}/100</div>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium text-navy-950">Current</h4>
+            <span className="text-xs text-secondary tabular-nums">{currentScore}</span>
           </div>
 
-          <div className="relative group">
+          <div className="relative">
             <img
               src={originalImage}
               alt="Original billboard"
-              className="w-full h-64 object-cover border-l-4 border-danger-500"
+              className="w-full h-48 object-cover border border-surface-200"
             />
-
-            {/* Problem Indicators */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              {improvements.map((improvement, index) => (
-                <div
-                  key={improvement.id}
-                  className="absolute bg-danger-500 text-white px-2 py-1 text-xs font-medium"
-                  style={{
-                    top: `${20 + index * 15}%`,
-                    left: `${10 + index * 20}%`
-                  }}
-                >
-                  {improvement.type}
-                </div>
-              ))}
-            </div>
           </div>
 
           {selectedImprovementData && (
-            <div className="mt-4 bg-danger-50 border-l-4 border-danger-500 p-4">
-              <h5 className="font-medium text-danger-800 mb-2">Current Issues:</h5>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Readability:</span>
-                  <span className="font-medium">{selectedImprovementData.beforeMetrics.readability}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Compliance:</span>
-                  <span className="font-medium">{selectedImprovementData.beforeMetrics.compliance}</span>
-                </div>
-              </div>
+            <div className="mt-3 text-xs text-secondary">
+              <span>{selectedImprovementData.beforeMetrics.readability}</span>
+              <span className="mx-1.5">·</span>
+              <span>{selectedImprovementData.beforeMetrics.compliance}</span>
             </div>
           )}
         </div>
 
-        {/* Arrow */}
-        <div className="hidden lg:flex items-center justify-center">
-          <div className="bg-navy-950 text-white w-16 h-16 flex items-center justify-center">
-            <ArrowRight className="w-8 h-8" />
-          </div>
-        </div>
-
         {/* After */}
-        <div className="lg:col-start-2">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-semibold text-navy-950 flex items-center">
-              <div className="w-2 h-2 bg-success-500 mr-2"></div>
-              Optimized Design
-            </h4>
-            <div className="text-sm text-secondary tabular-nums">
-              Score: {selectedImprovementData ? selectedImprovementData.afterMetrics.score : Math.min(currentScore + totalScoreImprovement, 95)}/100
-            </div>
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium text-navy-950">Optimized</h4>
+            <span className="text-xs text-navy-700 font-medium tabular-nums">
+              {selectedImprovementData ? selectedImprovementData.afterMetrics.score : Math.min(currentScore + totalScoreImprovement, 95)}
+            </span>
           </div>
 
-          <div className="relative group">
+          <div className="relative">
             <img
               src={originalImage}
               alt="Optimized billboard"
-              className="w-full h-64 object-cover border-l-4 border-success-500"
+              className="w-full h-48 object-cover border border-surface-200"
             />
-
-            {/* Improvement Overlays */}
-            <div className="absolute inset-0">
-              {(selectedImprovement === 'all' ? improvements : selectedImprovementData ? [selectedImprovementData] : []).map((improvement, index) => (
-                <div
-                  key={improvement.id}
-                  className="absolute bg-success-500 text-white px-3 py-2"
-                  style={{
-                    top: `${15 + index * 20}%`,
-                    right: `${10 + index * 15}%`
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    {getImprovementIcon(improvement.type)}
-                    <span className="text-sm font-medium">
-                      {improvement.type === 'font' && '45% Larger'}
-                      {improvement.type === 'contrast' && '4.8:1 Ratio'}
-                      {improvement.type === 'layout' && 'Simplified'}
-                      {improvement.type === 'arabic' && 'Enhanced'}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
 
             <button
               onClick={() => setShowSlider(!showSlider)}
-              className="absolute bottom-4 left-4 bg-navy-950 text-white px-3 py-2 text-sm hover:bg-navy-800 transition-colors"
+              className="absolute bottom-2 left-2 bg-navy-950/80 text-white px-2 py-1 text-xs hover:bg-navy-950 transition-colors"
             >
-              {showSlider ? 'Hide Slider' : 'Show Comparison'}
+              {showSlider ? 'Hide' : 'Compare'}
             </button>
           </div>
 
           {selectedImprovementData && (
-            <div className="mt-4 bg-success-50 border-l-4 border-success-500 p-4">
-              <h5 className="font-medium text-success-800 mb-2">After Improvements:</h5>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Readability:</span>
-                  <span className="font-medium">{selectedImprovementData.afterMetrics.readability}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Compliance:</span>
-                  <span className="font-medium">{selectedImprovementData.afterMetrics.compliance}</span>
-                </div>
-              </div>
+            <div className="mt-3 text-xs text-secondary">
+              <span>{selectedImprovementData.afterMetrics.readability}</span>
+              <span className="mx-1.5">·</span>
+              <span>{selectedImprovementData.afterMetrics.compliance}</span>
             </div>
           )}
         </div>
@@ -356,82 +288,64 @@ const ProfessionalBeforeAfter: React.FC<ProfessionalBeforeAfterProps> = ({
 
       {/* Interactive Slider */}
       {showSlider && (
-        <div className="mb-6 bg-surface-50 p-4">
-          <h4 className="font-medium text-navy-950 mb-3">Interactive Comparison</h4>
-          <div className="relative">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={sliderPosition}
-              onChange={(e) => setSliderPosition(parseInt(e.target.value))}
-              className="w-full h-2 bg-surface-200 appearance-none cursor-pointer"
-            />
-            <div className="flex justify-between text-sm text-secondary mt-2">
-              <span>Before</span>
-              <span className="tabular-nums">{sliderPosition}% Improved</span>
-              <span>After</span>
-            </div>
+        <div className="mb-6 bg-surface-50 p-3">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={sliderPosition}
+            onChange={(e) => setSliderPosition(parseInt(e.target.value))}
+            className="w-full h-1 bg-surface-200 appearance-none cursor-pointer"
+          />
+          <div className="flex justify-between text-xs text-secondary mt-2">
+            <span>Before</span>
+            <span className="tabular-nums">{sliderPosition}%</span>
+            <span>After</span>
           </div>
         </div>
       )}
 
-      {/* Improvement Details */}
+      {/* Improvement Details - Quieter */}
       {selectedImprovementData && (
-        <div className="bg-info-50 border-l-4 border-info-500 p-6 mb-6">
-          <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-info-500 flex items-center justify-center text-white">
-              {getImprovementIcon(selectedImprovementData.type)}
-            </div>
-            <div className="flex-1">
-              <h4 className="text-lg font-semibold text-info-900 mb-2">
-                {selectedImprovementData.title}
-              </h4>
-              <p className="text-info-800 mb-4">
-                {selectedImprovementData.description}
-              </p>
+        <div className="bg-surface-50 p-4 mb-6">
+          <h4 className="font-medium text-navy-950 mb-1">
+            {selectedImprovementData.title}
+          </h4>
+          <p className="text-sm text-secondary mb-3">
+            {selectedImprovementData.description}
+          </p>
 
-              <div className="grid md:grid-cols-3 gap-4">
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs font-medium ${getImpactColor(selectedImprovementData.impact)}`}>
-                    {selectedImprovementData.impact.toUpperCase()} IMPACT
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 text-xs font-medium ${getDifficultyColor(selectedImprovementData.difficulty)}`}>
-                    {selectedImprovementData.difficulty.toUpperCase()} TO IMPLEMENT
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-4 h-4 text-success-600" />
-                  <span className="text-success-600 font-medium tabular-nums">+{selectedImprovementData.roiEstimate}% ROI</span>
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className={`px-2 py-1 ${getImpactColor(selectedImprovementData.impact)}`}>
+              {selectedImprovementData.impact} impact
+            </span>
+            <span className={`px-2 py-1 ${getDifficultyColor(selectedImprovementData.difficulty)}`}>
+              {selectedImprovementData.difficulty} to implement
+            </span>
+            <span className="px-2 py-1 bg-surface-100 text-navy-600 tabular-nums">
+              +{selectedImprovementData.roiEstimate}% ROI
+            </span>
           </div>
         </div>
       )}
 
-      {/* Overall Impact Summary */}
-      <div className="grid md:grid-cols-4 gap-4">
-        <div className="text-center p-4 bg-success-50 border-l-4 border-success-500">
-          <div className="text-2xl font-bold text-success-600 tabular-nums">+{totalScoreImprovement}</div>
-          <div className="text-sm text-secondary">Score Improvement</div>
+      {/* Overall Impact Summary - Quieter */}
+      <div className="grid grid-cols-4 gap-3 text-center">
+        <div className="p-3 bg-surface-50">
+          <div className="text-lg font-semibold text-navy-950 tabular-nums">+{totalScoreImprovement}</div>
+          <div className="text-xs text-secondary">Score</div>
         </div>
-        <div className="text-center p-4 bg-info-50 border-l-4 border-info-500">
-          <div className="text-2xl font-bold text-info-600 tabular-nums">+{totalROI}%</div>
-          <div className="text-sm text-secondary">Expected ROI</div>
+        <div className="p-3 bg-surface-50">
+          <div className="text-lg font-semibold text-navy-950 tabular-nums">+{totalROI}%</div>
+          <div className="text-xs text-secondary">ROI</div>
         </div>
-        <div className="text-center p-4 bg-navy-50 border-l-4 border-navy-500">
-          <div className="text-2xl font-bold text-navy-700 flex items-center justify-center">
-            <Award className="w-6 h-6 mr-1" />
-            A+
-          </div>
-          <div className="text-sm text-secondary">Final Grade</div>
+        <div className="p-3 bg-surface-50">
+          <div className="text-lg font-semibold text-navy-950">A+</div>
+          <div className="text-xs text-secondary">Grade</div>
         </div>
-        <div className="text-center p-4 bg-warning-50 border-l-4 border-warning-500">
-          <div className="text-2xl font-bold text-warning-600">2-3 hrs</div>
-          <div className="text-sm text-secondary">Implementation</div>
+        <div className="p-3 bg-surface-50">
+          <div className="text-lg font-semibold text-navy-950">2-3h</div>
+          <div className="text-xs text-secondary">Time</div>
         </div>
       </div>
     </div>

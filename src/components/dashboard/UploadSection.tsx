@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Upload, Target, ChevronDown, ChevronUp, Building2 } from 'lucide-react';
+import { Upload, ChevronDown, ChevronUp } from 'lucide-react';
 import { LocationData } from '../../services/locationService';
 import IntelligentLocationSelector from './IntelligentLocationSelector';
 import { BillboardMetadata } from '../../types/billboard';
@@ -140,12 +140,12 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           <p className="text-secondary mt-1">Upload your creative for AI-powered readability scoring</p>
         </div>
 
-        {/* Upload Area or Preview - this is the HERO */}
+        {/* Upload Area or Preview */}
         {!file ? (
           <div
-            className={`relative border-2 border-dashed p-12 lg:p-16 text-center transition-all duration-200 cursor-pointer ${
+            className={`relative border-2 border-dashed p-10 lg:p-14 text-center transition-all duration-200 cursor-pointer ${
               dragActive
-                ? 'border-success-500 bg-success-50'
+                ? 'border-navy-400 bg-navy-50'
                 : 'border-surface-300 bg-surface-50 hover:border-navy-300 hover:bg-surface-100'
             }`}
             onDragEnter={handleDrag}
@@ -163,52 +163,51 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
             />
 
             <div className="flex flex-col items-center">
-              <div className={`w-16 h-16 flex items-center justify-center mb-6 transition-colors ${
-                dragActive ? 'bg-success-500' : 'bg-navy-100'
+              <div className={`w-12 h-12 flex items-center justify-center mb-4 ${
+                dragActive ? 'bg-navy-200' : 'bg-surface-100'
               }`}>
-                <Upload className={`w-8 h-8 ${dragActive ? 'text-white' : 'text-navy-600'}`} />
+                <Upload className={`w-6 h-6 ${dragActive ? 'text-navy-700' : 'text-navy-500'}`} />
               </div>
 
-              <p className="text-xl font-semibold text-navy-950 mb-2">
-                Drop your billboard creative here
+              <p className="text-lg font-medium text-navy-950 mb-1">
+                Drop your billboard here
               </p>
-              <p className="text-secondary mb-6">or click to browse</p>
+              <p className="text-sm text-secondary mb-5">or click to browse</p>
 
-              <span className="inline-flex items-center bg-navy-950 text-white px-6 py-3 font-medium hover:bg-navy-800 transition-colors">
-                <Upload className="w-4 h-4 mr-2" />
+              <span className="inline-flex items-center bg-navy-950 text-white px-5 py-2.5 text-sm font-medium hover:bg-navy-800 transition-colors">
                 Choose File
               </span>
 
-              <p className="text-xs text-secondary mt-6">
+              <p className="text-xs text-secondary mt-5">
                 JPG, PNG, or MP4 up to 50MB
               </p>
             </div>
           </div>
         ) : (
-          /* File Preview - Billboard is the HERO */
-          <div className="space-y-4">
+          /* File Preview */
+          <div className="space-y-3">
             {previewUrl && (
-              <div className="relative bg-navy-950 p-3">
+              <div className="relative bg-navy-900 p-2">
                 <img
                   src={previewUrl}
                   alt="Billboard preview"
-                  className="w-full max-h-[400px] object-contain mx-auto"
+                  className="w-full max-h-[360px] object-contain mx-auto"
                 />
               </div>
             )}
-            <div className="flex items-center justify-between py-3 border-b border-surface-200">
+            <div className="flex items-center justify-between py-2">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-success-100 flex items-center justify-center">
-                  <Upload className="w-5 h-5 text-success-600" />
+                <div className="w-8 h-8 bg-surface-100 flex items-center justify-center">
+                  <Upload className="w-4 h-4 text-navy-500" />
                 </div>
                 <div>
-                  <p className="font-semibold text-navy-950">{file.name}</p>
-                  <p className="text-sm text-secondary">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                  <p className="font-medium text-navy-950 text-sm">{file.name}</p>
+                  <p className="text-xs text-secondary">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
                 </div>
               </div>
               <button
                 onClick={clearFile}
-                className="text-sm text-secondary hover:text-danger-600 transition-colors"
+                className="text-xs text-secondary hover:text-navy-700 transition-colors"
               >
                 Remove
               </button>
@@ -217,8 +216,8 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
         )}
 
         {error && (
-          <div className="mt-4 p-3 bg-danger-50 border-l-4 border-danger-500 flex items-center space-x-2">
-            <span className="text-danger-700 text-sm">{error}</span>
+          <div className="mt-4 p-3 bg-surface-50 border-l-2 border-danger-400">
+            <span className="text-danger-600 text-sm">{error}</span>
           </div>
         )}
 
@@ -235,27 +234,23 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
           />
         </div>
 
-        {/* Distance Info - Contextual, appears when relevant */}
+        {/* Distance Info - Contextual */}
         {billboardMetadata?.location.distanceFromRoadM && (
-          <div className="mt-4 flex items-center space-x-3 text-sm">
-            <Target className="w-4 h-4 text-success-600" />
-            <span className="text-secondary">Viewing distance:</span>
-            <span className="font-semibold text-navy-950 tabular-nums">
-              {billboardMetadata.location.distanceFromRoadM}m from road
-            </span>
+          <div className="mt-4 text-sm text-secondary">
+            Viewing distance: <span className="font-medium text-navy-700 tabular-nums">{billboardMetadata.location.distanceFromRoadM}m</span>
           </div>
         )}
 
-        {/* Primary CTA - Full prominence */}
+        {/* Primary CTA */}
         <div className="mt-8">
           <button
             onClick={handleAnalyze}
             disabled={isAnalyzing || !file}
-            className="w-full bg-navy-950 hover:bg-navy-800 text-white py-4 px-8 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-navy-950 hover:bg-navy-800 text-white py-3.5 px-6 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isAnalyzing ? (
               <span className="flex items-center justify-center space-x-2">
-                <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
@@ -270,36 +265,31 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onAnalyze, isAnalyzing, u
       <div className="bg-white">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between p-5 text-left hover:bg-surface-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 text-left hover:bg-surface-50 transition-colors"
         >
-          <div className="flex items-center space-x-3">
-            <Building2 className="w-5 h-5 text-navy-600" />
-            <div>
-              <span className="font-semibold text-navy-950">Advanced Options</span>
-              {hasAdvancedData && (
-                <span className="ml-2 text-xs bg-success-100 text-success-700 px-2 py-0.5">
-                  Configured
-                </span>
-              )}
-            </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-navy-700">Advanced Options</span>
+            {hasAdvancedData && (
+              <span className="text-xs text-secondary">Configured</span>
+            )}
           </div>
           {showAdvanced ? (
-            <ChevronUp className="w-5 h-5 text-navy-400" />
+            <ChevronUp className="w-4 h-4 text-navy-400" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-navy-400" />
+            <ChevronDown className="w-4 h-4 text-navy-400" />
           )}
         </button>
 
         {showAdvanced && (
           <div className="border-t border-surface-200">
             {/* Brand Analysis */}
-            <div className="p-6 border-b border-surface-100">
+            <div className="p-5 border-b border-surface-100">
               <BrandAnalysisForm onAnalysisChange={setBrandData} />
             </div>
 
-            {/* Location Recommendations - Only show if brand data exists */}
+            {/* Location Recommendations */}
             {brandData.category && (
-              <div className="p-6">
+              <div className="p-5">
                 <LocationRecommendations
                   brandData={brandData}
                   allLocations={BillboardDataService.getAllLocations()}

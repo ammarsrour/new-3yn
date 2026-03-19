@@ -47,8 +47,8 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
   const campaignGoals = [
     'Brand Awareness',
     'Product Launch',
-    'Sales Drive',
-    'Event Promotion'
+    'Conversion / Sales',
+    'Brand Building'
   ];
 
   const budgetRanges = [

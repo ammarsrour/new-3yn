@@ -3,31 +3,25 @@ import { User, AnalysisResult, AnalysisHistory } from '../../types';
 import SimpleUploadSection from '../dashboard/SimpleUploadSection';
 import SimpleAnalysisResults from '../dashboard/SimpleAnalysisResults';
 import AnalysisProgress from '../dashboard/AnalysisProgress';
-import AnalysisHistoryComponent from '../dashboard/AnalysisHistory';
+import AnalysesHistoryPage from '../dashboard/AnalysesHistoryPage';
+import SimulatePage from '../dashboard/SimulatePage';
+import AccountPage from '../dashboard/AccountPage';
 import { BillboardMetadata } from '../../types/billboard';
 import { analyzeBillboardWithAI } from '../../services/openai';
 import { LocationData } from '../../services/locationService';
 import { UserProfile, supabaseAuthService } from '../../services/supabaseAuth';
 import { activityLogger } from '../../services/activityLogger';
+import { BarChart3, History, Eye, UserCircle } from 'lucide-react';
 
 interface DashboardProps {
   user: User;
   userProfile?: UserProfile | null;
 }
 
-/**
- * Dashboard - Distilled version
- *
- * Focused on the core flow: Upload → Analyze → Results
- *
- * Removed complexity:
- * - UsageStats bar (moved to account settings)
- * - Onboarding modals (product is self-explanatory)
- * - Enterprise views (separate routes)
- * - Mock enterprise data
- * - Advanced location features (available via IntelligentLocationSelector if needed)
- */
+type DashboardView = 'analyze' | 'history' | 'simulate' | 'account';
+
 const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
+  const [activeView, setActiveView] = useState<DashboardView>('analyze');
   const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStage, setAnalysisStage] = useState<'uploading' | 'analyzing' | 'generating' | 'completed'>('uploading');
@@ -38,25 +32,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     if (userProfile) {
       const accessCheck = supabaseAuthService.canAnalyze(userProfile);
       if (!accessCheck.allowed) {
-        const toast = document.createElement('div');
-        toast.className = 'fixed top-4 right-4 bg-danger-500 text-white px-6 py-3 z-50 max-w-md';
-
-        const title = document.createElement('div');
-        title.className = 'font-semibold mb-1';
-        title.textContent = 'Access Denied';
-
-        const message = document.createElement('div');
-        message.className = 'text-sm';
-        message.textContent = accessCheck.reason || 'Access not permitted';
-
-        toast.appendChild(title);
-        toast.appendChild(message);
-        document.body.appendChild(toast);
-        setTimeout(() => {
-          if (document.body.contains(toast)) {
-            document.body.removeChild(toast);
-          }
-        }, 6000);
+        alert(accessCheck.reason || 'Access not permitted');
         return;
       }
     }
@@ -67,7 +43,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
 
     try {
       setAnalysisProgress(25);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       setAnalysisStage('analyzing');
       setAnalysisProgress(50);
@@ -81,7 +57,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
 
       setAnalysisStage('generating');
       setAnalysisProgress(75);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       setAnalysisStage('completed');
       setAnalysisProgress(100);
@@ -150,41 +126,23 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       await activityLogger.logAnalysisFailed(user.id, location, errorMessage);
-
-      const toast = document.createElement('div');
-      toast.className = 'fixed top-4 right-4 bg-danger-500 text-white px-6 py-3 z-50 max-w-md relative';
-
-      const title = document.createElement('div');
-      title.className = 'font-semibold mb-1';
-      title.textContent = 'Analysis Failed';
-
-      const message = document.createElement('div');
-      message.className = 'text-sm';
-      message.textContent = error instanceof Error
-        ? error.message
-        : 'Please try again or contact support if the issue persists.';
-
-      const closeBtn = document.createElement('button');
-      closeBtn.className = 'absolute top-1 right-2 text-white hover:text-surface-200';
-      closeBtn.textContent = '×';
-      closeBtn.onclick = () => toast.remove();
-
-      toast.appendChild(title);
-      toast.appendChild(message);
-      toast.appendChild(closeBtn);
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        if (document.body.contains(toast)) {
-          document.body.removeChild(toast);
-        }
-      }, 8000);
+      alert(error instanceof Error ? error.message : 'Analysis failed. Please try again.');
     } finally {
       setIsAnalyzing(false);
     }
   };
 
   const handleSelectAnalysis = (id: string) => {
-    // TODO: Implement analysis selection
+    if (id === 'new') {
+      setActiveView('analyze');
+      return;
+    }
+    // TODO: Load full analysis from history
+    const historyItem = analysisHistory.find(h => h.id === id);
+    if (historyItem) {
+      // For now, switch to analyze tab - later we'll load full results
+      setActiveView('analyze');
+    }
   };
 
   const handleNewAnalysis = () => {
@@ -193,16 +151,21 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     setAnalysisStage('uploading');
   };
 
-  const hasHistory = analysisHistory.length > 0;
+  const tabs = [
+    { id: 'analyze' as const, label: 'Analyze', icon: BarChart3 },
+    { id: 'history' as const, label: 'My Analyses', icon: History },
+    { id: 'simulate' as const, label: 'Simulate', icon: Eye },
+    { id: 'account' as const, label: 'Account', icon: UserCircle },
+  ];
 
   return (
     <div className="min-h-screen bg-surface-50">
-      {/* Minimal Header */}
+      {/* Header */}
       <div className="bg-white border-b border-surface-200">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
           <h1 className="text-lg font-bold text-navy-950">3YN</h1>
 
-          {/* Trial indicator - subtle */}
+          {/* Trial indicator */}
           {userProfile && userProfile.subscription_status === 'trial' && (
             <div className="flex items-center space-x-3">
               <span className="text-sm text-secondary tabular-nums">
@@ -214,34 +177,83 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
             </div>
           )}
         </div>
+
+        {/* Navigation Tabs */}
+        <div className="max-w-5xl mx-auto px-6">
+          <nav className="flex space-x-1">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeView === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveView(tab.id);
+                    // Reset analysis view when switching to analyze tab
+                    if (tab.id === 'analyze' && currentAnalysis) {
+                      // Keep current analysis visible
+                    }
+                  }}
+                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors relative ${
+                    isActive
+                      ? 'text-navy-950'
+                      : 'text-secondary hover:text-navy-700'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                  {/* Active indicator */}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
       </div>
 
-      {/* Content - centered, constrained */}
-      <div className="max-w-3xl mx-auto px-6 py-8">
-        {isAnalyzing ? (
-          <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
-        ) : currentAnalysis ? (
-          <SimpleAnalysisResults
-            analysis={currentAnalysis}
-            onNewAnalysis={handleNewAnalysis}
-            userId={user.id}
-          />
-        ) : (
-          <div className="space-y-6">
-            <SimpleUploadSection
-              onAnalyze={handleAnalyze}
-              isAnalyzing={isAnalyzing}
-              userId={user.id}
-            />
-
-            {/* History - below, not sidebar */}
-            {hasHistory && (
-              <AnalysisHistoryComponent
-                history={analysisHistory}
-                onSelectAnalysis={handleSelectAnalysis}
-              />
+      {/* Content */}
+      <div className="max-w-5xl mx-auto px-6 py-8">
+        {activeView === 'analyze' && (
+          <>
+            {isAnalyzing ? (
+              <div className="max-w-2xl mx-auto">
+                <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
+              </div>
+            ) : currentAnalysis ? (
+              <div className="max-w-3xl mx-auto">
+                <SimpleAnalysisResults
+                  analysis={currentAnalysis}
+                  onNewAnalysis={handleNewAnalysis}
+                  userId={user.id}
+                />
+              </div>
+            ) : (
+              <div className="max-w-3xl mx-auto">
+                <SimpleUploadSection
+                  onAnalyze={handleAnalyze}
+                  isAnalyzing={isAnalyzing}
+                  userId={user.id}
+                />
+              </div>
             )}
-          </div>
+          </>
+        )}
+
+        {activeView === 'history' && (
+          <AnalysesHistoryPage
+            history={analysisHistory}
+            onSelectAnalysis={handleSelectAnalysis}
+          />
+        )}
+
+        {activeView === 'simulate' && (
+          <SimulatePage />
+        )}
+
+        {activeView === 'account' && (
+          <AccountPage user={user} userProfile={userProfile} />
         )}
       </div>
     </div>

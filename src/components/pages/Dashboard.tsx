@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { User, AnalysisResult, AnalysisHistory } from '../../types';
-import UploadSection from '../dashboard/UploadSection';
-import AnalysisResults from '../dashboard/AnalysisResults';
+import SimpleUploadSection from '../dashboard/SimpleUploadSection';
+import SimpleAnalysisResults from '../dashboard/SimpleAnalysisResults';
 import AnalysisProgress from '../dashboard/AnalysisProgress';
 import AnalysisHistoryComponent from '../dashboard/AnalysisHistory';
-import UsageStats from '../dashboard/UsageStats';
-import OnboardingWelcome from '../dashboard/OnboardingWelcome';
-import FirstAnalysisSuccess from '../dashboard/FirstAnalysisSuccess';
-import EmptyStateUpload from '../dashboard/EmptyStateUpload';
-import { useOnboarding } from '../../hooks/useOnboarding';
 import { BillboardMetadata } from '../../types/billboard';
-import EnterpriseAnalytics from '../enterprise/EnterpriseAnalytics';
-import TeamWorkspace from '../enterprise/TeamWorkspace';
-import ClientPortal from '../enterprise/ClientPortal';
 import { analyzeBillboardWithAI } from '../../services/openai';
 import { LocationData } from '../../services/locationService';
-import { Organization, ClientPortal as ClientPortalType } from '../../types';
 import { UserProfile, supabaseAuthService } from '../../services/supabaseAuth';
 import { activityLogger } from '../../services/activityLogger';
 
@@ -24,102 +15,24 @@ interface DashboardProps {
   userProfile?: UserProfile | null;
 }
 
+/**
+ * Dashboard - Distilled version
+ *
+ * Focused on the core flow: Upload → Analyze → Results
+ *
+ * Removed complexity:
+ * - UsageStats bar (moved to account settings)
+ * - Onboarding modals (product is self-explanatory)
+ * - Enterprise views (separate routes)
+ * - Mock enterprise data
+ * - Advanced location features (available via IntelligentLocationSelector if needed)
+ */
 const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
   const [currentAnalysis, setCurrentAnalysis] = useState<AnalysisResult | null>(null);
-  const [activeView, setActiveView] = useState<'analysis' | 'analytics' | 'team' | 'client-portal'>('analysis');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStage, setAnalysisStage] = useState<'uploading' | 'analyzing' | 'generating' | 'completed'>('uploading');
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [analysisHistory, setAnalysisHistory] = useState<AnalysisHistory[]>([]);
-  const [showFirstAnalysisCelebration, setShowFirstAnalysisCelebration] = useState(false);
-
-  // Onboarding state
-  const {
-    shouldShowWelcome,
-    isNewUser,
-    dismissWelcome,
-    skipWelcome,
-    completeFirstAnalysis,
-    acknowledgeFirstAnalysis,
-    state: onboardingState
-  } = useOnboarding(user.id);
-
-  // Mock enterprise data
-  const mockOrganization: Organization = {
-    id: '1',
-    name: 'Omantel Innovation Labs',
-    logo: '/3yn eye.png',
-    plan: 'Enterprise',
-    members: [
-      {
-        id: '1',
-        name: 'Sarah Al-Rashid',
-        email: 'sarah.alrashid@omantel.om',
-        role: 'admin',
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100',
-        status: 'online',
-        lastActive: new Date(),
-        permissions: ['all']
-      },
-      {
-        id: '2',
-        name: 'Ahmed Al-Balushi',
-        email: 'ahmed.balushi@omantel.om',
-        role: 'analyst',
-        avatar: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=100',
-        status: 'online',
-        lastActive: new Date(),
-        permissions: ['analyze', 'view']
-      },
-      {
-        id: '3',
-        name: 'Fatima Al-Zahra',
-        email: 'fatima.zahra@omantel.om',
-        role: 'viewer',
-        avatar: 'https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&w=100',
-        status: 'away',
-        lastActive: new Date(Date.now() - 3600000),
-        permissions: ['view']
-      }
-    ],
-    projects: [],
-    settings: {
-      branding: {
-        logo: '/3yn eye.png',
-        primaryColor: '#E30613',
-        whiteLabel: true
-      },
-      compliance: {
-        mtcitEnabled: true,
-        traEnabled: true,
-        customGuidelines: ['Arabic text prominence', 'Cultural sensitivity']
-      },
-      integrations: {
-        ssoEnabled: true,
-        apiAccess: true
-      }
-    }
-  };
-
-  const mockClientPortal: ClientPortalType = {
-    id: '1',
-    clientName: 'Omantel',
-    brandedUrl: 'omantel.billboard-analyzer.com',
-    accessCode: 'OTL2024',
-    projects: ['1', '2'],
-    customBranding: {
-      logo: '/3yn eye.png',
-      colors: {
-        primary: '#E30613',
-        secondary: '#1E40AF'
-      }
-    },
-    permissions: {
-      canComment: true,
-      canRequestRevisions: true,
-      canViewAnalytics: true
-    }
-  };
 
   const handleAnalyze = async (file: File, location: string, distance: number, locationData?: LocationData, billboardMetadata?: BillboardMetadata) => {
     if (userProfile) {
@@ -234,12 +147,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
       };
       setAnalysisHistory(prev => [historyItem, ...prev]);
 
-      // First analysis celebration
-      if (onboardingState.totalAnalyses === 0) {
-        completeFirstAnalysis();
-        setShowFirstAnalysisCelebration(true);
-      }
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       await activityLogger.logAnalysisFailed(user.id, location, errorMessage);
@@ -286,150 +193,53 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
     setAnalysisStage('uploading');
   };
 
-  const getTrialDaysRemaining = () => {
-    if (!userProfile) return 0;
-    const now = new Date();
-    const trialEnd = new Date(userProfile.trial_end_date);
-    const diffTime = Math.abs(trialEnd.getTime() - now.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
-
-  // Determine if user has history
   const hasHistory = analysisHistory.length > 0;
-  const isFirstTimeUser = user.totalAnalyses === 0 && !hasHistory && isNewUser;
-
-  const handleFirstAnalysisContinue = () => {
-    setShowFirstAnalysisCelebration(false);
-    acknowledgeFirstAnalysis();
-  };
-
-  const handleExploreFeatures = () => {
-    setShowFirstAnalysisCelebration(false);
-    acknowledgeFirstAnalysis();
-    // Could navigate to a features tour or expand advanced options
-  };
 
   return (
     <div className="min-h-screen bg-surface-50">
-      {/* First Analysis Celebration Modal */}
-      {showFirstAnalysisCelebration && currentAnalysis && (
-        <FirstAnalysisSuccess
-          score={currentAnalysis.score}
-          onContinue={handleFirstAnalysisContinue}
-          onExploreFeatures={handleExploreFeatures}
-        />
-      )}
-
-      {/* Onboarding Welcome Banner */}
-      {shouldShowWelcome && (
-        <OnboardingWelcome
-          userName={user.name}
-          onDismiss={dismissWelcome}
-          onSkip={skipWelcome}
-        />
-      )}
-
-      {/* Dashboard Header */}
+      {/* Minimal Header */}
       <div className="bg-white border-b border-surface-200">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-xl font-bold text-navy-950 tracking-tight">
-                Dashboard
-              </h1>
-              <p className="text-sm text-secondary">
-                Welcome back, {user.name}
-              </p>
-            </div>
+        <div className="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-lg font-bold text-navy-950">3YN</h1>
 
-            {/* Trial banner - minimal */}
-            {userProfile && userProfile.subscription_status === 'trial' && (
-              <div className="flex items-center space-x-4">
-                <div className="text-right">
-                  <p className="text-xs text-secondary">Trial</p>
-                  <p className="text-sm font-semibold text-navy-950 tabular-nums">
-                    {getTrialDaysRemaining()}d · {userProfile.trial_credits_remaining} credits
-                  </p>
-                </div>
-                <button className="bg-navy-950 text-white px-4 py-2 text-sm font-medium hover:bg-navy-800 transition-colors">
-                  Upgrade
-                </button>
-              </div>
-            )}
-          </div>
+          {/* Trial indicator - subtle */}
+          {userProfile && userProfile.subscription_status === 'trial' && (
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-secondary tabular-nums">
+                {userProfile.trial_credits_remaining} credits
+              </span>
+              <button className="text-sm text-navy-600 hover:text-navy-800">
+                Upgrade
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Stats bar - compact */}
-      <UsageStats user={user} totalAnalyses={user.totalAnalyses} />
-
-      {/* Main content - varied spacing */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 lg:py-12">
-
-        {activeView === 'analytics' && (user.plan === 'Enterprise' || user.plan === 'Professional') ? (
-          <EnterpriseAnalytics />
-        ) : activeView === 'team' && user.plan === 'Enterprise' ? (
-          <TeamWorkspace
-            organization={mockOrganization}
-            currentUser={mockOrganization.members[0]}
-          />
-        ) : activeView === 'client-portal' ? (
-          <ClientPortal
-            portal={mockClientPortal}
-            projects={[]}
-            analyses={analysisHistory.map(h => ({
-              id: h.id,
-              score: h.score,
-              image: h.thumbnail,
-              location: h.location,
-              distance: 100,
-              timestamp: h.timestamp,
-              criticalIssues: [],
-              minorIssues: [],
-              quickWins: [],
-              distanceAnalysis: { '50m': 85, '100m': h.score, '150m': h.score - 15 },
-              aiAnalysis: 'Mock analysis',
-              status: 'completed',
-              fontScore: Math.floor(h.score * 0.25),
-              contrastScore: Math.floor(h.score * 0.25),
-              layoutScore: Math.floor(h.score * 0.25),
-              ctaScore: Math.floor(h.score * 0.25)
-            }))}
-          />
-        ) : isAnalyzing ? (
-          <div className="max-w-2xl mx-auto">
-            <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
-          </div>
+      {/* Content - centered, constrained */}
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        {isAnalyzing ? (
+          <AnalysisProgress stage={analysisStage} progress={analysisProgress} />
         ) : currentAnalysis ? (
-          <AnalysisResults
+          <SimpleAnalysisResults
             analysis={currentAnalysis}
             onNewAnalysis={handleNewAnalysis}
             userId={user.id}
           />
         ) : (
-          /* Upload Flow Layout */
-          <div className={`grid gap-8 ${hasHistory ? 'lg:grid-cols-[1fr,340px]' : 'max-w-3xl mx-auto'}`}>
-            {/* Main Upload Area */}
-            <div>
-              {/* New user contextual help */}
-              <EmptyStateUpload isNewUser={isFirstTimeUser} />
+          <div className="space-y-6">
+            <SimpleUploadSection
+              onAnalyze={handleAnalyze}
+              isAnalyzing={isAnalyzing}
+              userId={user.id}
+            />
 
-              <UploadSection
-                onAnalyze={handleAnalyze}
-                isAnalyzing={isAnalyzing}
-                userId={user.id}
-              />
-            </div>
-
-            {/* History Sidebar - only show if user has history */}
+            {/* History - below, not sidebar */}
             {hasHistory && (
-              <div className="lg:sticky lg:top-8 lg:self-start">
-                <AnalysisHistoryComponent
-                  history={analysisHistory}
-                  onSelectAnalysis={handleSelectAnalysis}
-                />
-              </div>
+              <AnalysisHistoryComponent
+                history={analysisHistory}
+                onSelectAnalysis={handleSelectAnalysis}
+              />
             )}
           </div>
         )}

@@ -111,6 +111,7 @@ const SimpleAnalysisResults: React.FC<SimpleAnalysisResultsProps> = ({
               src={analysis.image}
               alt={`Analyzed billboard at ${analysis.location}`}
               className="w-full h-auto max-h-64 sm:max-h-96 object-contain mx-auto"
+              decoding="async"
             />
           </div>
 

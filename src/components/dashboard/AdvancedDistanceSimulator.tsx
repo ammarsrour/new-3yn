@@ -195,7 +195,7 @@ const AdvancedDistanceSimulator: React.FC<AdvancedDistanceSimulatorProps> = ({
         {/* Billboard Simulation */}
         <div className="flex justify-center items-center h-80">
           <div
-            className={`transition-all duration-500 ${isAnimating ? 'animate-pulse' : ''}`}
+            className={`transition-all duration-500 ${isAnimating ? 'animate-pulse motion-reduce:animate-none' : ''}`}
             style={{
               transform: `scale(${getScaleLevel(selectedDistance)})`,
               filter: `blur(${getBlurLevel(selectedDistance, selectedSpeed, weatherCondition)}px)`,

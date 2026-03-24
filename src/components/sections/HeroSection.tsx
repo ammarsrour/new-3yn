@@ -69,7 +69,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onGetStarted }) => {
               <p className="text-label text-success-600 mb-3">Readability Score</p>
               <p className="text-8xl text-stat text-success-600 tabular-nums mb-3">87</p>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-success-500 animate-pulse" />
+                <div className="w-2 h-2 bg-success-500 animate-pulse motion-reduce:animate-none" />
                 <p className="text-sm text-navy-600">Excellent visibility</p>
               </div>
             </div>

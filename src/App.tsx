@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from './components/layout/Header';
-import LandingPage from './components/pages/LandingPage';
-import Dashboard from './components/pages/Dashboard';
-import AuthModal from './components/auth/AuthModal';
 import { User } from './types';
 import { supabaseAuthService, UserProfile } from './services/supabaseAuth';
 import { activityLogger } from './services/activityLogger';
-import AdminDashboard from './components/pages/AdminDashboard';
+
+// Lazy load heavy components for better initial load performance
+const LandingPage = lazy(() => import('./components/pages/LandingPage'));
+const Dashboard = lazy(() => import('./components/pages/Dashboard'));
+const AuthModal = lazy(() => import('./components/auth/AuthModal'));
+const AdminDashboard = lazy(() => import('./components/pages/AdminDashboard'));
+
+// Minimal loading fallback for Suspense boundaries
+const PageLoader = () => (
+  <div className="flex items-center justify-center py-12">
+    <div className="w-6 h-6 border-2 border-navy-200 border-t-navy-600 rounded-full animate-spin motion-reduce:animate-none" />
+  </div>
+);
 
 function App() {
   const { t } = useTranslation();
@@ -172,7 +181,7 @@ function App() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <img src="/3yn eye.png" alt="3YN" className="w-16 h-16 mx-auto mb-4 animate-pulse" />
+          <img src="/3yn eye.png" alt="3YN" className="w-16 h-16 mx-auto mb-4 animate-pulse motion-reduce:animate-none" />
           <p className="text-sm text-slate-500 tracking-wider uppercase">Loading</p>
         </div>
       </div>
@@ -192,24 +201,28 @@ function App() {
         onViewChange={setCurrentView}
       />
 
-      {user ? (
-        currentView === 'admin' && isAdmin ? (
-          <AdminDashboard userId={user.id} />
+      <Suspense fallback={<PageLoader />}>
+        {user ? (
+          currentView === 'admin' && isAdmin ? (
+            <AdminDashboard userId={user.id} />
+          ) : (
+            <Dashboard user={user} userProfile={userProfile} />
+          )
         ) : (
-          <Dashboard user={user} userProfile={userProfile} />
-        )
-      ) : (
-        <LandingPage onGetStarted={() => openAuthModal('signup')} />
-      )}
+          <LandingPage onGetStarted={() => openAuthModal('signup')} />
+        )}
+      </Suspense>
 
       {showAuthModal && (
-        <AuthModal
-          mode={authMode}
-          onClose={() => setShowAuthModal(false)}
-          onLogin={handleLogin}
-          onSignup={handleSignup}
-          onSwitchMode={(mode) => setAuthMode(mode)}
-        />
+        <Suspense fallback={null}>
+          <AuthModal
+            mode={authMode}
+            onClose={() => setShowAuthModal(false)}
+            onLogin={handleLogin}
+            onSignup={handleSignup}
+            onSwitchMode={(mode) => setAuthMode(mode)}
+          />
+        </Suspense>
       )}
     </div>
   );

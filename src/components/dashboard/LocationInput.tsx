@@ -204,7 +204,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ value, onChange, error, u
           
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
             {isValidating && (
-              <div className="w-4 h-4 border-2 border-navy-500 border-t-transparent animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-navy-500 border-t-transparent animate-spin motion-reduce:animate-none"></div>
             )}
 
             {value && (
@@ -224,7 +224,7 @@ const LocationInput: React.FC<LocationInputProps> = ({ value, onChange, error, u
               className="text-navy-500 hover:text-navy-700 transition-colors disabled:opacity-50"
               title={t('dashboard.location.useCurrentLocation')}
             >
-              <Navigation className={`w-4 h-4 ${isGettingLocation ? 'animate-pulse' : ''}`} />
+              <Navigation className={`w-4 h-4 ${isGettingLocation ? 'animate-pulse motion-reduce:animate-none' : ''}`} />
             </button>
           </div>
         </div>

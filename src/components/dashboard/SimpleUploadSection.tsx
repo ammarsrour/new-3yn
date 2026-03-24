@@ -1,9 +1,11 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { Upload, X, ChevronDown, ChevronUp, Sparkles, MapPin } from 'lucide-react';
+import React, { useState, useCallback, useRef, lazy, Suspense } from 'react';
+import { Upload, ChevronDown, ChevronUp, Sparkles, MapPin } from 'lucide-react';
 import { LocationData } from '../../services/locationService';
 import SimpleLocationInput from './SimpleLocationInput';
-import IntelligentLocationSelector from './IntelligentLocationSelector';
 import BrandAnalysisForm, { BrandAnalysisData } from './BrandAnalysisForm';
+
+// Lazy load heavy map component - only loads when user expands location section
+const IntelligentLocationSelector = lazy(() => import('./IntelligentLocationSelector'));
 import { BillboardMetadata } from '../../types/billboard';
 import { activityLogger } from '../../services/activityLogger';
 
@@ -28,6 +30,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const [location, setLocation] = useState('');
   const [billboardMetadata, setBillboardMetadata] = useState<BillboardMetadata | null>(null);
   const [error, setError] = useState('');
@@ -81,6 +84,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
       if (droppedFile && validateFile(droppedFile)) {
         setFile(droppedFile);
         if (droppedFile.type.startsWith('image/')) {
+          setImageLoading(true);
           setPreviewUrl(URL.createObjectURL(droppedFile));
         }
         if (userId) {
@@ -96,6 +100,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
     if (selectedFile && validateFile(selectedFile)) {
       setFile(selectedFile);
       if (selectedFile.type.startsWith('image/')) {
+        setImageLoading(true);
         setPreviewUrl(URL.createObjectURL(selectedFile));
       }
       if (userId) {
@@ -201,11 +206,17 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
           /* Preview */
           <div className="space-y-3">
             {previewUrl && (
-              <div className="bg-navy-900 p-2">
+              <div className="bg-navy-900 p-2 relative">
+                {imageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-navy-900">
+                    <div className="w-6 h-6 border-2 border-navy-700 border-t-white rounded-full animate-spin motion-reduce:animate-none" />
+                  </div>
+                )}
                 <img
                   src={previewUrl}
                   alt={`Preview of uploaded billboard: ${file.name}`}
                   className="w-full max-h-72 object-contain mx-auto"
+                  onLoad={() => setImageLoading(false)}
                 />
               </div>
             )}
@@ -244,7 +255,7 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
         >
           {isAnalyzing ? (
             <span className="flex items-center justify-center space-x-2">
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
+              <svg className="animate-spin motion-reduce:animate-none w-4 h-4" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -342,12 +353,18 @@ const SimpleUploadSection: React.FC<SimpleUploadSectionProps> = ({
             aria-hidden={!showLocationMap}
           >
             <div className="pt-4">
-              <IntelligentLocationSelector
-                value={location}
-                onChange={handleLocationChange}
-                error={locationError}
-                brandCategory={brandData.category}
-              />
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-8">
+                  <div className="w-5 h-5 border-2 border-navy-200 border-t-navy-600 rounded-full animate-spin motion-reduce:animate-none" />
+                </div>
+              }>
+                <IntelligentLocationSelector
+                  value={location}
+                  onChange={handleLocationChange}
+                  error={locationError}
+                  brandCategory={brandData.category}
+                />
+              </Suspense>
             </div>
           </div>
         </div>

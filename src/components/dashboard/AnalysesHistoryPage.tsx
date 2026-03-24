@@ -177,6 +177,7 @@ const AnalysesHistoryPage: React.FC<AnalysesHistoryPageProps> = ({
                       alt=""
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
 

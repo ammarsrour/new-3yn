@@ -351,7 +351,7 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
             {isValidating && (
-              <div className="w-4 h-4 border-2 border-navy-500 border-t-transparent animate-spin"></div>
+              <div className="w-4 h-4 border-2 border-navy-500 border-t-transparent animate-spin motion-reduce:animate-none"></div>
             )}
 
             {value && (

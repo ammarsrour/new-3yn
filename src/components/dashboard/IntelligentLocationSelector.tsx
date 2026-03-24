@@ -34,10 +34,10 @@ const DISTRICT_COORDINATES: Record<string, { lat: number; lng: number }> = {
   'qurum': { lat: 23.5850, lng: 58.4350 },
 };
 
-// Map container style
+// Map container style - will be overridden with responsive classes
 const mapContainerStyle = {
   width: '100%',
-  height: '350px',
+  height: '100%',
 };
 
 // Map options - defined as plain object, typed inside component when google is available
@@ -213,88 +213,97 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
 
   return (
     <div className="space-y-4">
-      {/* Mode Toggle */}
-      <fieldset className="flex flex-wrap gap-2" role="radiogroup" aria-label="Location input mode">
+      {/* Mode Toggle - responsive: icons with short labels on mobile */}
+      <fieldset className="grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:gap-2" role="radiogroup" aria-label="Location input mode">
         <legend className="sr-only">Select input mode</legend>
         <button
           type="button"
           onClick={() => setInputMode('billboard')}
           role="radio"
           aria-checked={inputMode === 'billboard'}
-          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
+          className={`flex items-center justify-center px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'billboard'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <MapPin className="w-4 h-4 inline mr-2" aria-hidden="true" />
-          Billboard Locations
+          <MapPin className="w-4 h-4 sm:mr-2" aria-hidden="true" />
+          <span className="hidden sm:inline">Billboard Locations</span>
+          <span className="sm:hidden ml-1">Billboards</span>
         </button>
         <button
           type="button"
           onClick={() => setInputMode('address')}
           role="radio"
           aria-checked={inputMode === 'address'}
-          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
+          className={`flex items-center justify-center px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'address'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <Search className="w-4 h-4 inline mr-2" aria-hidden="true" />
-          Custom Address
+          <Search className="w-4 h-4 sm:mr-2" aria-hidden="true" />
+          <span className="hidden sm:inline">Custom Address</span>
+          <span className="sm:hidden ml-1">Address</span>
         </button>
         <button
           type="button"
           onClick={() => setInputMode('coordinates')}
           role="radio"
           aria-checked={inputMode === 'coordinates'}
-          className={`px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
+          className={`flex items-center justify-center px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
             inputMode === 'coordinates'
               ? 'bg-navy-950 text-white'
               : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
           }`}
         >
-          <Globe className="w-4 h-4 inline mr-2" aria-hidden="true" />
-          Coordinates
+          <Globe className="w-4 h-4 sm:mr-2" aria-hidden="true" />
+          <span className="hidden sm:inline">Coordinates</span>
+          <span className="sm:hidden ml-1">Coords</span>
         </button>
       </fieldset>
 
-      {/* Difficulty Filter (Billboard Mode Only) */}
+      {/* Difficulty Filter (Billboard Mode Only) - responsive layout */}
       {inputMode === 'billboard' && (
-        <div className="flex flex-wrap items-center gap-2">
-          <label htmlFor="difficulty-filter" className="text-sm text-secondary">Filter by difficulty:</label>
-          <select
-            id="difficulty-filter"
-            value={filterDifficulty}
-            onChange={(e) => setFilterDifficulty(e.target.value)}
-            className="text-sm border border-surface-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
-          >
-            <option value="all">All Locations</option>
-            <option value="easy">Easy (Low Speed)</option>
-            <option value="medium">Medium (Urban)</option>
-            <option value="hard">Hard (Highway)</option>
-            <option value="extreme">Extreme (Expressway)</option>
-          </select>
-          <button
-            onClick={() => setShowMap(!showMap)}
-            aria-pressed={showMap}
-            className={`px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
-              showMap ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-            }`}
-          >
-            {showMap ? 'Hide Map' : 'Show Map'}
-          </button>
-          <button
-            onClick={() => setShowComparison(!showComparison)}
-            aria-pressed={showComparison}
-            aria-label={`Compare locations (${comparisonLocations.length} selected)`}
-            className={`px-3 py-1 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
-              showComparison ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-            }`}
-          >
-            Compare ({comparisonLocations.length})
-          </button>
+        <div className="space-y-2 sm:space-y-0 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
+          {/* Filter row */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="difficulty-filter" className="text-xs sm:text-sm text-secondary whitespace-nowrap">Filter:</label>
+            <select
+              id="difficulty-filter"
+              value={filterDifficulty}
+              onChange={(e) => setFilterDifficulty(e.target.value)}
+              className="flex-1 sm:flex-none text-xs sm:text-sm border border-surface-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
+            >
+              <option value="all">All</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+              <option value="extreme">Extreme</option>
+            </select>
+          </div>
+          {/* Action buttons row */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowMap(!showMap)}
+              aria-pressed={showMap}
+              className={`flex-1 sm:flex-none px-3 py-1 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
+                showMap ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+              }`}
+            >
+              {showMap ? 'Hide Map' : 'Map'}
+            </button>
+            <button
+              onClick={() => setShowComparison(!showComparison)}
+              aria-pressed={showComparison}
+              aria-label={`Compare locations (${comparisonLocations.length} selected)`}
+              className={`flex-1 sm:flex-none px-3 py-1 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-offset-2 min-h-[44px] ${
+                showComparison ? 'bg-navy-950 text-white' : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+              }`}
+            >
+              Compare ({comparisonLocations.length})
+            </button>
+          </div>
         </div>
       )}
 
@@ -430,43 +439,45 @@ const IntelligentLocationSelector: React.FC<IntelligentLocationSelectorProps> = 
         )}
       </div>
 
-      {/* Map View */}
+      {/* Map View - responsive height */}
       {showMap && inputMode === 'billboard' && (
-        <div className="bg-surface-50 border-l-2 border-navy-300 p-6">
-          <h4 className="font-semibold text-navy-950 mb-4 flex items-center">
-            <MapPin className="w-5 h-5 mr-2 text-navy-600" />
-            Muscat Billboard Locations Map
+        <div className="bg-surface-50 border-l-2 border-navy-300 p-3 sm:p-6">
+          <h4 className="font-semibold text-navy-950 mb-3 sm:mb-4 flex items-center text-sm sm:text-base">
+            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-navy-600" aria-hidden="true" />
+            Muscat Billboard Locations
           </h4>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+
+          {/* Legend - scrollable on mobile */}
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-3 sm:mb-4 sm:grid sm:grid-cols-4 sm:overflow-visible">
             {['easy', 'medium', 'hard', 'extreme'].map((difficulty) => {
               const count = allLocations.filter(l => l.readabilityDifficulty === difficulty).length;
               return (
-                <div key={difficulty} className={`p-3 rounded-lg ${getDifficultyColor(difficulty)}`}>
-                  <div className="flex items-center space-x-2">
+                <div key={difficulty} className={`flex-shrink-0 p-2 sm:p-3 rounded-lg ${getDifficultyColor(difficulty)}`}>
+                  <div className="flex items-center space-x-1 sm:space-x-2">
                     {getDifficultyIcon(difficulty)}
-                    <span className="font-medium capitalize">{difficulty}</span>
+                    <span className="font-medium capitalize text-xs sm:text-sm">{difficulty}</span>
                   </div>
-                  <div className="text-sm mt-1">{count} locations</div>
+                  <div className="text-xs sm:text-sm mt-0.5 sm:mt-1">{count}</div>
                 </div>
               );
             })}
           </div>
-          
-          <div className="overflow-hidden border border-surface-200">
+
+          {/* Map container - responsive height */}
+          <div className="overflow-hidden border border-surface-200 h-[250px] sm:h-[300px] md:h-[350px]">
             {loadError || mapError ? (
-              <div className="w-full h-[350px] bg-surface-100 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-12 h-12 text-navy-400 mx-auto mb-3" />
-                  <p className="text-navy-600 font-medium">Map unavailable</p>
-                  <p className="text-secondary text-sm mt-1">Please check your API key or try again later</p>
+              <div className="w-full h-full bg-surface-100 flex items-center justify-center">
+                <div className="text-center px-4">
+                  <MapPin className="w-10 h-10 sm:w-12 sm:h-12 text-navy-400 mx-auto mb-2 sm:mb-3" aria-hidden="true" />
+                  <p className="text-navy-600 font-medium text-sm sm:text-base">Map unavailable</p>
+                  <p className="text-secondary text-xs sm:text-sm mt-1">Check API key or try again</p>
                 </div>
               </div>
             ) : !isLoaded ? (
-              <div className="w-full h-[350px] bg-surface-100 flex items-center justify-center">
+              <div className="w-full h-full bg-surface-100 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-8 h-8 border-4 border-navy-500 border-t-transparent animate-spin mx-auto mb-3"></div>
-                  <p className="text-secondary text-sm">Loading map...</p>
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 border-4 border-navy-500 border-t-transparent animate-spin motion-reduce:animate-none mx-auto mb-2 sm:mb-3"></div>
+                  <p className="text-secondary text-xs sm:text-sm">Loading map...</p>
                 </div>
               </div>
             ) : (

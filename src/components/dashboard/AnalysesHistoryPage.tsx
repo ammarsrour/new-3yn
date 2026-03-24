@@ -81,29 +81,29 @@ const AnalysesHistoryPage: React.FC<AnalysesHistoryPageProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Stats Summary */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-navy-950 tabular-nums">{history.length}</div>
-          <div className="text-xs text-secondary">Total Analyses</div>
+      {/* Stats Summary - responsive: horizontal scroll on very small, grid on larger */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="bg-white p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold text-navy-950 tabular-nums">{history.length}</div>
+          <div className="text-xs text-secondary">Total</div>
         </div>
-        <div className="bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-navy-950 tabular-nums">{averageScore}</div>
-          <div className="text-xs text-secondary">Average Score</div>
+        <div className="bg-white p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold text-navy-950 tabular-nums">{averageScore}</div>
+          <div className="text-xs text-secondary">Avg Score</div>
         </div>
-        <div className="bg-white p-4 text-center">
-          <div className="text-2xl font-bold text-navy-950 tabular-nums">
+        <div className="bg-white p-3 sm:p-4 text-center">
+          <div className="text-xl sm:text-2xl font-bold text-navy-950 tabular-nums">
             {history.filter(h => h.score >= 70).length}
           </div>
-          <div className="text-xs text-secondary">High Performers</div>
+          <div className="text-xs text-secondary">High Score</div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white p-4">
-        <div className="flex flex-col sm:flex-row gap-3">
-          {/* Search */}
-          <div className="relative flex-1">
+      {/* Filters - responsive: stacked on mobile, inline on larger */}
+      <div className="bg-white p-3 sm:p-4">
+        <div className="flex flex-col gap-3">
+          {/* Search - always full width on mobile */}
+          <div className="relative">
             <label htmlFor="history-search" className="sr-only">Search analyses by location</label>
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-navy-400" aria-hidden="true" />
             <input
@@ -116,37 +116,41 @@ const AnalysesHistoryPage: React.FC<AnalysesHistoryPageProps> = ({
             />
           </div>
 
-          {/* Period Filter */}
-          <fieldset className="flex items-center space-x-1">
-            <legend className="sr-only">Filter by time period</legend>
-            {(['all', 'week', 'month'] as const).map((period) => (
-              <button
-                key={period}
-                onClick={() => setFilterPeriod(period)}
-                aria-pressed={filterPeriod === period}
-                className={`px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset min-h-[44px] ${
-                  filterPeriod === period
-                    ? 'bg-navy-950 text-white'
-                    : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
-                }`}
-              >
-                {period === 'all' ? 'All Time' : period === 'week' ? 'This Week' : 'This Month'}
-              </button>
-            ))}
-          </fieldset>
+          {/* Period Filter + Sort - inline row */}
+          <div className="flex flex-wrap items-center gap-2">
+            <fieldset className="flex items-center flex-1 min-w-0">
+              <legend className="sr-only">Filter by time period</legend>
+              <div className="flex w-full sm:w-auto">
+                {(['all', 'week', 'month'] as const).map((period) => (
+                  <button
+                    key={period}
+                    onClick={() => setFilterPeriod(period)}
+                    aria-pressed={filterPeriod === period}
+                    className={`flex-1 sm:flex-none px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset min-h-[44px] ${
+                      filterPeriod === period
+                        ? 'bg-navy-950 text-white'
+                        : 'bg-surface-100 text-navy-600 hover:bg-surface-200'
+                    }`}
+                  >
+                    {period === 'all' ? 'All' : period === 'week' ? 'Week' : 'Month'}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
 
-          {/* Sort */}
-          <div>
-            <label htmlFor="history-sort" className="sr-only">Sort analyses</label>
-            <select
-              id="history-sort"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
-              className="px-3 py-2 border border-surface-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
-            >
-              <option value="date">Sort by Date</option>
-              <option value="score">Sort by Score</option>
-            </select>
+            {/* Sort */}
+            <div className="flex-shrink-0">
+              <label htmlFor="history-sort" className="sr-only">Sort analyses</label>
+              <select
+                id="history-sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'date' | 'score')}
+                className="px-2 sm:px-3 py-2 border border-surface-300 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-navy-500 focus:border-transparent min-h-[44px]"
+              >
+                <option value="date">Date</option>
+                <option value="score">Score</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>

@@ -182,9 +182,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
           )}
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="max-w-5xl mx-auto px-4 sm:px-6" aria-label="Dashboard navigation">
-          <div className="flex space-x-1" role="tablist">
+        {/* Navigation Tabs - responsive: icons only on mobile, full labels on larger screens */}
+        <nav className="max-w-5xl mx-auto px-4 sm:px-6 overflow-x-auto" aria-label="Dashboard navigation">
+          <div className="flex" role="tablist">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeView === tab.id;
@@ -194,6 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                   role="tab"
                   aria-selected={isActive}
                   aria-controls={`panel-${tab.id}`}
+                  aria-label={tab.label}
                   onClick={() => {
                     setActiveView(tab.id);
                     // Reset analysis view when switching to analyze tab
@@ -201,14 +202,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
                       // Keep current analysis visible
                     }
                   }}
-                  className={`flex items-center space-x-2 px-4 py-3 text-sm font-medium transition-colors relative focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset ${
+                  className={`flex items-center justify-center sm:justify-start space-x-0 sm:space-x-2 px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative focus:outline-none focus:ring-2 focus:ring-navy-500 focus:ring-inset min-w-[48px] sm:min-w-0 ${
                     isActive
                       ? 'text-navy-950'
                       : 'text-secondary hover:text-navy-700'
                   }`}
                 >
-                  <Icon className="w-4 h-4" aria-hidden="true" />
-                  <span>{tab.label}</span>
+                  <Icon className="w-5 h-5 sm:w-4 sm:h-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">{tab.label}</span>
                   {/* Active indicator */}
                   {isActive && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500" aria-hidden="true" />

@@ -58,10 +58,10 @@ const FeaturesSection: React.FC = () => {
         {/* Asymmetric feature layout - break the grid */}
         <div className="grid lg:grid-cols-12 gap-4 lg:gap-6">
           {/* Hero feature - takes more space */}
-          <div className={`lg:col-span-7 bg-navy-950 p-8 lg:p-12 border-l-4 border-success-500 ${isArabic ? 'text-right' : ''}`}>
+          <div className={`lg:col-span-7 bg-navy-950 p-8 lg:p-12 border-l-4 border-emerald-500 ${isArabic ? 'text-right' : ''}`}>
             <div className="flex items-start justify-between mb-6">
-              <Zap className={`w-10 h-10 text-success-400 ${isArabic ? 'order-2' : ''}`} />
-              <span className="text-success-400 text-6xl lg:text-7xl text-stat tabular-nums">{features[0].stat}</span>
+              <Zap className={`w-10 h-10 text-emerald-400 ${isArabic ? 'order-2' : ''}`} />
+              <span className="text-emerald-400 text-4xl lg:text-5xl text-stat tabular-nums">{features[0].stat}</span>
             </div>
             <h3 className="text-2xl lg:text-3xl font-bold text-white mb-3 tracking-tight">{features[0].title}</h3>
             <p className="text-navy-300 text-lg leading-relaxed mb-2">{features[0].description}</p>
@@ -69,10 +69,10 @@ const FeaturesSection: React.FC = () => {
           </div>
 
           {/* Secondary feature */}
-          <div className={`lg:col-span-5 bg-surface-100 p-8 lg:p-12 border-l-4 border-info-500 ${isArabic ? 'text-right' : ''}`}>
+          <div className={`lg:col-span-5 bg-surface-100 p-8 lg:p-12 border-l-4 border-navy-300 ${isArabic ? 'text-right' : ''}`}>
             <div className="flex items-start justify-between mb-6">
-              <Target className={`w-8 h-8 text-info-600 ${isArabic ? 'order-2' : ''}`} />
-              <span className="text-info-600 text-5xl text-stat tabular-nums">{features[1].stat}</span>
+              <Target className={`w-8 h-8 text-navy-600 ${isArabic ? 'order-2' : ''}`} />
+              <span className="text-navy-600 text-3xl text-stat tabular-nums">{features[1].stat}</span>
             </div>
             <h3 className="text-xl lg:text-2xl font-bold text-navy-950 mb-2 tracking-tight">{features[1].title}</h3>
             <p className="text-body mb-2">{features[1].description}</p>
@@ -80,20 +80,20 @@ const FeaturesSection: React.FC = () => {
           </div>
 
           {/* Bottom row - two columns with swapped sizes */}
-          <div className={`lg:col-span-5 bg-white border-l-4 border-warning-500 p-8 ${isArabic ? 'text-right' : ''}`}>
+          <div className={`lg:col-span-5 bg-white border-l-4 border-navy-200 p-8 ${isArabic ? 'text-right' : ''}`}>
             <div className="flex items-start justify-between mb-4">
-              <FileText className={`w-7 h-7 text-warning-600 ${isArabic ? 'order-2' : ''}`} />
-              <span className="text-warning-600 text-4xl text-stat tabular-nums">{features[2].stat}</span>
+              <FileText className={`w-7 h-7 text-navy-600 ${isArabic ? 'order-2' : ''}`} />
+              <span className="text-navy-600 text-2xl text-stat tabular-nums">{features[2].stat}</span>
             </div>
             <h3 className="text-xl font-bold text-navy-950 mb-2 tracking-tight">{features[2].title}</h3>
             <p className="text-body mb-2">{features[2].description}</p>
             <p className="text-label text-navy-500">{features[2].statLabel}</p>
           </div>
 
-          <div className={`lg:col-span-7 bg-white border-l-4 border-success-500 p-8 ${isArabic ? 'text-right' : ''}`}>
+          <div className={`lg:col-span-7 bg-white border-l-4 border-navy-200 p-8 ${isArabic ? 'text-right' : ''}`}>
             <div className="flex items-start justify-between mb-4">
-              <MapPin className={`w-7 h-7 text-success-600 ${isArabic ? 'order-2' : ''}`} />
-              <span className="text-success-600 text-4xl text-stat tabular-nums">{features[3].stat}</span>
+              <MapPin className={`w-7 h-7 text-navy-600 ${isArabic ? 'order-2' : ''}`} />
+              <span className="text-navy-600 text-2xl text-stat tabular-nums">{features[3].stat}</span>
             </div>
             <h3 className="text-xl font-bold text-navy-950 mb-2 tracking-tight">{features[3].title}</h3>
             <p className="text-body mb-2">{features[3].description}</p>

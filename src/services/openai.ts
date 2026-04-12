@@ -280,6 +280,19 @@ const generateMenaConsiderations = (billboardMetadata?: import('../types/billboa
 };
 
 /**
+ * Generate a simple numeric hash from a string for deterministic variation
+ */
+const generateSimpleHash = (str: string): number => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash);
+};
+
+/**
  * 🛡️ ENHANCED FALLBACK WITH VARIABLE SCORING
  */
 const generateVariableFallbackResponse = (location: string, distance: number, fileName: string, errorMessage: string, billboardMetadata?: import('../types/billboard').BillboardMetadata): OpenAIAnalysisResponse => {

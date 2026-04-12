@@ -47,6 +47,24 @@ SCORING PENALTIES - BE STRICT:
 - If Arabic is primary/dominant: Can score up to 10/10
 </critical_rule>
 
+<critical_rule id="cta_penalty" priority="3">
+CTA REQUIREMENT:
+If no call-to-action is present (no phone number, website, QR code, or store location), maximum overall_score is 7.0/10 regardless of other qualities.
+A billboard without a CTA fails to convert viewer attention into action.
+</critical_rule>
+
+<critical_rule id="font_size_penalty" priority="4">
+FONT SIZE REQUIREMENT:
+If headline font height is below 10 inches for highway billboards (speed > 80km/h) or below 6 inches for urban billboards (speed ≤ 80km/h), maximum overall_score is 6.0/10.
+Illegible text defeats the entire purpose of a billboard.
+</critical_rule>
+
+<critical_rule id="clutter_penalty" priority="5">
+CLUTTER REQUIREMENT:
+If word count exceeds 15 words or clutter_score is 7 or higher, maximum overall_score is 5.5/10.
+Cluttered billboards fail the fundamental readability test — viewers have 2-5 seconds to read.
+</critical_rule>
+
 <readability_assessment>
 - Measure font sizes relative to billboard dimensions
 - Count EXACT number of words visible

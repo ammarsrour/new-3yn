@@ -146,9 +146,6 @@ export const analyzeBillboardWithAI = async (
   distance: number,
   locationData?: import('./locationService').LocationData & { billboardMetadata?: import('../types/billboard').BillboardMetadata }
 ): Promise<OpenAIAnalysisResponse> => {
-  const maxRetries = 2;
-  let attempt = 0;
-
   try {
     const base64Image = await convertImageToBase64(imageFile);
 
@@ -157,66 +154,7 @@ export const analyzeBillboardWithAI = async (
       throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
     }
 
-    // 📍 ENHANCED LOCATION CONTEXT WITH REAL BILLBOARD DATA
-    let locationContext = `Location: ${location}`;
-    let billboardSpecs = '';
-    let physicalConstraints = '';
-    
-    if (locationData?.valid && locationData.context) {
-      const { billboardMetadata } = locationData;
-      const { context } = locationData;
-      locationContext += `
-
-Location Context:
-- Setting: ${context.type} area
-- Typical viewing speed: ${context.speed} mph
-- Traffic density: ${context.trafficDensity}
-- Region: ${context.region}, ${context.country}`;
-
-      if (billboardMetadata) {
-        const { location: billboard, analysisContext } = billboardMetadata;
-        
-        // Calculate precise font size requirements using real billboard dimensions
-        const actualViewingDistance = billboard.distanceFromRoadM || analysisContext.viewingDistance;
-        const billboardHeight = billboard.approxHeightM || 5;
-        const billboardWidth = billboard.approxWidthM || 14;
-        const speedKmh = analysisContext.speedContext.kmh;
-        
-        // Font size calculation: (viewing_distance_m / approx_height_m) * speed_factor
-        const speedFactor = speedKmh <= 50 ? 1.0 : speedKmh <= 80 ? 1.3 : speedKmh <= 100 ? 1.6 : 2.0;
-        const minimumFontHeightM = (actualViewingDistance / billboardHeight) * speedFactor * 0.15; // 15cm per meter of height as baseline
-        const minimumFontHeightPx = Math.round((minimumFontHeightM / billboardHeight) * 400); // Assuming 400px billboard height in design
-        
-        billboardSpecs = `
-
-REAL BILLBOARD SPECIFICATIONS:
-- Board Type: ${billboard.boardType} (${billboard.format})
-- Physical Dimensions: ${billboardWidth}m × ${billboardHeight}m (${billboardWidth * billboardHeight}m² total area)
-- Actual viewing distance: ${actualViewingDistance}m (NOT ${distance}m - use ACTUAL distance)
-- Traffic speed: ${analysisContext.speedContext.kmh} km/h (${analysisContext.speedContext.mph} mph)
-- Road category: ${analysisContext.speedContext.category}
-- Highway designation: ${billboard.highwayDesignation || 'N/A'}
-- Traffic direction: ${billboard.trafficDirectionVisibility}
-- Lighting conditions: ${billboard.lighting}`;
-
-        physicalConstraints = `
-
-CRITICAL PHYSICAL CONSTRAINTS FOR ANALYSIS:
-- MINIMUM font height required: ${minimumFontHeightPx}px (${minimumFontHeightM.toFixed(2)}m actual size)
-- Viewing time at ${speedKmh} km/h: ${((billboardWidth * 2) / (speedKmh * 0.277778)).toFixed(1)} seconds
-- Text-to-billboard ratio: Headline should occupy ${Math.round((minimumFontHeightM / billboardHeight) * 100)}% of billboard height
-- Maximum word count for ${((billboardWidth * 2) / (speedKmh * 0.277778)).toFixed(1)}s viewing: ${Math.max(3, Math.floor(((billboardWidth * 2) / (speedKmh * 0.277778)) * 2))} words
-- Arabic text requirement: Must occupy 60%+ of space (${(billboardWidth * billboardHeight * 0.6).toFixed(1)}m²)
-
-SCORING MUST REFLECT THESE REAL CONSTRAINTS:
-- If text appears smaller than ${minimumFontHeightPx}px equivalent: CRITICAL ISSUE (score 20-40)
-- If contrast ratio below 4.5:1 for ${billboard.lighting} conditions: MAJOR PENALTY (score 30-50)
-- If word count exceeds ${Math.max(3, Math.floor(((billboardWidth * 2) / (speedKmh * 0.277778)) * 2))} words: READABILITY FAILURE (score 25-45)
-- If Arabic text less than 60% prominent: COMPLIANCE FAILURE (score 30-50)`;
-      }
-    }
-
-    // 🤖 ENHANCED OPENAI API CALL WITH REAL BILLBOARD CONSTRAINTS
+    // 🤖 OPENAI API CALL WITH TOOL USE
     const systemPrompt = getBillboardAnalyzerSystemPrompt();
 
     const response = await fetch('/.netlify/functions/openai', {
@@ -265,26 +203,18 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
 
     const data = await response.json();
 
-    // 🔧 NEW: Try to extract from tool_calls first (structured output)
+    // Extract structured response from tool_calls
     const toolCall = data.choices[0]?.message?.tool_calls?.[0];
-    if (toolCall?.function?.name === 'submit_billboard_analysis' && toolCall?.function?.arguments) {
-      try {
-        const toolResponse = JSON.parse(toolCall.function.arguments) as BillboardAnalysisToolResponse;
-        return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
-      } catch (toolParseError) {
-        console.warn('[OpenAI] Tool response parsing failed, falling back to content parsing:', toolParseError);
-        // Fall through to legacy parsing
-      }
+    if (!toolCall?.function?.arguments) {
+      throw new Error('No tool response from OpenAI - expected function call output');
     }
 
-    // 🔄 LEGACY: Fall back to content-based parsing if tool_calls not present or failed
-    const analysisText = data.choices[0]?.message?.content;
-    if (!analysisText) {
-      throw new Error('No response content from OpenAI');
+    if (toolCall.function.name !== 'submit_billboard_analysis') {
+      throw new Error(`Unexpected tool call: ${toolCall.function.name}`);
     }
 
-    // 🔄 ENHANCED RESPONSE PROCESSING WITH VALIDATION (legacy path)
-    return await parseAndValidateResponse(analysisText, maxRetries, imageFile.name, locationData?.billboardMetadata);
+    const toolResponse = JSON.parse(toolCall.function.arguments) as BillboardAnalysisToolResponse;
+    return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
     
   } catch (error) {
     // 🛡️ ENHANCED FALLBACK WITH VARIABLE SCORING
@@ -293,217 +223,6 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
   }
 };
 
-/**
- * 🔄 ENHANCED RESPONSE PARSING WITH CONTENT VALIDATION
- */
-const parseAndValidateResponse = async (analysisText: string, maxRetries: number, fileName: string, billboardMetadata?: import('../types/billboard').BillboardMetadata): Promise<OpenAIAnalysisResponse> => {
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      // Extract JSON from response
-      const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No JSON found in response');
-      }
-
-      const analysisData = JSON.parse(jsonMatch[0]);
-
-      // Validate required fields
-      if (!analysisData.assessment?.overall_score && !analysisData.overall_score) {
-        throw new Error('Missing required AI response fields: overall_score');
-      }
-
-      // 🚨 VALIDATE RESPONSE IS NOT GENERIC
-      const isGenericResponse = validateResponseQuality(analysisData, analysisText, billboardMetadata);
-      if (isGenericResponse && attempt < maxRetries) {
-        throw new Error('Generic response detected');
-      }
-      
-      // 📊 BUILD ENHANCED RESPONSE WITH REAL BILLBOARD DATA
-      const actualDistance = billboardMetadata?.analysisContext.viewingDistance || 100;
-
-      // Map AI scores (0-10) to system scores (0-100)
-      const aiOverallScore = analysisData.assessment?.overall_score || analysisData.overall_score || 7;
-      const overallScore = Math.round(aiOverallScore * 10);
-
-      // Calculate component scores from AI overall score
-      const baseComponentScore = aiOverallScore * 2.5;
-
-      // Estimate component scores based on AI analysis
-      const fontScore = Math.round(
-        analysisData.font_score ||
-        (analysisData.readability_metrics?.compliant
-          ? Math.min(25, baseComponentScore + 3)
-          : Math.max(5, baseComponentScore - 5))
-      );
-
-      const contrastScore = Math.round(
-        analysisData.contrast_score ||
-        (analysisData.visual_analysis?.contrast_ratio
-          ? estimateContrastScore(analysisData.visual_analysis.contrast_ratio, baseComponentScore)
-          : baseComponentScore)
-      );
-
-      const layoutScore = Math.round(
-        analysisData.layout_score ||
-        (analysisData.readability_metrics?.word_count && analysisData.readability_metrics?.max_recommended_words
-          ? estimateLayoutScore(analysisData.readability_metrics, baseComponentScore)
-          : baseComponentScore)
-      );
-
-      const ctaScore = Math.round(
-        analysisData.cta_score ||
-        (analysisData.text_content?.cta
-          ? Math.min(25, baseComponentScore + 2)
-          : Math.max(5, baseComponentScore - 3))
-      );
-
-      // Convert recommendations to issues
-      const recommendations = analysisData.recommendations || [];
-      const criticalIssues = recommendations
-        .filter((r: any) => r.priority === 'HIGH')
-        .map((r: any) => `${r.issue}: ${r.action} (Impact: ${r.expected_impact})`)
-        .concat(analysisData.critical_issues || analysisData.assessment?.critical_issues || []);
-
-      const minorIssues = recommendations
-        .filter((r: any) => r.priority === 'MEDIUM')
-        .map((r: any) => `${r.issue}: ${r.action}`);
-
-      const quickWins = recommendations
-        .filter((r: any) => r.priority === 'LOW')
-        .map((r: any) => `${r.action} (${r.expected_impact})`);
-
-      // Build detailed analysis text from JSON fields
-      const detailedAnalysis = buildDetailedAnalysisText(analysisData, analysisText);
-
-      return {
-        overallScore: Math.max(20, Math.min(100, overallScore)),
-        arabicTextDetected: analysisData.arabic_text_detected || false,
-        culturalCompliance: analysisData.cultural_compliance || 'needs_review',
-        fontScore: Math.max(5, Math.min(25, fontScore)),
-        contrastScore: Math.max(5, Math.min(25, contrastScore)),
-        layoutScore: Math.max(5, Math.min(25, layoutScore)),
-        ctaScore: Math.max(5, Math.min(25, ctaScore)),
-        distanceAnalysis: {
-          '50m': Math.max(30, Math.min(95, analysisData.distance_analysis?.['50m_simulation'] || analysisData.distance_50m || overallScore + 10)),
-          '100m': Math.max(25, Math.min(90, analysisData.distance_analysis?.['100m_simulation'] || analysisData.distance_100m || overallScore)),
-          '150m': Math.max(20, Math.min(85, analysisData.distance_analysis?.['150m_simulation'] || analysisData.distance_150m || overallScore - 15))
-        },
-        criticalIssues: criticalIssues.length > 0 ? criticalIssues : generateLocationSpecificIssues(billboardMetadata, 'critical'),
-        minorIssues: minorIssues.length > 0 ? minorIssues : generateLocationSpecificIssues(billboardMetadata, 'minor'),
-        quickWins: quickWins.length > 0 ? quickWins : generateLocationSpecificIssues(billboardMetadata, 'wins'),
-        detailedAnalysis,
-        visualDescription: analysisData.visual_description || "Visual content analysis unavailable",
-        actualTextContent: analysisData.text_content?.headline || analysisData.actual_text_content || "Text content not detected",
-        colorAnalysis: buildColorAnalysisText(analysisData.visual_analysis) || analysisData.color_analysis || "Color analysis unavailable",
-        menaConsiderations: analysisData.mena_considerations || generateMenaConsiderations(billboardMetadata)
-      };
-    } catch (parseError) {
-      if (attempt === maxRetries) {
-        return parseAnalysisTextEnhanced(analysisText, fileName, billboardMetadata);
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 100 * (attempt + 1)));
-    }
-  }
-  
-  throw new Error('All parsing attempts failed');
-};
-
-/**
- * 🔢 HELPER FUNCTIONS FOR SCORE ESTIMATION
- */
-const estimateContrastScore = (contrastRatio: string, baseScore: number): number => {
-  const ratio = parseFloat(contrastRatio.split(':')[0]);
-  if (ratio >= 7.0) return Math.min(25, baseScore + 5);
-  if (ratio >= 4.5) return Math.min(25, baseScore + 2);
-  if (ratio >= 3.0) return Math.max(10, baseScore - 5);
-  return Math.max(5, baseScore - 10);
-};
-
-const estimateLayoutScore = (metrics: any, baseScore: number): number => {
-  const wordCount = metrics.word_count || 0;
-  const maxWords = metrics.max_recommended_words || 10;
-  const compliant = metrics.compliant !== false;
-
-  if (compliant && wordCount <= maxWords) return Math.min(25, baseScore + 5);
-  if (wordCount <= maxWords * 1.2) return Math.min(25, baseScore);
-  if (wordCount <= maxWords * 1.5) return Math.max(10, baseScore - 5);
-  return Math.max(5, baseScore - 10);
-};
-
-const buildColorAnalysisText = (visualAnalysis: any): string | null => {
-  if (!visualAnalysis) return null;
-
-  const parts = [];
-  if (visualAnalysis.text_color) parts.push(`Text: ${visualAnalysis.text_color}`);
-  if (visualAnalysis.background_color) parts.push(`Background: ${visualAnalysis.background_color}`);
-  if (visualAnalysis.contrast_ratio) parts.push(`Contrast: ${visualAnalysis.contrast_ratio}`);
-
-  return parts.length > 0 ? parts.join(', ') : null;
-};
-
-const buildDetailedAnalysisText = (analysisData: any, fallbackText: string): string => {
-  const parts: string[] = [];
-
-  if (analysisData.text_content) {
-    const tc = analysisData.text_content;
-    parts.push(`Text Content: ${tc.headline || ''}${tc.body ? ' - ' + tc.body : ''}${tc.cta ? ' | CTA: ' + tc.cta : ''}`);
-  }
-
-  if (analysisData.readability_metrics) {
-    const rm = analysisData.readability_metrics;
-    parts.push(`Readability: ${rm.word_count} words (max ${rm.max_recommended_words}), ${rm.viewing_time_seconds?.toFixed(1)}s viewing time, ${rm.compliant ? 'Compliant' : 'Non-compliant'}`);
-  }
-
-  if (analysisData.visual_analysis) {
-    const va = analysisData.visual_analysis;
-    parts.push(`Visual: ${va.font_style || 'Unknown font'}, headline ${va.headline_font_inches || 'N/A'}" tall, clutter score ${va.clutter_score || 'N/A'}/10`);
-  }
-
-  if (analysisData.assessment) {
-    const assess = analysisData.assessment;
-    parts.push(`Assessment: Score ${assess.overall_score}/10`);
-    if (assess.critical_issues?.length) {
-      parts.push(`Issues: ${assess.critical_issues.join('; ')}`);
-    }
-  }
-
-  if (analysisData.detailed_analysis) {
-    parts.push(analysisData.detailed_analysis);
-  }
-
-  return parts.length > 0 ? parts.join('\n\n') : fallbackText;
-};
-
-/**
- * 🚨 RESPONSE QUALITY VALIDATOR
- * Detects and rejects generic/template responses
- */
-const validateResponseQuality = (analysisData: any, fullText: string, billboardMetadata?: import('../types/billboard').BillboardMetadata): boolean => {
-  // Check for generic score patterns (0-10 scale in new format)
-  const overallScore = analysisData.assessment?.overall_score || analysisData.overall_score || 0;
-  if (overallScore >= 7 && overallScore <= 7.5 && overallScore !== 0) {
-    return true;
-  }
-
-  // Check if response has required structure
-  const hasAssessment = analysisData.assessment?.overall_score !== undefined;
-  const hasTextContent = analysisData.text_content?.headline || analysisData.actual_text_content;
-
-  if (!hasAssessment && !hasTextContent) {
-    return true;
-  }
-
-  // For new format, check for required fields
-  if (analysisData.readability_metrics) {
-    if (analysisData.readability_metrics.word_count === undefined ||
-        analysisData.readability_metrics.viewing_time_seconds === undefined) {
-      return true;
-    }
-  }
-
-  return false;
-};
 
 /**
  * 🏗️ LOCATION-SPECIFIC ISSUE GENERATOR
@@ -604,76 +323,6 @@ const generateVariableFallbackResponse = (location: string, distance: number, fi
   };
 };
 
-/**
- * 📝 ENHANCED TEXT PARSING FALLBACK
- */
-const parseAnalysisTextEnhanced = (text: string, fileName: string, billboardMetadata?: import('../types/billboard').BillboardMetadata): OpenAIAnalysisResponse => {
-  
-  // Extract visual description
-  const visualMatch = text.match(/visual[_\s]description['":\s]*([^"',}]+)/i);
-  const visualDescription = visualMatch ? visualMatch[1].trim() : 
-    billboardMetadata ? `Visual analysis for ${billboardMetadata.location.locationName} (${billboardMetadata.location.approxWidthM}m×${billboardMetadata.location.approxHeightM}m)` : 
-    "Visual content analysis from text response";
-  
-  // Extract actual text content
-  const textMatch = text.match(/actual[_\s]text[_\s]content['":\s]*([^"',}]+)/i);
-  const actualTextContent = textMatch ? textMatch[1].trim() : "Text content extracted from response";
-  
-  // Extract color analysis
-  const colorMatch = text.match(/color[_\s]analysis['":\s]*([^"',}]+)/i);
-  const colorAnalysis = colorMatch ? colorMatch[1].trim() : "Color information from text analysis";
-  
-  // Extract score with validation
-  const scoreMatch = text.match(/(?:overall[_\s]score|score).*?(\d+)/i);
-  let score = scoreMatch ? parseInt(scoreMatch[1]) : 65;
-  
-  // Ensure variable scoring
-  const fileHash = generateSimpleHash(fileName);
-  if (score >= 70 && score <= 75) {
-    // Adjust generic scores to be more variable
-    score = 45 + (fileHash % 35) + (score - 70) * 2;
-  }
-  
-  score = Math.max(25, Math.min(95, score));
-  
-  // Use actual billboard distance if available
-  const actualDistance = billboardMetadata?.location.distanceFromRoadM || 100;
-  
-  return {
-    overallScore: score,
-    fontScore: Math.max(5, Math.min(25, Math.floor(score * 0.25) + (fileHash % 4) - 2)),
-    contrastScore: Math.max(5, Math.min(25, Math.floor(score * 0.24) + (fileHash % 5) - 2)),
-    layoutScore: Math.max(5, Math.min(25, Math.floor(score * 0.26) + (fileHash % 3) - 1)),
-    ctaScore: Math.max(5, Math.min(25, Math.floor(score * 0.25) + (fileHash % 4) - 2)),
-    distanceAnalysis: {
-      '50m': Math.min(score + 15, 95),
-      '100m': actualDistance === 100 ? score : Math.max(score - Math.abs(actualDistance - 100) * 0.3, 25),
-      '150m': Math.max(score - 20, 25)
-    },
-    criticalIssues: extractEnhancedListItems(text, ['critical', 'major', 'serious', 'urgent']) || generateLocationSpecificIssues(billboardMetadata, 'critical'),
-    minorIssues: extractEnhancedListItems(text, ['minor', 'moderate', 'small', 'slight']),
-    quickWins: extractEnhancedListItems(text, ['quick', 'easy', 'improve', 'recommend', 'simple']) || generateLocationSpecificIssues(billboardMetadata, 'wins'),
-    detailedAnalysis: text,
-    visualDescription,
-    actualTextContent,
-    colorAnalysis,
-    menaConsiderations: generateMenaConsiderations(billboardMetadata),
-    apiNote: `Analysis parsed from OpenAI text response with ${billboardMetadata?.location.locationName || 'generic'} location data`
-  };
-};
-
-/**
- * 🔢 SIMPLE HASH GENERATOR FOR CONSISTENT VARIABILITY
- */
-const generateSimpleHash = (input: string): number => {
-  let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    const char = input.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  return Math.abs(hash);
-};
 
 /**
  * 🚨 VARIABLE CRITICAL ISSUES GENERATOR
@@ -797,37 +446,6 @@ const generateVariableDetailedAnalysis = (score: number, location: string, dista
 } room for enhancement on this ${billboard?.roadType || 'road'} location. Priority improvements would yield estimated ${
   Math.min(50, (100 - score) * 0.6)
 }% increase in message effectiveness for ${billboard?.trafficDirectionVisibility || 'traffic'} viewing patterns.`;
-};
-
-/**
- * 📋 ENHANCED LIST ITEM EXTRACTOR
- */
-const extractEnhancedListItems = (text: string, keywords: string[]): string[] => {
-  const items: string[] = [];
-  const lines = text.split('\n');
-  
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/) || trimmed.includes(':')) {
-      const hasKeyword = keywords.some(keyword => 
-        trimmed.toLowerCase().includes(keyword.toLowerCase())
-      );
-      
-      if (hasKeyword || items.length < 2) {
-        const cleanItem = trimmed
-          .replace(/^[-•*]\s/, '')
-          .replace(/^\d+\.\s/, '')
-          .replace(/^["']/, '')
-          .replace(/["']$/, '');
-        
-        if (cleanItem.length > 10) { // Ensure substantial content
-          items.push(cleanItem);
-        }
-      }
-    }
-  }
-  
-  return items.slice(0, 4); // Limit to 4 items max
 };
 
 // 🔧 HELPER FUNCTIONS

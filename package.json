@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eval:generate": "npx tsx src/evals/generate-dataset.ts",
+    "eval:run": "npx tsx src/evals/run-eval.ts"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",

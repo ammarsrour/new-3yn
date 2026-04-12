@@ -1,4 +1,5 @@
 import { getBillboardAnalyzerSystemPrompt, getLocationContextPrompt } from '../prompts/billboardAnalyzer';
+import { billboardAnalysisTool, BillboardAnalysisToolResponse } from '../schemas/billboardAnalysis';
 
 export interface OpenAIAnalysisResponse {
   overallScore: number;
@@ -20,6 +21,119 @@ export interface OpenAIAnalysisResponse {
   colorAnalysis: string;
   apiNote?: string;
 }
+
+/**
+ * 🔧 NEW: Map tool response to OpenAIAnalysisResponse
+ * This provides a clean, direct mapping from the structured tool output
+ * without needing regex parsing or heuristic validation.
+ */
+const mapToolResponseToAnalysis = (
+  toolResponse: BillboardAnalysisToolResponse,
+  billboardMetadata?: import('../types/billboard').BillboardMetadata
+): OpenAIAnalysisResponse => {
+  const { assessment, text_content, visual_analysis, arabic_analysis, readability_metrics, recommendations } = toolResponse;
+
+  // Map AI scores (0-10) to system scores (0-100 for overall, 0-25 for components)
+  const overallScore = Math.round(assessment.overall_score * 10);
+  const scores = assessment.scores_breakdown;
+
+  // Map component scores from 0-10 to 0-25 scale
+  const fontScore = Math.round((scores.font_clarity / 10) * 25);
+  const contrastScore = Math.round((scores.color_contrast / 10) * 25);
+  const layoutScore = Math.round((scores.layout_simplicity / 10) * 25);
+  const ctaScore = Math.round((scores.cta_effectiveness / 10) * 25);
+
+  // Calculate distance analysis based on overall score
+  const distanceAnalysis = {
+    '50m': Math.min(95, overallScore + 10),
+    '100m': overallScore,
+    '150m': Math.max(20, overallScore - 15)
+  };
+
+  // Map recommendations to issues by priority
+  const criticalIssues = [
+    ...assessment.critical_issues,
+    ...recommendations
+      .filter(r => r.priority === 'CRITICAL')
+      .map(r => `${r.issue}: ${r.action} (Impact: ${r.expected_impact})`)
+  ];
+
+  const minorIssues = recommendations
+    .filter(r => r.priority === 'MEDIUM' || r.priority === 'LOW')
+    .map(r => `${r.issue}: ${r.action}`);
+
+  const quickWins = recommendations
+    .filter(r => r.priority === 'HIGH')
+    .map(r => `${r.action} (${r.expected_impact})`);
+
+  // Build color analysis string
+  const colorAnalysis = [
+    visual_analysis.text_color && `Text: ${visual_analysis.text_color}`,
+    visual_analysis.background_color && `Background: ${visual_analysis.background_color}`,
+    visual_analysis.contrast_ratio && `Contrast: ${visual_analysis.contrast_ratio}`
+  ].filter(Boolean).join(', ') || 'Color analysis not available';
+
+  // Build detailed analysis text
+  const detailedAnalysis = buildDetailedAnalysisFromTool(toolResponse, billboardMetadata);
+
+  return {
+    overallScore: Math.max(20, Math.min(100, overallScore)),
+    fontScore: Math.max(5, Math.min(25, fontScore)),
+    contrastScore: Math.max(5, Math.min(25, contrastScore)),
+    layoutScore: Math.max(5, Math.min(25, layoutScore)),
+    ctaScore: Math.max(5, Math.min(25, ctaScore)),
+    distanceAnalysis,
+    criticalIssues: criticalIssues.length > 0 ? criticalIssues : ['Analysis complete - review recommendations'],
+    minorIssues,
+    quickWins: quickWins.length > 0 ? quickWins : ['No quick wins identified'],
+    detailedAnalysis,
+    visualDescription: toolResponse.detailed_visual_description,
+    actualTextContent: text_content.headline || 'No headline detected',
+    colorAnalysis,
+    apiNote: 'Analysis generated via structured tool output'
+  };
+};
+
+/**
+ * 🔧 NEW: Build detailed analysis text from tool response
+ */
+const buildDetailedAnalysisFromTool = (
+  toolResponse: BillboardAnalysisToolResponse,
+  billboardMetadata?: import('../types/billboard').BillboardMetadata
+): string => {
+  const { text_content, visual_analysis, arabic_analysis, readability_metrics, assessment } = toolResponse;
+
+  const parts: string[] = [];
+
+  // Text content summary
+  parts.push(`Text Content: ${text_content.headline || 'No headline'}${text_content.body ? ' - ' + text_content.body : ''}${text_content.cta ? ' | CTA: ' + text_content.cta : ''}`);
+
+  // Readability metrics
+  parts.push(`Readability: ${readability_metrics.word_count} words (max ${readability_metrics.max_recommended_words || 'N/A'}), ${readability_metrics.viewing_time_seconds.toFixed(1)}s viewing time, ${readability_metrics.compliant ? 'Compliant' : 'Non-compliant'}`);
+
+  // Visual analysis
+  parts.push(`Visual: ${visual_analysis.font_style || 'Unknown font'}, headline ${visual_analysis.headline_font_inches}" tall, clutter score ${visual_analysis.clutter_score}/10`);
+
+  // Arabic compliance
+  const arabicStatus = arabic_analysis.arabic_detected
+    ? (arabic_analysis.arabic_is_primary ? 'Arabic is primary language (compliant)' : 'Arabic present but not primary')
+    : 'NO ARABIC TEXT - Critical legal violation';
+  parts.push(`Arabic Compliance: ${arabicStatus}`);
+
+  // Assessment
+  parts.push(`Assessment: Score ${assessment.overall_score}/10`);
+  if (assessment.critical_issues.length > 0) {
+    parts.push(`Issues: ${assessment.critical_issues.join('; ')}`);
+  }
+
+  // MENA considerations
+  if (billboardMetadata) {
+    const billboard = billboardMetadata.location;
+    parts.push(`Location Context: ${billboard.locationName}, ${billboard.district} - ${billboard.roadType} at ${billboardMetadata.analysisContext.speedContext.kmh} km/h`);
+  }
+
+  return parts.join('\n\n');
+};
 
 /**
  * 🔍 MAIN OPENAI ANALYSIS FUNCTION
@@ -113,7 +227,9 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
       body: JSON.stringify({
         action: "analyze",
         model: "gpt-4o",
-        response_format: { type: "json_object" },
+        // Use function calling for structured output (preferred over response_format)
+        tools: [billboardAnalysisTool],
+        tool_choice: { type: "function", function: { name: "submit_billboard_analysis" } },
         messages: [
           {
             role: "system",
@@ -137,7 +253,7 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
             ]
           }
         ],
-        max_tokens: 1500,
+        max_tokens: 2000,
         temperature: 0.3
       })
     });
@@ -149,12 +265,25 @@ SCORING MUST REFLECT THESE REAL CONSTRAINTS:
 
     const data = await response.json();
 
+    // 🔧 NEW: Try to extract from tool_calls first (structured output)
+    const toolCall = data.choices[0]?.message?.tool_calls?.[0];
+    if (toolCall?.function?.name === 'submit_billboard_analysis' && toolCall?.function?.arguments) {
+      try {
+        const toolResponse = JSON.parse(toolCall.function.arguments) as BillboardAnalysisToolResponse;
+        return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
+      } catch (toolParseError) {
+        console.warn('[OpenAI] Tool response parsing failed, falling back to content parsing:', toolParseError);
+        // Fall through to legacy parsing
+      }
+    }
+
+    // 🔄 LEGACY: Fall back to content-based parsing if tool_calls not present or failed
     const analysisText = data.choices[0]?.message?.content;
     if (!analysisText) {
       throw new Error('No response content from OpenAI');
     }
 
-    // 🔄 ENHANCED RESPONSE PROCESSING WITH VALIDATION
+    // 🔄 ENHANCED RESPONSE PROCESSING WITH VALIDATION (legacy path)
     return await parseAndValidateResponse(analysisText, maxRetries, imageFile.name, locationData?.billboardMetadata);
     
   } catch (error) {

@@ -13,6 +13,9 @@ interface OpenAIRequest {
   max_tokens?: number;
   temperature?: number;
   response_format?: { type: string };
+  // Function calling / tool use support
+  tools?: any[];
+  tool_choice?: any;
 }
 
 const corsHeaders = {
@@ -52,7 +55,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
   try {
     const requestBody: OpenAIRequest = JSON.parse(event.body || "{}");
-    const { action, model, messages, max_tokens, temperature, response_format } = requestBody;
+    const { action, model, messages, max_tokens, temperature, response_format, tools, tool_choice } = requestBody;
 
     if (!messages || !Array.isArray(messages)) {
       return {
@@ -65,11 +68,18 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
     const openaiRequestBody: any = {
       model: model || (action === "validate" ? "gpt-4o-mini" : "gpt-4o"),
       messages,
-      max_tokens: max_tokens || (action === "validate" ? 150 : 1500),
+      max_tokens: max_tokens || (action === "validate" ? 150 : 2000),
       temperature: temperature ?? (action === "validate" ? 0.1 : 0.3),
     };
 
-    if (response_format) {
+    // Support for function calling / tool use (preferred for structured output)
+    if (tools && Array.isArray(tools) && tools.length > 0) {
+      openaiRequestBody.tools = tools;
+      if (tool_choice) {
+        openaiRequestBody.tool_choice = tool_choice;
+      }
+    } else if (response_format) {
+      // Legacy: use response_format only if tools not provided
       openaiRequestBody.response_format = response_format;
     }
 

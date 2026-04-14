@@ -162,10 +162,11 @@ export const analyzeBillboardWithAI = async (
     const base64Image = await convertImageToBase64(imageFile);
     const mediaType = imageFile.type || 'image/jpeg';
 
-    const validationResult = await validateImageContent(base64Image, mediaType);
-    if (!validationResult.isValid) {
-      throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
-    }
+    // TODO: Re-enable validation after Claude API migration is confirmed working
+    // const validationResult = await validateImageContent(base64Image, mediaType);
+    // if (!validationResult.isValid) {
+    //   throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
+    // }
 
     // 🤖 CLAUDE API CALL WITH TOOL USE
     const systemPrompt = getBillboardAnalyzerSystemPrompt();

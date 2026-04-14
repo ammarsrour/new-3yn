@@ -160,8 +160,9 @@ export const analyzeBillboardWithAI = async (
 ): Promise<OpenAIAnalysisResponse> => {
   try {
     const base64Image = await convertImageToBase64(imageFile);
+    const mediaType = imageFile.type || 'image/jpeg';
 
-    const validationResult = await validateImageContent(base64Image);
+    const validationResult = await validateImageContent(base64Image, mediaType);
     if (!validationResult.isValid) {
       throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
     }
@@ -193,7 +194,7 @@ export const analyzeBillboardWithAI = async (
                 type: "image",
                 source: {
                   type: "base64",
-                  media_type: "image/jpeg",
+                  media_type: mediaType,
                   data: base64Image
                 }
               }
@@ -490,7 +491,7 @@ const convertImageToBase64 = (file: File): Promise<string> => {
  * 🔍 IMAGE CONTENT VALIDATOR
  * Uses OpenAI Vision to detect if the image is actually outdoor billboard/advertising
  */
-const validateImageContent = async (base64Image: string): Promise<{ isValid: boolean; message?: string }> => {
+const validateImageContent = async (base64Image: string, mediaType: string = 'image/jpeg'): Promise<{ isValid: boolean; message?: string }> => {
   try {
     const response = await fetch('/.netlify/functions/claude', {
       method: 'POST',
@@ -512,7 +513,7 @@ const validateImageContent = async (base64Image: string): Promise<{ isValid: boo
                 type: "image",
                 source: {
                   type: "base64",
-                  media_type: "image/jpeg",
+                  media_type: mediaType,
                   data: base64Image
                 }
               }

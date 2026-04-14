@@ -1,0 +1,326 @@
+[
+  {
+    "test_case_id": "cluttered_design",
+    "test_case_name": "Cluttered Busy Billboard",
+    "grade": 97.5,
+    "input_description": "Cluttered retail billboard. Arabic 'تخفيضات ضخمة' at 8 inches, English 'MEGA SALE' at 7 inches — similar sizes, Arabic not dominant. Overwhelmed with: '70% OFF', 'BUY 2 GET 1', store hours, address, phone, WhatsApp, Instagram, website, plus 6 product images. Pink-purple gradient background with yellow starbursts. Multiple fonts, colors scattered. Total 28 words. Contrast varies 2:1 to 15:1.",
+    "output": {
+      "text_content": {
+        "headline": "تخفيضات ضخمة",
+        "body": "70% OFF, BUY 2 GET 1, store hours, address, phone, WhatsApp, Instagram, website",
+        "cta": "phone, WhatsApp, Instagram, website",
+        "all_text_elements": [
+          "تخفيضات",
+          "ضخمة",
+          "MEGA",
+          "SALE",
+          "70%",
+          "OFF",
+          "BUY",
+          "2",
+          "GET",
+          "1",
+          "store",
+          "hours",
+          "address",
+          "phone",
+          "WhatsApp",
+          "Instagram",
+          "website"
+        ]
+      },
+      "visual_analysis": {
+        "headline_font_inches": 8,
+        "body_font_inches": 7,
+        "font_style": "Multiple fonts, sans-serif and serif mixed",
+        "text_color": "#FFFF00",
+        "background_color": "#FF69B4",
+        "accent_colors": [
+          "#800080",
+          "#FFFF00"
+        ],
+        "clutter_score": 9,
+        "contrast_ratio": "2:1 to 15:1",
+        "design_elements": [
+          "6 product images",
+          "yellow starbursts"
+        ]
+      },
+      "arabic_analysis": {
+        "arabic_detected": true,
+        "arabic_text_found": [
+          "تخفيضات ضخمة"
+        ],
+        "english_text_found": [
+          "MEGA SALE",
+          "70% OFF",
+          "BUY 2 GET 1",
+          "store hours",
+          "address",
+          "phone",
+          "WhatsApp",
+          "Instagram",
+          "website"
+        ],
+        "other_language_found": [],
+        "arabic_is_primary": false,
+        "english_positioned_next_to_arabic": true,
+        "ordinance_25_93_compliant": false,
+        "compliance_status": "partial",
+        "legal_consequence": "Municipality may issue fines or require modification for non-compliance"
+      },
+      "readability_metrics": {
+        "word_count": 28,
+        "viewing_time_seconds": 5.6,
+        "max_recommended_words": 10,
+        "compliant": false,
+        "word_count_violation": true,
+        "specific_measurements": {
+          "headline_height_inches": 8,
+          "body_text_height_inches": 7,
+          "total_text_elements": 17
+        }
+      },
+      "assessment": {
+        "overall_score": 5.5,
+        "critical_issues": [
+          "Arabic text 'تخفيضات ضخمة' is not dominant over English 'MEGA SALE' - violates Oman Ordinance 25/93",
+          "Word count of 28 exceeds maximum recommended 10 words for 5.6-second viewing window",
+          "Clutter score of 9 indicates excessive visual elements, reducing readability",
+          "Contrast ratio varies significantly, affecting text legibility"
+        ],
+        "scores_breakdown": {
+          "font_clarity": 4,
+          "color_contrast": 5,
+          "layout_simplicity": 3,
+          "cta_effectiveness": 6,
+          "arabic_compliance": 3
+        }
+      },
+      "recommendations": [
+        {
+          "priority": "CRITICAL",
+          "issue": "Arabic text 'تخفيضات ضخمة' is not dominant over English 'MEGA SALE' - violates Oman Ordinance 25/93",
+          "action": "Increase Arabic text size to 12 inches and reduce English text to 6 inches to ensure Arabic dominance.",
+          "expected_impact": "Achieves legal compliance with Ordinance 25/93, prevents potential fines, +30 points to overall score"
+        },
+        {
+          "priority": "HIGH",
+          "issue": "Word count of 28 exceeds maximum recommended 10 words for 5.6-second viewing window",
+          "action": "Reduce text to essential information only, limit to 10 words maximum.",
+          "expected_impact": "+20% message comprehension rate, +15 points layout simplicity score"
+        },
+        {
+          "priority": "HIGH",
+          "issue": "Clutter score of 9 indicates excessive visual elements, reducing readability",
+          "action": "Remove non-essential product images and starbursts, focus on key message and CTA.",
+          "expected_impact": "+25% readability improvement, +10 points layout simplicity score"
+        },
+        {
+          "priority": "MEDIUM",
+          "issue": "Contrast ratio varies significantly, affecting text legibility",
+          "action": "Standardize contrast to at least 4.5:1 for all text elements.",
+          "expected_impact": "+15 points color contrast score, +20% text legibility improvement"
+        }
+      ],
+      "detailed_visual_description": "The billboard features a pink-purple gradient background with yellow starbursts scattered throughout. The Arabic text 'تخفيضات ضخمة' is at 8 inches, while the English 'MEGA SALE' is at 7 inches, both in bold fonts but not clearly dominant. The billboard is cluttered with additional text such as '70% OFF', 'BUY 2 GET 1', store hours, address, phone, WhatsApp, Instagram, and website details. There are 6 product images adding to the visual clutter. The text uses multiple fonts, both sans-serif and serif, with colors scattered across the design. The contrast ratio varies from 2:1 to 15:1, affecting readability."
+    }
+  },
+  {
+    "test_case_id": "poor_contrast",
+    "test_case_name": "Poor Contrast Billboard",
+    "grade": 97.5,
+    "input_description": "Travel agency billboard with contrast issues. Arabic headline 'سافر معنا' (Travel With Us) at 14 inches and English 'TRAVEL WITH US' at 8 inches. Arabic is larger and primary. However, the color scheme is problematic: light gray text (#C0C0C0) on white background (#F5F5F5). Extremely poor contrast ratio estimated at 1.5:1. Beach sunset image in background with palm trees, which further reduces text visibility as colors blend together. Flight and hotel icons in light blue. Website URL barely visible. Total 5 words. Text is essentially unreadable, especially from distance.",
+    "output": {
+      "text_content": {
+        "headline": "سافر معنا",
+        "body": "",
+        "cta": "TRAVEL WITH US",
+        "all_text_elements": [
+          "سافر معنا",
+          "TRAVEL WITH US"
+        ]
+      },
+      "visual_analysis": {
+        "headline_font_inches": 14,
+        "body_font_inches": 8,
+        "font_style": "Bold sans-serif for both Arabic and English",
+        "text_color": "#C0C0C0",
+        "background_color": "#F5F5F5",
+        "accent_colors": [
+          "#ADD8E6"
+        ],
+        "clutter_score": 5,
+        "contrast_ratio": "1.5:1",
+        "design_elements": [
+          "Beach sunset image",
+          "Palm trees",
+          "Flight icon",
+          "Hotel icon"
+        ]
+      },
+      "arabic_analysis": {
+        "arabic_detected": true,
+        "arabic_text_found": [
+          "سافر معنا"
+        ],
+        "english_text_found": [
+          "TRAVEL WITH US"
+        ],
+        "other_language_found": [],
+        "arabic_is_primary": true,
+        "english_positioned_next_to_arabic": true,
+        "ordinance_25_93_compliant": true,
+        "compliance_status": "compliant"
+      },
+      "readability_metrics": {
+        "word_count": 5,
+        "viewing_time_seconds": 1.5,
+        "max_recommended_words": 7,
+        "compliant": false,
+        "word_count_violation": false,
+        "specific_measurements": {
+          "headline_height_inches": 14,
+          "body_text_height_inches": 8,
+          "total_text_elements": 2
+        }
+      },
+      "assessment": {
+        "overall_score": 5,
+        "critical_issues": [
+          "Extremely poor contrast ratio of 1.5:1 makes text unreadable from a distance",
+          "Light gray text (#C0C0C0) on white background (#F5F5F5) further reduces visibility",
+          "Beach sunset image and palm trees blend with text, reducing readability"
+        ],
+        "scores_breakdown": {
+          "font_clarity": 2,
+          "color_contrast": 1,
+          "layout_simplicity": 5,
+          "cta_effectiveness": 3,
+          "arabic_compliance": 10
+        }
+      },
+      "recommendations": [
+        {
+          "priority": "CRITICAL",
+          "issue": "Extremely poor contrast ratio of 1.5:1 makes text unreadable from a distance",
+          "action": "Change text color to a darker shade, such as #000000, to improve contrast ratio to at least 7:1",
+          "expected_impact": "+50% readability improvement, +20 points to color contrast score"
+        },
+        {
+          "priority": "HIGH",
+          "issue": "Beach sunset image and palm trees blend with text, reducing readability",
+          "action": "Add a solid color overlay behind text or reposition text to a less busy area of the image",
+          "expected_impact": "+30% text visibility, +10 points to layout simplicity score"
+        },
+        {
+          "priority": "MEDIUM",
+          "issue": "Website URL barely visible due to poor contrast",
+          "action": "Increase font size of URL to at least 10 inches and use a contrasting color",
+          "expected_impact": "+15 points to CTA effectiveness score, +20% increase in website visits"
+        }
+      ],
+      "detailed_visual_description": "The billboard features a travel agency advertisement with a problematic color scheme. The Arabic headline 'سافر معنا' is prominently displayed at 14 inches, larger than the English 'TRAVEL WITH US' at 8 inches, complying with Oman's Ordinance 25/93. However, the light gray text (#C0C0C0) on a white background (#F5F5F5) results in an extremely poor contrast ratio of 1.5:1, making the text nearly unreadable. The background features a beach sunset image with palm trees, which further blends with the text. Light blue flight and hotel icons are present. The total word count is 5, but the text is essentially unreadable from a distance due to the contrast issues."
+    }
+  },
+  {
+    "test_case_id": "mixed_language_partial",
+    "test_case_name": "Mixed Language Partial Compliance",
+    "grade": 97.5,
+    "input_description": "Restaurant billboard with mixed language hierarchy issue. English headline 'THE BEST BURGERS IN TOWN' at 14 inches in bold yellow (#FFD700) text. Arabic translation 'أفضل برجر في المدينة' at 10 inches below it in white. English is larger and more prominent. Red (#B71C1C) background. Large burger photograph in center. Price '$5.99' and Arabic '٢.٢٩ ر.ع.' both shown. Address and phone number at bottom. Good contrast ratio 12:1. Arabic IS present but English dominates visually. Total 9 words.",
+    "output": {
+      "text_content": {
+        "headline": "THE BEST BURGERS IN TOWN",
+        "body": "$5.99 ٢.٢٩ ر.ع.",
+        "cta": "Address and phone number",
+        "all_text_elements": [
+          "THE",
+          "BEST",
+          "BURGERS",
+          "IN",
+          "TOWN",
+          "أفضل",
+          "برجر",
+          "في",
+          "المدينة",
+          "$5.99",
+          "٢.٢٩",
+          "ر.ع."
+        ]
+      },
+      "visual_analysis": {
+        "headline_font_inches": 14,
+        "body_font_inches": 10,
+        "font_style": "Bold sans-serif headline, Regular sans-serif Arabic",
+        "text_color": "#FFD700",
+        "background_color": "#B71C1C",
+        "accent_colors": [
+          "#FFFFFF"
+        ],
+        "clutter_score": 5,
+        "contrast_ratio": "12:1",
+        "design_elements": [
+          "Large burger photograph in center"
+        ]
+      },
+      "arabic_analysis": {
+        "arabic_detected": true,
+        "arabic_text_found": [
+          "أفضل برجر في المدينة",
+          "٢.٢٩ ر.ع."
+        ],
+        "english_text_found": [
+          "THE BEST BURGERS IN TOWN",
+          "$5.99"
+        ],
+        "other_language_found": [],
+        "arabic_is_primary": false,
+        "english_positioned_next_to_arabic": true,
+        "ordinance_25_93_compliant": false,
+        "compliance_status": "partial",
+        "legal_consequence": "Municipality may require adjustments for compliance with Ordinance 25/93"
+      },
+      "readability_metrics": {
+        "word_count": 9,
+        "viewing_time_seconds": 2,
+        "max_recommended_words": 7,
+        "compliant": false,
+        "word_count_violation": true,
+        "specific_measurements": {
+          "headline_height_inches": 14,
+          "body_text_height_inches": 10,
+          "total_text_elements": 12
+        }
+      },
+      "assessment": {
+        "overall_score": 6.5,
+        "critical_issues": [
+          "Arabic text is present but not primary - English text 'THE BEST BURGERS IN TOWN' is larger and more prominent, violating Oman Ordinance 25/93",
+          "Word count of 9 exceeds maximum recommended 7 words for 2-second viewing window"
+        ],
+        "scores_breakdown": {
+          "font_clarity": 8,
+          "color_contrast": 9,
+          "layout_simplicity": 6,
+          "cta_effectiveness": 7,
+          "arabic_compliance": 5
+        }
+      },
+      "recommendations": [
+        {
+          "priority": "CRITICAL",
+          "issue": "Arabic text is not primary - English headline 'THE BEST BURGERS IN TOWN' is larger and more prominent",
+          "action": "Increase Arabic text size to 18 inches and position it above the English headline to comply with Ordinance 25/93",
+          "expected_impact": "Achieves legal compliance, prevents potential removal, +40 points to overall score"
+        },
+        {
+          "priority": "HIGH",
+          "issue": "Word count of 9 exceeds maximum recommended 7 words for 2-second viewing window",
+          "action": "Reduce text to 6 words maximum by removing less critical information or converting price to a visual element",
+          "expected_impact": "+20% message comprehension rate, +10 points layout simplicity score"
+        }
+      ],
+      "detailed_visual_description": "The billboard features a bold yellow (#FFD700) English headline 'THE BEST BURGERS IN TOWN' at 14 inches, with a smaller white Arabic translation 'أفضل برجر في المدينة' at 10 inches below it. The background is a deep red (#B71C1C). A large photograph of a burger is centrally placed. The price is shown as '$5.99' in English and '٢.٢٩ ر.ع.' in Arabic. The address and phone number are located at the bottom. The overall contrast ratio is 12:1, providing good readability. However, the English text is more visually dominant than the Arabic, which is a compliance issue in Oman."
+    }
+  }
+]

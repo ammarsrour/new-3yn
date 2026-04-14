@@ -1,0 +1,1613 @@
+{
+  "run_id": "eval_20260412_193606",
+  "run_at": "2026-04-12T15:38:17.858Z",
+  "prompt_version": "1.0.0",
+  "model": "gpt-4o",
+  "grading_model": "gpt-4o-mini",
+  "summary": {
+    "total_tests": 10,
+    "passed": 10,
+    "failed": 0,
+    "average_grade": 95.2,
+    "criterion_averages": {
+      "arabic_detection": 10,
+      "score_accuracy": 10,
+      "critical_issues_coverage": 8.8,
+      "compliance_status": 10,
+      "recommendation_quality": 8.4,
+      "specificity": 9.4
+    },
+    "pass_rates": {
+      "arabic_detection": 100,
+      "score_accuracy": 100,
+      "critical_issues_coverage": 90,
+      "compliance_status": 100
+    }
+  },
+  "results": [
+    {
+      "test_case": {
+        "id": "arabic_compliant_high",
+        "name": "Arabic-Primary Compliant Billboard",
+        "category": "compliant",
+        "description": "A professional telecommunications billboard. Large Arabic headline 'عروض رمضان الحصرية' (Exclusive Ramadan Offers) at 18 inches height in bold white (#FFFFFF) text, prominently positioned in the top half of the billboard. Below it, smaller English text 'Exclusive Ramadan Offers' at 7 inches. Deep navy blue background (#1E3A5F). Single smartphone image on the right showing the app interface. Price displayed as '٤٩ ر.ع.' (49 OMR) in Arabic numerals. Brand logo 'Ooredoo' in bottom right corner at 4 inches. Clean layout with ample white space. High contrast ratio approximately 14:1. Arabic text is clearly dominant, occupying 60% of text area. Total word count: 6 words. QR code in bottom left corner.",
+        "expected": {
+          "score_range": [
+            7.5,
+            10
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "عروض رمضان الحصرية",
+          "body": "Exclusive Ramadan Offers",
+          "cta": "٤٩ ر.ع.",
+          "all_text_elements": [
+            "عروض رمضان الحصرية",
+            "Exclusive Ramadan Offers",
+            "٤٩ ر.ع.",
+            "Ooredoo"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 18,
+          "body_font_inches": 7,
+          "font_style": "Bold sans-serif Arabic headline, Regular sans-serif English body",
+          "text_color": "#FFFFFF",
+          "background_color": "#1E3A5F",
+          "accent_colors": [],
+          "clutter_score": 2,
+          "contrast_ratio": "14:1",
+          "design_elements": [
+            "Single smartphone image showing app interface",
+            "Brand logo 'Ooredoo'",
+            "QR code"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "عروض رمضان الحصرية",
+            "٤٩ ر.ع."
+          ],
+          "english_text_found": [
+            "Exclusive Ramadan Offers",
+            "Ooredoo"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 6,
+          "viewing_time_seconds": 1.5,
+          "max_recommended_words": 7,
+          "compliant": true,
+          "word_count_violation": false,
+          "specific_measurements": {
+            "headline_height_inches": 18,
+            "body_text_height_inches": 7,
+            "total_text_elements": 4
+          }
+        },
+        "assessment": {
+          "overall_score": 9.5,
+          "critical_issues": [],
+          "scores_breakdown": {
+            "font_clarity": 9,
+            "color_contrast": 9,
+            "layout_simplicity": 9,
+            "cta_effectiveness": 9,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "LOW",
+            "issue": "English text at 7 inches is smaller than ideal for highway viewing at high speeds.",
+            "action": "Consider increasing English text size to 10 inches for improved readability.",
+            "expected_impact": "+5% readability improvement for English text."
+          }
+        ],
+        "detailed_visual_description": "The billboard features a deep navy blue background (#1E3A5F) with a large Arabic headline 'عروض رمضان الحصرية' in bold white (#FFFFFF) text at 18 inches height, prominently positioned in the top half...."
+      },
+      "grading": {
+        "test_case_id": "arabic_compliant_high",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text in the billboard, confirming that Arabic text was present."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 9.5 falls within the expected range of 7.5 to 10."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "No critical issues were expected, and none were mentioned, resulting in 100% coverage."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly assigned the compliance status as compliant, matching the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 8,
+          "max_score": 10,
+          "reasoning": "The recommendation to increase the English text size to 10 inches is specific and actionable, providing a clear next step with an expected impact on readability."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including font sizes, colors, and layout details, demonstrating high specificity."
+        },
+        "overall_grade": 97,
+        "overall_pass": true
+      },
+      "latency_ms": 5557
+    },
+    {
+      "test_case": {
+        "id": "english_only_violation",
+        "name": "English-Only Critical Violation",
+        "category": "violation",
+        "description": "Billboard for a fitness center with English-only text. Headline 'GET FIT THIS SUMMER' in bold red (#E53935) text at 12 inches on white (#FFFFFF) background. Subheadline '50% OFF MEMBERSHIP' at 6 inches. Image of muscular person exercising. Phone number '9876 5432' and website 'www.fitzone.com' at bottom. Modern geometric design elements. Good contrast ratio 8:1. Clean layout. NO ARABIC TEXT ANYWHERE on the billboard - only English. Total 8 words.",
+        "expected": {
+          "score_range": [
+            0,
+            4.5
+          ],
+          "arabic_detected": false,
+          "arabic_is_primary": false,
+          "compliance_status": "critical_violation_no_arabic",
+          "critical_issues_keywords": [
+            "arabic",
+            "ordinance",
+            "legal",
+            "violation"
+          ],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "GET FIT THIS SUMMER",
+          "body": "50% OFF MEMBERSHIP",
+          "cta": "9876 5432 www.fitzone.com",
+          "all_text_elements": [
+            "GET",
+            "FIT",
+            "THIS",
+            "SUMMER",
+            "50%",
+            "OFF",
+            "MEMBERSHIP",
+            "9876",
+            "5432",
+            "www.fitzone.com"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 12,
+          "body_font_inches": 6,
+          "font_style": "Bold sans-serif headline, Regular sans-serif body",
+          "text_color": "#E53935",
+          "background_color": "#FFFFFF",
+          "accent_colors": [],
+          "clutter_score": 3,
+          "contrast_ratio": "8:1",
+          "design_elements": [
+            "Image of muscular person exercising",
+            "Modern geometric design elements"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": false,
+          "arabic_text_found": [],
+          "english_text_found": [
+            "GET FIT THIS SUMMER",
+            "50% OFF MEMBERSHIP",
+            "9876 5432",
+            "www.fitzone.com"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": false,
+          "english_positioned_next_to_arabic": false,
+          "ordinance_25_93_compliant": false,
+          "compliance_status": "critical_violation_no_arabic",
+          "legal_consequence": "Municipality can remove billboard per Ordinance 25/93"
+        },
+        "readability_metrics": {
+          "word_count": 8,
+          "viewing_time_seconds": 2,
+          "max_recommended_words": 7,
+          "compliant": false,
+          "word_count_violation": true,
+          "specific_measurements": {
+            "headline_height_inches": 12,
+            "body_text_height_inches": 6,
+            "total_text_elements": 10
+          }
+        },
+        "assessment": {
+          "overall_score": 4.5,
+          "critical_issues": [
+            "LEGAL VIOLATION: No Arabic text present - Oman Ordinance 25/93 Article 8 requires 'the main language of the advertisement shall be literary Arabic'",
+            "Municipality enforcement: Billboard can be removed for non-compliance",
+            "Word count: 8 words detected - exceeds maximum 7 words for 2.0-second viewing window at highway speeds"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 7,
+            "color_contrast": 8,
+            "layout_simplicity": 8,
+            "cta_effectiveness": 7,
+            "arabic_compliance": 0
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "No Arabic text violates Oman Ordinance 25/93 - legal non-compliance",
+            "action": "Add Arabic headline above the English headline. Make Arabic text 18 inches tall (50% larger than English) to establish it as the main language per legal requirement. Position English text directly below Arabic.",
+            "expected_impact": "Achieves legal compliance with Ordinance 25/93, prevents billboard removal by Municipality, +40 points to overall score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Word count of 8 words exceeds maximum 7 words recommended for 2.0-second viewing window at highway speeds",
+            "action": "Reduce text to 6 words maximum. Consider removing 'THIS' from the headline to simplify message.",
+            "expected_impact": "+30% message comprehension rate, +10 points layout simplicity score"
+          }
+        ],
+        "detailed_visual_description": "Billboard for a fitness center with a white background (#FFFFFF) featuring bold red (#E53935) text 'GET FIT THIS SUMMER' at 12 inches height. Subheadline '50% OFF MEMBERSHIP' at 6 inches height. Image..."
+      },
+      "grading": {
+        "test_case_id": "english_only_violation",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified that there was no Arabic text present on the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 4.5 is exactly at the upper limit of the expected range."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 7.5,
+          "max_score": 10,
+          "reasoning": "3 out of 4 expected keywords were found in the critical issues."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly assigned the compliance status as critical violation due to the absence of Arabic text."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific, actionable, and include exact measurements and expected impacts."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including colors, measurements, and contrast ratios."
+        },
+        "overall_grade": 93.75,
+        "overall_pass": true
+      },
+      "latency_ms": 5855
+    },
+    {
+      "test_case": {
+        "id": "cluttered_design",
+        "name": "Cluttered Busy Billboard",
+        "category": "readability",
+        "description": "Cluttered retail billboard. Arabic 'تخفيضات ضخمة' at 8 inches, English 'MEGA SALE' at 7 inches — similar sizes, Arabic not dominant. Overwhelmed with: '70% OFF', 'BUY 2 GET 1', store hours, address, phone, WhatsApp, Instagram, website, plus 6 product images. Pink-purple gradient background with yellow starbursts. Multiple fonts, colors scattered. Total 28 words. Contrast varies 2:1 to 15:1.",
+        "expected": {
+          "score_range": [
+            2.5,
+            5.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": false,
+          "compliance_status": "partial",
+          "critical_issues_keywords": [
+            "word count",
+            "clutter",
+            "readability"
+          ],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "تخفيضات ضخمة",
+          "body": "70% OFF, BUY 2 GET 1, store hours, address, phone, WhatsApp, Instagram, website",
+          "cta": "phone, WhatsApp, Instagram, website",
+          "all_text_elements": [
+            "تخفيضات",
+            "ضخمة",
+            "MEGA",
+            "SALE",
+            "70%",
+            "OFF",
+            "BUY",
+            "2",
+            "GET",
+            "1",
+            "store",
+            "hours",
+            "address",
+            "phone",
+            "WhatsApp",
+            "Instagram",
+            "website"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 8,
+          "body_font_inches": 7,
+          "font_style": "Multiple fonts, sans-serif and serif mixed",
+          "text_color": "#FFFF00",
+          "background_color": "#FF69B4",
+          "accent_colors": [
+            "#800080",
+            "#FFFF00"
+          ],
+          "clutter_score": 9,
+          "contrast_ratio": "2:1 to 15:1",
+          "design_elements": [
+            "6 product images",
+            "yellow starbursts"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "تخفيضات ضخمة"
+          ],
+          "english_text_found": [
+            "MEGA SALE",
+            "70% OFF",
+            "BUY 2 GET 1",
+            "store hours",
+            "address",
+            "phone",
+            "WhatsApp",
+            "Instagram",
+            "website"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": false,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": false,
+          "compliance_status": "partial",
+          "legal_consequence": "Municipality may issue fines or require modification for non-compliance"
+        },
+        "readability_metrics": {
+          "word_count": 28,
+          "viewing_time_seconds": 5.6,
+          "max_recommended_words": 10,
+          "compliant": false,
+          "word_count_violation": true,
+          "specific_measurements": {
+            "headline_height_inches": 8,
+            "body_text_height_inches": 7,
+            "total_text_elements": 17
+          }
+        },
+        "assessment": {
+          "overall_score": 5.5,
+          "critical_issues": [
+            "Arabic text 'تخفيضات ضخمة' is not dominant over English 'MEGA SALE' - violates Oman Ordinance 25/93",
+            "Word count of 28 exceeds maximum recommended 10 words for 5.6-second viewing window",
+            "Clutter score of 9 indicates excessive visual elements, reducing readability",
+            "Contrast ratio varies significantly, affecting text legibility"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 4,
+            "color_contrast": 5,
+            "layout_simplicity": 3,
+            "cta_effectiveness": 6,
+            "arabic_compliance": 3
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "Arabic text 'تخفيضات ضخمة' is not dominant over English 'MEGA SALE' - violates Oman Ordinance 25/93",
+            "action": "Increase Arabic text size to 12 inches and reduce English text to 6 inches to ensure Arabic dominance.",
+            "expected_impact": "Achieves legal compliance with Ordinance 25/93, prevents potential fines, +30 points to overall score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Word count of 28 exceeds maximum recommended 10 words for 5.6-second viewing window",
+            "action": "Reduce text to essential information only, limit to 10 words maximum.",
+            "expected_impact": "+20% message comprehension rate, +15 points layout simplicity score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Clutter score of 9 indicates excessive visual elements, reducing readability",
+            "action": "Remove non-essential product images and starbursts, focus on key message and CTA.",
+            "expected_impact": "+25% readability improvement, +10 points layout simplicity score"
+          },
+          {
+            "priority": "MEDIUM",
+            "issue": "Contrast ratio varies significantly, affecting text legibility",
+            "action": "Standardize contrast to at least 4.5:1 for all text elements.",
+            "expected_impact": "+15 points color contrast score, +20% text legibility improvement"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a pink-purple gradient background with yellow starbursts scattered throughout. The Arabic text 'تخفيضات ضخمة' is at 8 inches, while the English 'MEGA SALE' is at 7 inches, both ..."
+      },
+      "grading": {
+        "test_case_id": "cluttered_design",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text 'تخفيضات ضخمة' on the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 5.5 is within the expected range of 2.5 to 5.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "All expected keywords were mentioned in the critical issues."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the compliance status as partial, which aligns with the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific, actionable, and include exact measurements and expected impacts."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including font sizes, colors, and contrast ratios."
+        },
+        "overall_grade": 97.5,
+        "overall_pass": true
+      },
+      "latency_ms": 8555
+    },
+    {
+      "test_case": {
+        "id": "clean_design_exemplar",
+        "name": "Clean Minimalist Design (Exemplar)",
+        "category": "exemplar",
+        "description": "Premium automotive billboard with exceptional design. Large Arabic headline 'القيادة المستقبلية' (The Future of Driving) at 20 inches in elegant white (#FFFFFF) serif font centered at top. English tagline 'The Future of Driving' at 6 inches directly below. Solid deep black (#000000) background providing maximum contrast. Single hero image of sleek electric car in silver, positioned in lower half. Brand logo 'BMW' at 5 inches in bottom right. Contrast ratio 21:1. Arabic clearly dominant at 3x English size. Total 5 words. Perfect visual hierarchy. Ample negative space. No clutter. Professional, premium feel.",
+        "expected": {
+          "score_range": [
+            8.5,
+            10
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [],
+          "has_cta": false
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "القيادة المستقبلية",
+          "body": "The Future of Driving",
+          "cta": "BMW",
+          "all_text_elements": [
+            "القيادة المستقبلية",
+            "The Future of Driving",
+            "BMW"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 20,
+          "body_font_inches": 6,
+          "font_style": "Elegant serif Arabic headline, Regular serif English tagline",
+          "text_color": "#FFFFFF",
+          "background_color": "#000000",
+          "accent_colors": [
+            "#C0C0C0"
+          ],
+          "clutter_score": 1,
+          "contrast_ratio": "21:1",
+          "design_elements": [
+            "Sleek silver electric car image",
+            "BMW logo"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "القيادة المستقبلية"
+          ],
+          "english_text_found": [
+            "The Future of Driving",
+            "BMW"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 5,
+          "viewing_time_seconds": 1.2,
+          "max_recommended_words": 7,
+          "compliant": true,
+          "specific_measurements": {
+            "headline_height_inches": 20,
+            "body_text_height_inches": 6,
+            "total_text_elements": 3
+          }
+        },
+        "assessment": {
+          "overall_score": 9.5,
+          "critical_issues": [],
+          "scores_breakdown": {
+            "font_clarity": 10,
+            "color_contrast": 10,
+            "layout_simplicity": 10,
+            "cta_effectiveness": 8,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "LOW",
+            "issue": "Call-to-action effectiveness could be improved by adding a direct action element.",
+            "action": "Include a website URL or QR code for immediate engagement.",
+            "expected_impact": "+5% engagement rate, +2 points to CTA effectiveness score"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a large Arabic headline 'القيادة المستقبلية' in an elegant white serif font, measuring 20 inches, centered at the top against a deep black background. Directly below is the Engl..."
+      },
+      "grading": {
+        "test_case_id": "clean_design_exemplar",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text, confirming that 'القيادة المستقبلية' is included in the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 9.5 falls within the expected range of 8.5 to 10."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "No critical issues were expected, and none were mentioned, resulting in 100% coverage."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the compliance status as compliant, matching the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 7,
+          "max_score": 10,
+          "reasoning": "The recommendation is specific and actionable, suggesting the addition of a website URL or QR code, but does not provide exact measurements."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including font sizes, colors, and contrast ratios, demonstrating high specificity."
+        },
+        "overall_grade": 95.5,
+        "overall_pass": true
+      },
+      "latency_ms": 4611
+    },
+    {
+      "test_case": {
+        "id": "poor_contrast",
+        "name": "Poor Contrast Billboard",
+        "category": "contrast",
+        "description": "Travel agency billboard with contrast issues. Arabic headline 'سافر معنا' (Travel With Us) at 14 inches and English 'TRAVEL WITH US' at 8 inches. Arabic is larger and primary. However, the color scheme is problematic: light gray text (#C0C0C0) on white background (#F5F5F5). Extremely poor contrast ratio estimated at 1.5:1. Beach sunset image in background with palm trees, which further reduces text visibility as colors blend together. Flight and hotel icons in light blue. Website URL barely visible. Total 5 words. Text is essentially unreadable, especially from distance.",
+        "expected": {
+          "score_range": [
+            2.5,
+            5.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [
+            "contrast",
+            "visibility",
+            "readability"
+          ],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "سافر معنا",
+          "body": "",
+          "cta": "TRAVEL WITH US",
+          "all_text_elements": [
+            "سافر معنا",
+            "TRAVEL WITH US"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 14,
+          "body_font_inches": 8,
+          "font_style": "Bold sans-serif for both Arabic and English",
+          "text_color": "#C0C0C0",
+          "background_color": "#F5F5F5",
+          "accent_colors": [
+            "#ADD8E6"
+          ],
+          "clutter_score": 5,
+          "contrast_ratio": "1.5:1",
+          "design_elements": [
+            "Beach sunset image",
+            "Palm trees",
+            "Flight icon",
+            "Hotel icon"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "سافر معنا"
+          ],
+          "english_text_found": [
+            "TRAVEL WITH US"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 5,
+          "viewing_time_seconds": 1.5,
+          "max_recommended_words": 7,
+          "compliant": false,
+          "word_count_violation": false,
+          "specific_measurements": {
+            "headline_height_inches": 14,
+            "body_text_height_inches": 8,
+            "total_text_elements": 2
+          }
+        },
+        "assessment": {
+          "overall_score": 5,
+          "critical_issues": [
+            "Extremely poor contrast ratio of 1.5:1 makes text unreadable from a distance",
+            "Light gray text (#C0C0C0) on white background (#F5F5F5) further reduces visibility",
+            "Beach sunset image and palm trees blend with text, reducing readability"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 2,
+            "color_contrast": 1,
+            "layout_simplicity": 5,
+            "cta_effectiveness": 3,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "Extremely poor contrast ratio of 1.5:1 makes text unreadable from a distance",
+            "action": "Change text color to a darker shade, such as #000000, to improve contrast ratio to at least 7:1",
+            "expected_impact": "+50% readability improvement, +20 points to color contrast score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Beach sunset image and palm trees blend with text, reducing readability",
+            "action": "Add a solid color overlay behind text or reposition text to a less busy area of the image",
+            "expected_impact": "+30% text visibility, +10 points to layout simplicity score"
+          },
+          {
+            "priority": "MEDIUM",
+            "issue": "Website URL barely visible due to poor contrast",
+            "action": "Increase font size of URL to at least 10 inches and use a contrasting color",
+            "expected_impact": "+15 points to CTA effectiveness score, +20% increase in website visits"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a travel agency advertisement with a problematic color scheme. The Arabic headline 'سافر معنا' is prominently displayed at 14 inches, larger than the English 'TRAVEL WITH US' at..."
+      },
+      "grading": {
+        "test_case_id": "poor_contrast",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text 'سافر معنا' in the billboard analysis."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 5 falls within the expected range of 2.5 to 5.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "All expected keywords were mentioned in the critical issues and recommendations."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly assigned the compliance status as compliant, consistent with the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific, actionable, and include measurements, such as changing text color to #000000 and increasing URL font size to at least 10 inches."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements, including exact hex colors, inch measurements, and specific contrast ratios, providing a high level of specificity."
+        },
+        "overall_grade": 97.5,
+        "overall_pass": true
+      },
+      "latency_ms": 6280
+    },
+    {
+      "test_case": {
+        "id": "small_fonts",
+        "name": "Small Illegible Fonts",
+        "category": "font_size",
+        "description": "Real estate billboard with font size issues. Arabic headline 'شقق فاخرة للبيع' (Luxury Apartments for Sale) at only 5 inches height. English 'LUXURY APARTMENTS FOR SALE' at 4 inches. Arabic is slightly larger but both are far too small for highway viewing at 100+ meters. Building rendering image takes up 70% of the billboard. Price '٢٥٠,٠٠٠ ر.ع.' at 3 inches. Contact details, location map, and agent photo all crammed into remaining space at 2 inches or smaller. Dark blue (#1A237E) text on light blue (#E3F2FD) background - decent contrast 6:1. Total 12 words. Text simply too small to read at speed.",
+        "expected": {
+          "score_range": [
+            3,
+            5.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [
+            "font",
+            "size",
+            "small",
+            "inches",
+            "readability"
+          ],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "شقق فاخرة للبيع",
+          "body": "٢٥٠,٠٠٠ ر.ع.",
+          "cta": "Contact details, location map, and agent photo",
+          "all_text_elements": [
+            "شقق",
+            "فاخرة",
+            "للبيع",
+            "٢٥٠,٠٠٠",
+            "ر.ع.",
+            "LUXURY",
+            "APARTMENTS",
+            "FOR",
+            "SALE"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 5,
+          "body_font_inches": 3,
+          "font_style": "Bold sans-serif for both Arabic and English",
+          "text_color": "#1A237E",
+          "background_color": "#E3F2FD",
+          "accent_colors": [],
+          "clutter_score": 8,
+          "contrast_ratio": "6:1",
+          "design_elements": [
+            "Building rendering image",
+            "Contact details",
+            "Location map",
+            "Agent photo"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "شقق فاخرة للبيع",
+            "٢٥٠,٠٠٠ ر.ع."
+          ],
+          "english_text_found": [
+            "LUXURY APARTMENTS FOR SALE"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 9,
+          "viewing_time_seconds": 2.5,
+          "max_recommended_words": 7,
+          "compliant": false,
+          "word_count_violation": true,
+          "specific_measurements": {
+            "headline_height_inches": 5,
+            "body_text_height_inches": 3,
+            "total_text_elements": 9
+          }
+        },
+        "assessment": {
+          "overall_score": 5.5,
+          "critical_issues": [
+            "Headline 'شقق فاخرة للبيع' at 5 inches is too small for highway viewing at 100+ meters - requires minimum 10 inches",
+            "Word count of 9 exceeds maximum recommended 7 for 2.5-second viewing window",
+            "Cluttered layout with building rendering taking 70% of space, leaving insufficient room for text"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 3,
+            "color_contrast": 7,
+            "layout_simplicity": 3,
+            "cta_effectiveness": 4,
+            "arabic_compliance": 8
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "Headline 'شقق فاخرة للبيع' at 5 inches is too small for highway viewing at 100+ meters",
+            "action": "Increase Arabic headline to 10 inches and English to 8 inches for better readability",
+            "expected_impact": "+30% readability improvement, +20 points to font clarity score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Word count of 9 exceeds maximum recommended 7 for 2.5-second viewing window",
+            "action": "Reduce text to essential information only, remove redundant elements",
+            "expected_impact": "+15% message comprehension rate, +10 points layout simplicity score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Cluttered layout with building rendering taking 70% of space",
+            "action": "Reduce building rendering to 50% of billboard area to increase space for text",
+            "expected_impact": "+20% text visibility, +10 points layout simplicity score"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a large building rendering image occupying 70% of the space. The Arabic headline 'شقق فاخرة للبيع' is at the top in bold sans-serif font, measuring 5 inches in height, with the ..."
+      },
+      "grading": {
+        "test_case_id": "small_fonts",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text in the billboard analysis."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 5.5 is within the expected range of 3 to 5.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 8,
+          "max_score": 10,
+          "reasoning": "4 out of 5 expected keywords were mentioned in the critical issues, resulting in 80% coverage."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly assigned the compliance status as compliant."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific, actionable, and include exact measurements and expected impacts."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including measurements and color codes."
+        },
+        "overall_grade": 94.5,
+        "overall_pass": true
+      },
+      "latency_ms": 6307
+    },
+    {
+      "test_case": {
+        "id": "mixed_language_partial",
+        "name": "Mixed Language Partial Compliance",
+        "category": "partial",
+        "description": "Restaurant billboard with mixed language hierarchy issue. English headline 'THE BEST BURGERS IN TOWN' at 14 inches in bold yellow (#FFD700) text. Arabic translation 'أفضل برجر في المدينة' at 10 inches below it in white. English is larger and more prominent. Red (#B71C1C) background. Large burger photograph in center. Price '$5.99' and Arabic '٢.٢٩ ر.ع.' both shown. Address and phone number at bottom. Good contrast ratio 12:1. Arabic IS present but English dominates visually. Total 9 words.",
+        "expected": {
+          "score_range": [
+            4.5,
+            6.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": false,
+          "compliance_status": "partial",
+          "critical_issues_keywords": [
+            "arabic",
+            "primary",
+            "dominant",
+            "compliance"
+          ],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "THE BEST BURGERS IN TOWN",
+          "body": "$5.99 ٢.٢٩ ر.ع.",
+          "cta": "Address and phone number",
+          "all_text_elements": [
+            "THE",
+            "BEST",
+            "BURGERS",
+            "IN",
+            "TOWN",
+            "أفضل",
+            "برجر",
+            "في",
+            "المدينة",
+            "$5.99",
+            "٢.٢٩",
+            "ر.ع."
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 14,
+          "body_font_inches": 10,
+          "font_style": "Bold sans-serif headline, Regular sans-serif Arabic",
+          "text_color": "#FFD700",
+          "background_color": "#B71C1C",
+          "accent_colors": [
+            "#FFFFFF"
+          ],
+          "clutter_score": 5,
+          "contrast_ratio": "12:1",
+          "design_elements": [
+            "Large burger photograph in center"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "أفضل برجر في المدينة",
+            "٢.٢٩ ر.ع."
+          ],
+          "english_text_found": [
+            "THE BEST BURGERS IN TOWN",
+            "$5.99"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": false,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": false,
+          "compliance_status": "partial",
+          "legal_consequence": "Municipality may require adjustments for compliance with Ordinance 25/93"
+        },
+        "readability_metrics": {
+          "word_count": 9,
+          "viewing_time_seconds": 2,
+          "max_recommended_words": 7,
+          "compliant": false,
+          "word_count_violation": true,
+          "specific_measurements": {
+            "headline_height_inches": 14,
+            "body_text_height_inches": 10,
+            "total_text_elements": 12
+          }
+        },
+        "assessment": {
+          "overall_score": 6.5,
+          "critical_issues": [
+            "Arabic text is present but not primary - English text 'THE BEST BURGERS IN TOWN' is larger and more prominent, violating Oman Ordinance 25/93",
+            "Word count of 9 exceeds maximum recommended 7 words for 2-second viewing window"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 8,
+            "color_contrast": 9,
+            "layout_simplicity": 6,
+            "cta_effectiveness": 7,
+            "arabic_compliance": 5
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "Arabic text is not primary - English headline 'THE BEST BURGERS IN TOWN' is larger and more prominent",
+            "action": "Increase Arabic text size to 18 inches and position it above the English headline to comply with Ordinance 25/93",
+            "expected_impact": "Achieves legal compliance, prevents potential removal, +40 points to overall score"
+          },
+          {
+            "priority": "HIGH",
+            "issue": "Word count of 9 exceeds maximum recommended 7 words for 2-second viewing window",
+            "action": "Reduce text to 6 words maximum by removing less critical information or converting price to a visual element",
+            "expected_impact": "+20% message comprehension rate, +10 points layout simplicity score"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a bold yellow (#FFD700) English headline 'THE BEST BURGERS IN TOWN' at 14 inches, with a smaller white Arabic translation 'أفضل برجر في المدينة' at 10 inches below it. The backg..."
+      },
+      "grading": {
+        "test_case_id": "mixed_language_partial",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified that Arabic text was present on the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 6.5 is within the expected range of 4.5 to 6.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "All expected keywords were mentioned in the critical issues."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly assigned the compliance status as partial, which aligns with the expected value."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific, actionable, and include exact measurements and clear next steps."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including font sizes, colors, and contrast ratios."
+        },
+        "overall_grade": 97.5,
+        "overall_pass": true
+      },
+      "latency_ms": 5877
+    },
+    {
+      "test_case": {
+        "id": "good_cta",
+        "name": "Strong Call-to-Action Billboard",
+        "category": "cta",
+        "description": "E-commerce promotional billboard with excellent CTA. Arabic headline 'تسوق الآن' (Shop Now) at 16 inches in bold white. English 'SHOP NOW' at 6 inches. Arabic clearly primary. Bright emerald green (#10B981) background. Large CTA button graphic showing 'اطلب الآن - ORDER NOW' with arrow icon. QR code prominently displayed with 'امسح للتسوق / SCAN TO SHOP' label. Website 'www.store.om' at 8 inches in contrasting yellow (#FFC107). Phone number with WhatsApp icon. Promotional text '20% OFF' in starburst. Total 8 words. Contrast ratio 15:1. Clear visual hierarchy directing to action.",
+        "expected": {
+          "score_range": [
+            7,
+            9.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "تسوق الآن",
+          "body": "20% OFF",
+          "cta": "اطلب الآن - ORDER NOW",
+          "all_text_elements": [
+            "تسوق الآن",
+            "SHOP NOW",
+            "اطلب الآن - ORDER NOW",
+            "امسح للتسوق / SCAN TO SHOP",
+            "www.store.om",
+            "20% OFF"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 16,
+          "body_font_inches": 8,
+          "font_style": "Bold sans-serif for Arabic, Regular sans-serif for English",
+          "text_color": "#FFFFFF",
+          "background_color": "#10B981",
+          "accent_colors": [
+            "#FFC107"
+          ],
+          "clutter_score": 3,
+          "contrast_ratio": "15:1",
+          "design_elements": [
+            "CTA button graphic with arrow icon",
+            "QR code",
+            "WhatsApp icon",
+            "Starburst with '20% OFF'"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "تسوق الآن",
+            "اطلب الآن",
+            "امسح للتسوق"
+          ],
+          "english_text_found": [
+            "SHOP NOW",
+            "ORDER NOW",
+            "SCAN TO SHOP",
+            "www.store.om",
+            "20% OFF"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 8,
+          "viewing_time_seconds": 2,
+          "max_recommended_words": 10,
+          "compliant": true,
+          "specific_measurements": {
+            "headline_height_inches": 16,
+            "body_text_height_inches": 8,
+            "total_text_elements": 6
+          }
+        },
+        "assessment": {
+          "overall_score": 9.5,
+          "critical_issues": [],
+          "scores_breakdown": {
+            "font_clarity": 9,
+            "color_contrast": 9,
+            "layout_simplicity": 9,
+            "cta_effectiveness": 10,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "LOW",
+            "issue": "Minor improvement in font clarity",
+            "action": "Increase English text size from 6 inches to 8 inches for better readability at high speeds",
+            "expected_impact": "+5% readability improvement"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a bright emerald green background (#10B981) with a bold white Arabic headline 'تسوق الآن' (Shop Now) at 16 inches, making it the primary language. The English 'SHOP NOW' is at 6..."
+      },
+      "grading": {
+        "test_case_id": "good_cta",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text, confirming that it was present in the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 9.5 is within the expected range of 7 to 9.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "No critical issues were expected, and none were mentioned, resulting in 100% coverage."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the compliance status as compliant, matching the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 8,
+          "max_score": 10,
+          "reasoning": "The recommendation is specific and actionable, suggesting an increase in English text size from 6 inches to 8 inches for better readability, which is a clear next step."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including hex colors, inch measurements, and specific design elements, demonstrating high specificity."
+        },
+        "overall_grade": 97,
+        "overall_pass": true
+      },
+      "latency_ms": 6065
+    },
+    {
+      "test_case": {
+        "id": "missing_cta",
+        "name": "Missing Call-to-Action",
+        "category": "cta",
+        "description": "Brand awareness billboard lacking CTA. Arabic headline 'الجودة في كل تفصيل' (Quality in Every Detail) at 15 inches in gold (#FFD700). English 'Quality in Every Detail' at 7 inches. Arabic dominant. Dark purple (#4A148C) background. Abstract geometric patterns. Brand name 'PREMIUM CO.' at 6 inches. High-quality product image of a watch. Good contrast 10:1. Clean design, Arabic compliant. BUT: No website, no phone number, no QR code, no social media, no store location, no 'visit us' or 'call now'. Total 6 words. Viewer has no idea how to take action or learn more.",
+        "expected": {
+          "score_range": [
+            5.5,
+            7.5
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [
+            "cta",
+            "call-to-action",
+            "contact",
+            "action"
+          ],
+          "has_cta": false
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "الجودة في كل تفصيل",
+          "body": "Quality in Every Detail",
+          "cta": "PREMIUM CO.",
+          "all_text_elements": [
+            "الجودة في كل تفصيل",
+            "Quality in Every Detail",
+            "PREMIUM CO."
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 15,
+          "body_font_inches": 7,
+          "font_style": "Bold serif Arabic headline, Regular serif English body",
+          "text_color": "#FFD700",
+          "background_color": "#4A148C",
+          "accent_colors": [
+            "#FFD700"
+          ],
+          "clutter_score": 2,
+          "contrast_ratio": "10:1",
+          "design_elements": [
+            "Abstract geometric patterns",
+            "High-quality product image of a watch"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "الجودة في كل تفصيل"
+          ],
+          "english_text_found": [
+            "Quality in Every Detail",
+            "PREMIUM CO."
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 6,
+          "viewing_time_seconds": 1.4,
+          "max_recommended_words": 7,
+          "compliant": true,
+          "word_count_violation": false,
+          "specific_measurements": {
+            "headline_height_inches": 15,
+            "body_text_height_inches": 7,
+            "total_text_elements": 3
+          }
+        },
+        "assessment": {
+          "overall_score": 7,
+          "critical_issues": [
+            "No call-to-action present - fails to convert viewer attention into action"
+          ],
+          "scores_breakdown": {
+            "font_clarity": 9,
+            "color_contrast": 8,
+            "layout_simplicity": 9,
+            "cta_effectiveness": 0,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "CRITICAL",
+            "issue": "No call-to-action present - fails to convert viewer attention into action",
+            "action": "Add a call-to-action such as a website URL, phone number, or QR code to guide viewers on how to engage with the brand.",
+            "expected_impact": "+30% viewer engagement, +3 points to overall score"
+          },
+          {
+            "priority": "MEDIUM",
+            "issue": "English text is significantly smaller than Arabic text",
+            "action": "Consider increasing English text size to improve readability for non-Arabic speakers, while maintaining Arabic dominance.",
+            "expected_impact": "+10% readability for English text, +1 point to font clarity score"
+          }
+        ],
+        "detailed_visual_description": "The billboard features a dark purple (#4A148C) background with abstract geometric patterns. The Arabic headline 'الجودة في كل تفصيل' is prominently displayed at 15 inches in gold (#FFD700), with the E..."
+      },
+      "grading": {
+        "test_case_id": "missing_cta",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text in the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 7 is within the expected range of 5.5 to 7.5."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": false,
+          "score": 2.5,
+          "max_score": 10,
+          "reasoning": "Only one of the four expected keywords ('call-to-action') was mentioned in the critical issues."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the compliance status as compliant."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 8,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific and actionable, providing clear next steps to improve the billboard's effectiveness."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 9,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including colors, sizes, and contrast ratios."
+        },
+        "overall_grade": 84.75,
+        "overall_pass": true
+      },
+      "latency_ms": 4811
+    },
+    {
+      "test_case": {
+        "id": "perfect_exemplar",
+        "name": "Perfect Score Exemplar",
+        "category": "exemplar",
+        "description": "Government health campaign billboard with perfect execution. Large Arabic headline 'صحتك أولاً' (Your Health First) at 22 inches in bold white (#FFFFFF), centered and commanding. English 'YOUR HEALTH FIRST' at 8 inches directly below, properly subordinate. Deep teal (#00695C) background - calming and professional. Ministry of Health logo with Arabic name 'وزارة الصحة' at 6 inches in top right. Simple icon of heart and stethoscope. Hotline number '٨٠٠٨٠٠٨٠' prominently displayed at 10 inches. QR code linking to health portal. Total 4 words of main message. Contrast ratio 18:1. Perfect hierarchy: Arabic 3x larger than English, clearly dominant. Ample white space. Professional, trustworthy, clear message. Fully compliant with Ordinance 25/93.",
+        "expected": {
+          "score_range": [
+            9,
+            10
+          ],
+          "arabic_detected": true,
+          "arabic_is_primary": true,
+          "compliance_status": "compliant",
+          "critical_issues_keywords": [],
+          "has_cta": true
+        }
+      },
+      "response": {
+        "text_content": {
+          "headline": "صحتك أولاً",
+          "body": "YOUR HEALTH FIRST",
+          "cta": "٨٠٠٨٠٠٨٠",
+          "all_text_elements": [
+            "صحتك أولاً",
+            "YOUR HEALTH FIRST",
+            "٨٠٠٨٠٠٨٠"
+          ]
+        },
+        "visual_analysis": {
+          "headline_font_inches": 22,
+          "body_font_inches": 8,
+          "font_style": "Bold sans-serif for Arabic headline, Regular sans-serif for English",
+          "text_color": "#FFFFFF",
+          "background_color": "#00695C",
+          "accent_colors": [],
+          "clutter_score": 2,
+          "contrast_ratio": "18:1",
+          "design_elements": [
+            "Ministry of Health logo with Arabic name 'وزارة الصحة'",
+            "Simple icon of heart and stethoscope",
+            "QR code linking to health portal"
+          ]
+        },
+        "arabic_analysis": {
+          "arabic_detected": true,
+          "arabic_text_found": [
+            "صحتك أولاً",
+            "وزارة الصحة"
+          ],
+          "english_text_found": [
+            "YOUR HEALTH FIRST"
+          ],
+          "other_language_found": [],
+          "arabic_is_primary": true,
+          "english_positioned_next_to_arabic": true,
+          "ordinance_25_93_compliant": true,
+          "compliance_status": "compliant"
+        },
+        "readability_metrics": {
+          "word_count": 4,
+          "viewing_time_seconds": 1,
+          "max_recommended_words": 7,
+          "compliant": true,
+          "word_count_violation": false,
+          "specific_measurements": {
+            "headline_height_inches": 22,
+            "body_text_height_inches": 8,
+            "total_text_elements": 3
+          }
+        },
+        "assessment": {
+          "overall_score": 10,
+          "critical_issues": [],
+          "scores_breakdown": {
+            "font_clarity": 10,
+            "color_contrast": 10,
+            "layout_simplicity": 10,
+            "cta_effectiveness": 10,
+            "arabic_compliance": 10
+          }
+        },
+        "recommendations": [
+          {
+            "priority": "LOW",
+            "issue": "No significant issues detected. Billboard is fully compliant and effective.",
+            "action": "Maintain current design standards for future campaigns.",
+            "expected_impact": "Continued high effectiveness and compliance."
+          }
+        ],
+        "detailed_visual_description": "The billboard features a large Arabic headline 'صحتك أولاً' (Your Health First) in bold white (#FFFFFF) at 22 inches, centered prominently on a deep teal (#00695C) background. Below it, the English tr..."
+      },
+      "grading": {
+        "test_case_id": "perfect_exemplar",
+        "arabic_detection": {
+          "name": "Arabic Detection",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the presence of Arabic text, confirming that 'صحتك أولاً' and 'وزارة الصحة' were included in the billboard."
+        },
+        "score_accuracy": {
+          "name": "Score Accuracy",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The overall score of 10 is within the expected range of 9 to 10."
+        },
+        "critical_issues_coverage": {
+          "name": "Critical Issues Coverage",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "No critical issues were expected, and none were mentioned, resulting in 100% coverage."
+        },
+        "compliance_status": {
+          "name": "Compliance Status",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The AI correctly identified the compliance status as compliant, matching the expected status."
+        },
+        "recommendation_quality": {
+          "name": "Recommendation Quality",
+          "passed": true,
+          "score": 8,
+          "max_score": 10,
+          "reasoning": "The recommendations are specific and actionable, suggesting to maintain current design standards, but lack precise measurements or numerical targets."
+        },
+        "specificity": {
+          "name": "Specificity",
+          "passed": true,
+          "score": 10,
+          "max_score": 10,
+          "reasoning": "The detailed analysis references actual billboard elements with exact values, including colors, measurements, and design elements, demonstrating high specificity."
+        },
+        "overall_grade": 97,
+        "overall_pass": true
+      },
+      "latency_ms": 5681
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "version": "1.0.0",
+  "description": "Billboard analysis prompt evaluation test cases for Oman market compliance",
+  "test_cases": [
+    {
+      "id": "arabic_english_compliant",
+      "name": "Arabic + English Billboard (Compliant)",
+      "description": "A well-designed billboard with large Arabic headline 'عرض خاص' (Special Offer) at 16 inches height dominating the top third. Below it, smaller English text 'SPECIAL OFFER' at 8 inches. Clean navy blue background (#1E3A5F) with white text (#FFFFFF). Single product image of a smartphone on the right side. Arabic text clearly larger and more prominent. Price '99 OMR' in both Arabic numerals. QR code in bottom corner. Total 6 words. Good contrast ratio approximately 12:1.",
+      "expected": {
+        "score_range": [7.0, 10.0],
+        "arabic_detected": true,
+        "arabic_is_primary": true,
+        "compliance_status": "compliant",
+        "critical_issues_must_not_contain": ["no arabic", "legal violation", "ordinance 25/93"],
+        "scores_breakdown": {
+          "arabic_compliance_min": 8
+        }
+      }
+    },
+    {
+      "id": "english_only_violation",
+      "name": "English Only Billboard (Critical Violation)",
+      "description": "Billboard with English-only text. Large white headline 'SUMMER SALE' at 14 inches on bright red background (#E53935). Body text '50% OFF EVERYTHING' at 6 inches. Store logo in corner. Website URL 'www.store.com' at bottom. Modern sans-serif font. High contrast white on red. NO ARABIC TEXT ANYWHERE on the billboard. Total 7 words. Clean layout with good visual hierarchy.",
+      "expected": {
+        "score_range": [0, 4.5],
+        "arabic_detected": false,
+        "arabic_is_primary": false,
+        "compliance_status": "critical_violation_no_arabic",
+        "critical_issues_must_contain": ["arabic", "ordinance"],
+        "scores_breakdown": {
+          "arabic_compliance_max": 0
+        }
+      }
+    },
+    {
+      "id": "cluttered_too_much_text",
+      "name": "Cluttered Billboard (Too Much Text)",
+      "description": "Extremely busy billboard with Arabic headline 'تخفيضات نهاية الموسم' at 10 inches and English 'END OF SEASON SALE' at 8 inches. But also contains: '50% OFF', 'LIMITED TIME', 'HURRY NOW', 'BEST PRICES', 'DON'T MISS OUT', store address, phone number, website, social media handles (@store), opening hours '9AM-10PM', and multiple product images overlapping. Background is gradient from blue to purple with yellow starburst graphics. Multiple fonts used. Text in red, yellow, white, and black. Estimated 25+ words total. Arabic is present but competing with many elements. Viewing time approximately 3 seconds at 80 km/h.",
+      "expected": {
+        "score_range": [3.0, 6.0],
+        "arabic_detected": true,
+        "compliance_status": "partial",
+        "critical_issues_must_contain": ["word count", "clutter"],
+        "readability_must_flag": {
+          "word_count_violation": true,
+          "compliant": false
+        }
+      }
+    },
+    {
+      "id": "clean_arabic_primary",
+      "name": "Clean Well-Designed Billboard (Arabic Primary)",
+      "description": "Minimalist billboard design. Large Arabic headline 'اكتشف الجديد' (Discover What's New) at 18 inches height in bold white (#FFFFFF) centered on deep emerald green background (#10B981). Small English tagline 'Discover What's New' at 5 inches directly below Arabic. Single elegant watch product image on right third. Brand logo 'TIMEPIECE' small in bottom right corner. Excellent contrast ratio 15:1. Clean sans-serif Arabic font (similar to Cairo). Total 5 words. Ample white space. Arabic clearly dominant at 3x the size of English.",
+      "expected": {
+        "score_range": [8.0, 10.0],
+        "arabic_detected": true,
+        "arabic_is_primary": true,
+        "compliance_status": "compliant",
+        "critical_issues_must_not_contain": ["violation", "non-compliant"],
+        "scores_breakdown": {
+          "arabic_compliance_min": 9,
+          "layout_simplicity_min": 7,
+          "color_contrast_min": 8
+        }
+      }
+    },
+    {
+      "id": "small_font_illegible",
+      "name": "Small Font Billboard (Illegible)",
+      "description": "Billboard with Arabic text 'عروض حصرية' and English 'EXCLUSIVE OFFERS' but both at only 4 inches height - far too small for highway viewing at 100m distance. Arabic is slightly larger than English (4.5 inches vs 4 inches). Background is light gray (#E0E0E0) with dark gray text (#424242). Additional small body text at 2 inches listing multiple product categories. Store hours and address in tiny 1-inch text at bottom. Clean design otherwise but text is simply too small to read at speed. Total 12 words.",
+      "expected": {
+        "score_range": [3.0, 5.5],
+        "arabic_detected": true,
+        "arabic_is_primary": true,
+        "compliance_status": "compliant",
+        "critical_issues_must_contain": ["font", "size", "inch"],
+        "scores_breakdown": {
+          "font_clarity_max": 4
+        }
+      }
+    },
+    {
+      "id": "poor_contrast",
+      "name": "Poor Contrast Billboard",
+      "description": "Billboard with Arabic headline 'وجهتك المثالية' (Your Perfect Destination) at 14 inches and English 'YOUR PERFECT DESTINATION' at 7 inches. Arabic is clearly larger. However, the color scheme is problematic: light yellow text (#FFF59D) on white background (#FFFFFF). Extremely poor contrast ratio estimated at 1.3:1. Travel imagery of beach in background further reduces text visibility. Palm tree graphics overlay some text. Total 6 words. Arabic present and primary but nearly unreadable due to contrast issues.",
+      "expected": {
+        "score_range": [3.0, 6.0],
+        "arabic_detected": true,
+        "arabic_is_primary": true,
+        "compliance_status": "compliant",
+        "critical_issues_must_contain": ["contrast"],
+        "scores_breakdown": {
+          "color_contrast_max": 3,
+          "arabic_compliance_min": 7
+        }
+      }
+    }
+  ],
+  "evaluation_criteria": {
+    "critical_checks": [
+      "arabic_detected matches expected",
+      "compliance_status matches expected",
+      "score within expected range"
+    ],
+    "important_checks": [
+      "arabic_is_primary matches expected when applicable",
+      "critical issues contain required keywords",
+      "critical issues do not contain forbidden keywords"
+    ],
+    "informational_checks": [
+      "scores_breakdown within expected bounds",
+      "word_count_violation flag correct",
+      "recommendations provided"
+    ]
+  }
+}

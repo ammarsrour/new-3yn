@@ -1,6 +1,18 @@
 import { getBillboardAnalyzerSystemPrompt, getLocationContextPrompt } from '../prompts/billboardAnalyzer';
 import { billboardAnalysisTool, BillboardAnalysisToolResponse } from '../schemas/billboardAnalysis';
 
+/**
+ * Transform OpenAI tool schema to Anthropic format
+ * Anthropic uses "input_schema" instead of "parameters"
+ */
+const transformToolForAnthropic = (openAITool: typeof billboardAnalysisTool) => {
+  return {
+    name: openAITool.function.name,
+    description: openAITool.function.description,
+    input_schema: openAITool.function.parameters,
+  };
+};
+
 export interface OpenAIAnalysisResponse {
   overallScore: number;
   fontScore: number;
@@ -90,7 +102,7 @@ const mapToolResponseToAnalysis = (
     visualDescription: toolResponse.detailed_visual_description,
     actualTextContent: text_content.headline || 'No headline detected',
     colorAnalysis,
-    apiNote: 'Analysis generated via structured tool output'
+    apiNote: 'Analysis powered by Claude AI'
   };
 };
 
@@ -154,25 +166,20 @@ export const analyzeBillboardWithAI = async (
       throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
     }
 
-    // 🤖 OPENAI API CALL WITH TOOL USE
+    // 🤖 CLAUDE API CALL WITH TOOL USE
     const systemPrompt = getBillboardAnalyzerSystemPrompt();
 
-    const response = await fetch('/.netlify/functions/openai', {
+    const response = await fetch('/.netlify/functions/claude', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         action: "analyze",
-        model: "gpt-4o",
-        // Use function calling for structured output (preferred over response_format)
-        tools: [billboardAnalysisTool],
-        tool_choice: { type: "function", function: { name: "submit_billboard_analysis" } },
+        system: systemPrompt,
+        tools: [transformToolForAnthropic(billboardAnalysisTool)],
+        tool_choice: { type: "tool", name: "submit_billboard_analysis" },
         messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
           {
             role: "user",
             content: [
@@ -183,37 +190,37 @@ export const analyzeBillboardWithAI = async (
                   : `Analyzing billboard at ${location}, distance: ${distance}m`
               },
               {
-                type: "image_url",
-                image_url: {
-                  url: `data:image/jpeg;base64,${base64Image}`
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: "image/jpeg",
+                  data: base64Image
                 }
               }
             ]
           }
-        ],
-        max_tokens: 2000,
-        temperature: 0.3
+        ]
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(`OpenAI API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      throw new Error(`Claude API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
 
-    // Extract structured response from tool_calls
-    const toolCall = data.choices[0]?.message?.tool_calls?.[0];
-    if (!toolCall?.function?.arguments) {
-      throw new Error('No tool response from OpenAI - expected function call output');
+    // Extract structured response from tool_use block
+    const toolUseBlock = data.content?.find((block: any) => block.type === "tool_use");
+    if (!toolUseBlock?.input) {
+      throw new Error('No tool response from Claude');
     }
 
-    if (toolCall.function.name !== 'submit_billboard_analysis') {
-      throw new Error(`Unexpected tool call: ${toolCall.function.name}`);
+    if (toolUseBlock.name !== 'submit_billboard_analysis') {
+      throw new Error('Unexpected tool: ' + toolUseBlock.name);
     }
 
-    const toolResponse = JSON.parse(toolCall.function.arguments) as BillboardAnalysisToolResponse;
+    const toolResponse = toolUseBlock.input as BillboardAnalysisToolResponse;
     return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
     
   } catch (error) {
@@ -485,19 +492,15 @@ const convertImageToBase64 = (file: File): Promise<string> => {
  */
 const validateImageContent = async (base64Image: string): Promise<{ isValid: boolean; message?: string }> => {
   try {
-    const response = await fetch('/.netlify/functions/openai', {
+    const response = await fetch('/.netlify/functions/claude', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         action: "validate",
-        model: "gpt-4o-mini",
+        system: "You are an image classifier. Determine if the image is an outdoor billboard, advertising creative, or marketing artwork. Respond with JSON only: {\"is_billboard\": true/false, \"confidence\": 0-100, \"reason\": \"brief explanation\"}",
         messages: [
-          {
-            role: "system",
-            content: "You are an image classifier. Determine if the image is an outdoor billboard, advertising creative, or marketing artwork. Respond with JSON only: {\"is_billboard\": true/false, \"confidence\": 0-100, \"reason\": \"brief explanation\"}"
-          },
           {
             role: "user",
             content: [
@@ -506,16 +509,16 @@ const validateImageContent = async (base64Image: string): Promise<{ isValid: boo
                 text: "Is this image an outdoor billboard, advertising creative, poster, or marketing artwork? It should show advertising/marketing content with text and graphics. It should NOT be: personal photos, screenshots, documents, nature photos, random objects, or non-advertising content."
               },
               {
-                type: "image_url",
-                image_url: {
-                  url: `data:image/jpeg;base64,${base64Image}`
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: "image/jpeg",
+                  data: base64Image
                 }
               }
             ]
           }
-        ],
-        max_tokens: 150,
-        temperature: 0.1
+        ]
       })
     });
 
@@ -524,7 +527,7 @@ const validateImageContent = async (base64Image: string): Promise<{ isValid: boo
     }
 
     const data = await response.json();
-    const content = data.choices[0]?.message?.content;
+    const content = data.content?.[0]?.text;
 
     if (!content) {
       return { isValid: true };

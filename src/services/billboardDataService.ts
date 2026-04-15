@@ -360,10 +360,12 @@ export class BillboardDataService {
     // Calculate CPM
     const cpm = (monthlyCost / monthlyImpressions) * 1000;
 
-    // Industry benchmark CPM in Oman: 0.08-0.15 OMR
-    const benchmarkCPM = 0.12;
-
-    let roiScore = Math.round((benchmarkCPM / cpm) * 85);
+    // Industry benchmark CPM for outdoor billboards in Oman: 1.5-4.0 OMR
+    // Lower CPM = better value. Score based on where this billboard falls in the range.
+    const excellentCPM = 1.0;  // Best case scenario
+    const poorCPM = 8.0;       // Worst case scenario
+    // Linear scale: excellent CPM = 95, poor CPM = 20
+    let roiScore = Math.round(95 - ((cpm - excellentCPM) / (poorCPM - excellentCPM)) * 75);
     roiScore = Math.min(95, Math.max(20, roiScore));
 
     let marketPosition: string;

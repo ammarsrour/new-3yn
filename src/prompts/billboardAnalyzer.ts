@@ -102,6 +102,11 @@ BAD recommendation (generic, no specific reference):
 GOOD recommendation (specific, references actual content):
 "The headline 'ANNUAL SOCCER TOURNAMENT' at approximately 10 inches is too small for 110 km/h viewing at 100m. Increase to 16 inches minimum by reducing the flame effect graphics from ~25% to ~10% of billboard area."
 
+LANGUAGE RULES FOR RECOMMENDATIONS:
+- Never use internal field names in user-facing text. Write "layout score" not "layout_simplicity", "contrast score" not "color_contrast", "font score" not "font_clarity", "CTA score" not "cta_effectiveness".
+- Write expected_impact in plain English: "+15% readability improvement" not "+2 points to font_clarity (from 5 to 7)"
+- Do not reference scoring internals like point values or score ranges. Focus on real-world impact: "readable from 100m at highway speed" not "+2 points to font_clarity"
+
 Generate 3-5 recommendations, ordered by priority. Each must be genuinely different from the others.
 </step_4_recommendations>
 

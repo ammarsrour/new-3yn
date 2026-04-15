@@ -63,20 +63,17 @@ const mapToolResponseToAnalysis = (
   };
 
   // Map recommendations to issues by priority
-  const criticalIssues = [
-    ...assessment.critical_issues,
-    ...recommendations
-      .filter(r => r.priority === 'CRITICAL')
-      .map(r => `${r.issue}: ${r.action} (Impact: ${r.expected_impact})`)
-  ];
-
-  const minorIssues = recommendations
-    .filter(r => r.priority === 'MEDIUM' || r.priority === 'LOW')
-    .map(r => `${r.issue}: ${r.action}`);
+  const criticalIssues = assessment.critical_issues.length > 0
+    ? assessment.critical_issues
+    : ['No critical issues identified'];
 
   const quickWins = recommendations
     .filter(r => r.priority === 'HIGH')
-    .map(r => `${r.action} (${r.expected_impact})`);
+    .map(r => r.action);
+
+  const minorIssues = recommendations
+    .filter(r => r.priority === 'MEDIUM' || r.priority === 'LOW')
+    .map(r => r.action);
 
   // Build color analysis string
   const colorAnalysis = [
@@ -95,7 +92,7 @@ const mapToolResponseToAnalysis = (
     layoutScore: Math.max(5, Math.min(25, layoutScore)),
     ctaScore: Math.max(5, Math.min(25, ctaScore)),
     distanceAnalysis,
-    criticalIssues: criticalIssues.length > 0 ? criticalIssues : ['Analysis complete - review recommendations'],
+    criticalIssues,
     minorIssues,
     quickWins: quickWins.length > 0 ? quickWins : ['No quick wins identified'],
     detailedAnalysis,
@@ -162,11 +159,10 @@ export const analyzeBillboardWithAI = async (
     const base64Image = await convertImageToBase64(imageFile);
     const mediaType = imageFile.type || 'image/jpeg';
 
-    // TODO: Re-enable validation after Claude API migration is confirmed working
-    // const validationResult = await validateImageContent(base64Image, mediaType);
-    // if (!validationResult.isValid) {
-    //   throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
-    // }
+    const validationResult = await validateImageContent(base64Image, mediaType);
+    if (!validationResult.isValid) {
+      throw new Error(validationResult.message || 'Looks like this is the wrong artwork. Please re-upload.');
+    }
 
     // 🤖 CLAUDE API CALL WITH TOOL USE
     const systemPrompt = getBillboardAnalyzerSystemPrompt();
@@ -212,13 +208,6 @@ export const analyzeBillboardWithAI = async (
 
     const data = await response.json();
 
-    console.log('Claude response status:', response.status);
-    console.log('Claude response data keys:', Object.keys(data));
-    if (data.content) {
-      console.log('Claude content types:', data.content.map((c: any) => c.type));
-      console.log('Claude content:', JSON.stringify(data.content).substring(0, 500));
-    }
-
     // Merge all submit_billboard_analysis tool_use blocks into one response
     const toolUseBlocks = data.content?.filter(
       (block: any) => block.type === "tool_use" && block.name === "submit_billboard_analysis"
@@ -234,8 +223,6 @@ export const analyzeBillboardWithAI = async (
     const mergedInput = toolUseBlocks.reduce((acc: any, block: any) => {
       return { ...acc, ...block.input };
     }, {});
-
-    console.log('Merged tool response keys:', Object.keys(mergedInput));
 
     const toolResponse = mergedInput as BillboardAnalysisToolResponse;
     return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
@@ -516,7 +503,7 @@ const validateImageContent = async (base64Image: string, mediaType: string = 'im
       },
       body: JSON.stringify({
         action: "validate",
-        system: "You are an image classifier. Determine if the image is an outdoor billboard, advertising creative, or marketing artwork. Respond with JSON only: {\"is_billboard\": true/false, \"confidence\": 0-100, \"reason\": \"brief explanation\"}",
+        system: "Determine if this image is an outdoor billboard, advertising creative, poster, or marketing artwork. Respond with JSON only: {\"is_billboard\": true/false, \"confidence\": 0-100, \"reason\": \"brief explanation\"}",
         messages: [
           {
             role: "user",

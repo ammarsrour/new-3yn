@@ -103,14 +103,8 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     const data = await response.json();
 
-    console.log('Anthropic API status:', response.status);
-    console.log('Anthropic API response keys:', Object.keys(data));
-    console.log('Anthropic API stop_reason:', data.stop_reason);
-    console.log('Anthropic API content types:', data.content?.map((c: any) => c.type));
-
     if (!response.ok) {
       console.error("Anthropic API error:", response.status, data);
-      console.log('Anthropic API error body:', JSON.stringify(data));
       return {
         statusCode: response.status,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

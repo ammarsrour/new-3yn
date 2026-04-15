@@ -66,7 +66,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 
     // Set defaults based on action
     const isValidate = action === "validate";
-    const defaultModel = isValidate ? "claude-haiku-4-5-20251001" : "claude-sonnet-4-6";
+    const defaultModel = isValidate ? "claude-haiku-4-5-20251001" : "claude-haiku-4-5-20251001";
     const defaultMaxTokens = isValidate ? 150 : 4096;
     const defaultTemperature = isValidate ? 0.1 : 0.3;
 

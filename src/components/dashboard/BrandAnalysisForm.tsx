@@ -26,29 +26,44 @@ const BrandAnalysisForm: React.FC<BrandAnalysisFormProps> = ({ onAnalysisChange 
   };
 
   const categories = [
-    'Luxury',
-    'Family',
-    'Tech',
-    'B2B',
-    'Traditional',
-    'Food/Beverage',
     'Automotive',
-    'Real Estate'
+    'B2B',
+    'Education',
+    'Entertainment',
+    'Events & Conferences',
+    'Family',
+    'Fashion & Apparel',
+    'Finance & Banking',
+    'Food & Beverage',
+    'Government & Public Services',
+    'Healthcare',
+    'Hospitality & Tourism',
+    'Luxury & Premium',
+    'Real Estate',
+    'Retail',
+    'Sports & Fitness',
+    'Telecommunications',
+    'Other'
   ];
 
   const ageGroups = [
-    '18-25',
-    '26-35',
-    '36-45',
-    '46-55',
-    '55+'
+    '13-17 (Teens)',
+    '18-24 (Young Adults)',
+    '25-34 (Adults)',
+    '35-44 (Mid-Career)',
+    '45-54 (Established)',
+    '55+ (Senior)',
+    'All Ages'
   ];
 
   const campaignGoals = [
     'Brand Awareness',
     'Product Launch',
     'Conversion / Sales',
-    'Brand Building'
+    'Event Promotion',
+    'Store/Location Traffic',
+    'Seasonal Campaign',
+    'Public Service / Government'
   ];
 
   const budgetRanges = [

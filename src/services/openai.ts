@@ -219,14 +219,14 @@ export const analyzeBillboardWithAI = async (
       console.log('Claude content:', JSON.stringify(data.content).substring(0, 500));
     }
 
-    // Extract structured response from tool_use block
-    const toolUseBlock = data.content?.find((block: any) => block.type === "tool_use");
-    if (!toolUseBlock?.input) {
-      throw new Error('No tool response from Claude');
-    }
+    // Find the tool_use block named submit_billboard_analysis
+    const toolUseBlock = data.content?.find(
+      (block: any) => block.type === "tool_use" && block.name === "submit_billboard_analysis"
+    );
 
-    if (toolUseBlock.name !== 'submit_billboard_analysis') {
-      throw new Error('Unexpected tool: ' + toolUseBlock.name);
+    if (!toolUseBlock?.input) {
+      console.error('No valid tool response. Content types:', data.content?.map((c: any) => `${c.type}:${c.name || 'no-name'}`));
+      throw new Error('No tool response from Claude - expected submit_billboard_analysis tool use');
     }
 
     const toolResponse = toolUseBlock.input as BillboardAnalysisToolResponse;

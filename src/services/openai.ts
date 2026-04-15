@@ -212,6 +212,13 @@ export const analyzeBillboardWithAI = async (
 
     const data = await response.json();
 
+    console.log('Claude response status:', response.status);
+    console.log('Claude response data keys:', Object.keys(data));
+    if (data.content) {
+      console.log('Claude content types:', data.content.map((c: any) => c.type));
+      console.log('Claude content:', JSON.stringify(data.content).substring(0, 500));
+    }
+
     // Extract structured response from tool_use block
     const toolUseBlock = data.content?.find((block: any) => block.type === "tool_use");
     if (!toolUseBlock?.input) {

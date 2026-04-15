@@ -219,17 +219,25 @@ export const analyzeBillboardWithAI = async (
       console.log('Claude content:', JSON.stringify(data.content).substring(0, 500));
     }
 
-    // Find the tool_use block named submit_billboard_analysis
-    const toolUseBlock = data.content?.find(
+    // Merge all submit_billboard_analysis tool_use blocks into one response
+    const toolUseBlocks = data.content?.filter(
       (block: any) => block.type === "tool_use" && block.name === "submit_billboard_analysis"
-    );
+    ) || [];
 
-    if (!toolUseBlock?.input) {
+    if (toolUseBlocks.length === 0) {
       console.error('No valid tool response. Content types:', data.content?.map((c: any) => `${c.type}:${c.name || 'no-name'}`));
       throw new Error('No tool response from Claude - expected submit_billboard_analysis tool use');
     }
 
-    const toolResponse = toolUseBlock.input as BillboardAnalysisToolResponse;
+    // Merge all tool_use inputs into a single object
+    // Claude sometimes splits a complex tool call into multiple blocks
+    const mergedInput = toolUseBlocks.reduce((acc: any, block: any) => {
+      return { ...acc, ...block.input };
+    }, {});
+
+    console.log('Merged tool response keys:', Object.keys(mergedInput));
+
+    const toolResponse = mergedInput as BillboardAnalysisToolResponse;
     return mapToolResponseToAnalysis(toolResponse, locationData?.billboardMetadata);
     
   } catch (error) {

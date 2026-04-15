@@ -73,24 +73,68 @@ const Dashboard: React.FC<DashboardProps> = ({ user, userProfile }) => {
         location,
         distance,
         timestamp: new Date(),
-        criticalIssues: aiAnalysis.criticalIssues.map((issue, index) => ({
-          id: `critical-${index}`,
-          title: issue.split(':')[0] || issue,
-          description: issue.split(':')[1] || issue,
-          severity: 'critical' as const
-        })),
-        minorIssues: aiAnalysis.minorIssues.map((issue, index) => ({
-          id: `minor-${index}`,
-          title: issue.split(':')[0] || issue,
-          description: issue.split(':')[1] || issue,
-          severity: 'minor' as const
-        })),
-        quickWins: aiAnalysis.quickWins.map((win, index) => ({
-          id: `win-${index}`,
-          title: win.split(':')[0] || win,
-          description: win.split(':')[1] || win,
-          severity: 'improvement' as const
-        })),
+        criticalIssues: aiAnalysis.criticalIssues.map((issue, index) => {
+          // Try splitting on ' — ' (em dash) first, then ' - ' (hyphen), then first '. ' (period)
+          let title = issue;
+          let description = '';
+          if (issue.includes(' — ')) {
+            title = issue.split(' — ')[0];
+            description = issue.split(' — ').slice(1).join(' — ');
+          } else if (issue.includes(' - ')) {
+            title = issue.split(' - ')[0];
+            description = issue.split(' - ').slice(1).join(' - ');
+          } else if (issue.includes('. ')) {
+            title = issue.split('. ')[0] + '.';
+            description = issue.split('. ').slice(1).join('. ');
+          }
+          // If no split found, use first 60 chars as title, rest as description
+          if (!description && issue.length > 60) {
+            const breakPoint = issue.lastIndexOf(' ', 60);
+            title = issue.substring(0, breakPoint > 0 ? breakPoint : 60);
+            description = issue.substring(breakPoint > 0 ? breakPoint + 1 : 60);
+          }
+          return { id: `critical-${index}`, title, description, severity: 'critical' as const };
+        }),
+        minorIssues: aiAnalysis.minorIssues.map((issue, index) => {
+          let title = issue;
+          let description = '';
+          if (issue.includes(' — ')) {
+            title = issue.split(' — ')[0];
+            description = issue.split(' — ').slice(1).join(' — ');
+          } else if (issue.includes(' - ')) {
+            title = issue.split(' - ')[0];
+            description = issue.split(' - ').slice(1).join(' - ');
+          } else if (issue.includes('. ')) {
+            title = issue.split('. ')[0] + '.';
+            description = issue.split('. ').slice(1).join('. ');
+          }
+          if (!description && issue.length > 60) {
+            const breakPoint = issue.lastIndexOf(' ', 60);
+            title = issue.substring(0, breakPoint > 0 ? breakPoint : 60);
+            description = issue.substring(breakPoint > 0 ? breakPoint + 1 : 60);
+          }
+          return { id: `minor-${index}`, title, description, severity: 'minor' as const };
+        }),
+        quickWins: aiAnalysis.quickWins.map((win, index) => {
+          let title = win;
+          let description = '';
+          if (win.includes(' — ')) {
+            title = win.split(' — ')[0];
+            description = win.split(' — ').slice(1).join(' — ');
+          } else if (win.includes(' - ')) {
+            title = win.split(' - ')[0];
+            description = win.split(' - ').slice(1).join(' - ');
+          } else if (win.includes('. ')) {
+            title = win.split('. ')[0] + '.';
+            description = win.split('. ').slice(1).join('. ');
+          }
+          if (!description && win.length > 60) {
+            const breakPoint = win.lastIndexOf(' ', 60);
+            title = win.substring(0, breakPoint > 0 ? breakPoint : 60);
+            description = win.substring(breakPoint > 0 ? breakPoint + 1 : 60);
+          }
+          return { id: `win-${index}`, title, description, severity: 'improvement' as const };
+        }),
         distanceAnalysis: aiAnalysis.distanceAnalysis,
         aiAnalysis: aiAnalysis.detailedAnalysis,
         status: 'completed'

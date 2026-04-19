@@ -459,8 +459,14 @@ export class BillboardDataService {
     const distanceM = location.distanceFromRoadM || 100;
     const widthM = location.approxWidthM || 14;
     const heightM = location.approxHeightM || 5;
-    const viewingTime = ((widthM * 2) / (avgSpeed / 3.6)).toFixed(1);
-    const maxWords = Math.max(1, Math.floor(parseFloat(viewingTime) * 2.5));
+    // Override for forecourt/service station locations — viewers are stationary, not driving past
+    let effectiveSpeed = avgSpeed;
+    if (boardType.includes('forecourt') || boardType.includes('service station')) {
+      effectiveSpeed = 5; // Walking speed in km/h — viewers are at fuel pumps
+    }
+
+    const viewingTime = ((widthM * 2) / (effectiveSpeed / 3.6)).toFixed(1);
+    const maxWords = Math.max(3, Math.floor(parseFloat(viewingTime) * 2.5));
     const impressions = enrichedLoc?.estimatedMonthlyImpressions;
     const rental = enrichedLoc?.rentalRateOMR;
     const audience = enrichedLoc?.primaryAudience || 'Mixed demographics';
@@ -483,6 +489,11 @@ export class BillboardDataService {
 
     if (boardType.includes('forecourt')) {
       speedRecommendation += ` Captive audience: Drivers spend 3-5 minutes at fuel stops. Detailed product information, QR codes, and promotional offers work well here.`;
+    }
+
+    // Override entire speedRecommendation for forecourt locations
+    if (boardType.includes('forecourt') || boardType.includes('service station')) {
+      speedRecommendation = `Forecourt location: Captive audience with 3-5 minute average dwell time at this ${widthM}m × ${heightM}m screen, viewed from ${distanceM}m. Extended viewing allows detailed messaging — up to ${maxWords} words, product features, QR codes, and promotional offers are all effective. Digital format enables daypart-specific content and rotating messages to maximize the ${impressions ? (impressions / 1000).toFixed(0) + 'K' : 'available'} monthly impressions.`;
     }
 
     // Location insight — specific to this location's character

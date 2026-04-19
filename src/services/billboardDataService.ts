@@ -454,53 +454,77 @@ export class BillboardDataService {
   } {
     const speedRange = this.parseSpeedLimit(location.speedLimitKmh);
     const avgSpeed = (speedRange.min + speedRange.max) / 2;
-    const roadType = location.roadType.toLowerCase();
+    const enrichedLoc = MUSCAT_BILLBOARD_LOCATIONS.find(l => l.id === location.id);
     const boardType = location.boardType.toLowerCase();
+    const distanceM = location.distanceFromRoadM || 100;
+    const widthM = location.approxWidthM || 14;
+    const heightM = location.approxHeightM || 5;
+    const viewingTime = ((widthM * 2) / (avgSpeed / 3.6)).toFixed(1);
+    const maxWords = Math.max(1, Math.floor(parseFloat(viewingTime) * 2.5));
+    const impressions = enrichedLoc?.estimatedMonthlyImpressions;
+    const rental = enrichedLoc?.rentalRateOMR;
+    const audience = enrichedLoc?.primaryAudience || 'Mixed demographics';
+    const traffic = enrichedLoc?.trafficType || 'Mixed';
+    const competition = enrichedLoc?.competitionLevel || 'Medium';
 
+    // Speed recommendation — specific to this billboard's parameters
     let speedRecommendation = '';
-    if (avgSpeed > 100) {
-      speedRecommendation = 'High-speed location: Use large fonts (minimum 200px), maximum contrast colors, and limit to 6 words or less. Consider bold, sans-serif fonts for optimal highway readability.';
+    if (avgSpeed >= 100) {
+      speedRecommendation = `High-speed location: At ${avgSpeed} km/h, drivers have ${viewingTime} seconds to read a ${widthM}m × ${heightM}m billboard from ${distanceM}m. Maximum ${maxWords} words. Use bold, sans-serif fonts minimum ${Math.round(distanceM * 0.15)}cm tall. No decorative fonts, no fine print.`;
     } else if (avgSpeed >= 60) {
-      speedRecommendation = 'Medium-speed location: Balanced approach works well. Use clear fonts (minimum 150px), good contrast, and keep messaging concise (8-10 words maximum).';
+      speedRecommendation = `Medium-speed location: At ${avgSpeed} km/h, viewers have ${viewingTime} seconds from ${distanceM}m distance. Up to ${maxWords} words work on this ${widthM}m × ${heightM}m format. Clear fonts minimum ${Math.round(distanceM * 0.1)}cm tall. Good contrast essential.`;
     } else {
-      speedRecommendation = 'Low-speed location: Detailed messaging acceptable. Can use smaller fonts (100px+), more text elements, and complex layouts as viewers have more time to read.';
+      speedRecommendation = `Low-speed location: At ${avgSpeed} km/h, viewers have ${viewingTime} seconds — enough for detailed messaging on this ${widthM}m × ${heightM}m format. Up to ${maxWords} words. QR codes and detailed CTAs are effective at ${distanceM}m viewing distance.`;
     }
 
-    if (boardType.includes('dooh') || location.format.toLowerCase().includes('digital')) {
-      speedRecommendation += ' Digital advantages: Consider animation, video content, or rotating messages to maximize engagement.';
+    if (boardType.includes('dooh') || (location.format && location.format.toLowerCase().includes('digital'))) {
+      speedRecommendation += ` Digital format: Consider animation, rotating messages, or daypart-specific content to maximize the ${impressions ? (impressions / 1000).toFixed(0) + 'K' : 'available'} monthly impressions.`;
     }
 
     if (boardType.includes('forecourt')) {
-      speedRecommendation += ' Captive audience advantage: Detailed product information, QR codes, and promotional offers work well here.';
+      speedRecommendation += ` Captive audience: Drivers spend 3-5 minutes at fuel stops. Detailed product information, QR codes, and promotional offers work well here.`;
     }
 
-    let locationInsight = '';
-    const enrichedLoc = MUSCAT_BILLBOARD_LOCATIONS.find(l => l.id === location.id);
+    // Location insight — specific to this location's character
+    let locationInsight = `${location.locationName} in ${location.district}: `;
 
-    if (roadType.includes('expressway')) {
-      locationInsight = 'Premium expressway location: Maximum reach with high-income demographics. Requires simple, bold messaging due to high speeds. Excellent for brand awareness campaigns.';
-    } else if (enrichedLoc?.trafficType === 'Commercial' || location.district.toLowerCase().includes('cbd')) {
-      locationInsight = 'Business district location: Professional audience during weekdays. Ideal for B2B messaging, financial services, and corporate communications. Peak traffic during rush hours.';
-    } else if (enrichedLoc?.trafficType === 'Tourist') {
-      locationInsight = 'Tourism hub: Mixed international and local audience. Consider bilingual content (Arabic/English). High-value demographics with travel/leisure focus.';
-    } else if (enrichedLoc?.trafficType === 'Residential') {
-      locationInsight = 'Residential area location: Family-oriented demographics. Perfect for consumer products, family services, and lifestyle brands. Consider weekend traffic patterns.';
+    if (enrichedLoc) {
+      locationInsight += `${traffic} traffic area targeting ${audience.toLowerCase()}. `;
+
+      if (impressions && rental) {
+        const cpm = ((rental / impressions) * 1000).toFixed(2);
+        locationInsight += `Estimated ${(impressions / 1000).toFixed(0)}K monthly impressions at ${rental} OMR/month (${cpm} OMR CPM). `;
+      }
+
+      locationInsight += `Competition level: ${competition.toLowerCase()}. `;
+
+      if (location.lighting && location.lighting !== 'TBD') {
+        locationInsight += `${location.lighting} lighting — `;
+        if (location.lighting.toLowerCase().includes('led') || location.lighting.toLowerCase().includes('premium')) {
+          locationInsight += 'excellent visibility day and night.';
+        } else if (location.lighting.toLowerCase().includes('street')) {
+          locationInsight += 'ensure high-contrast design for evening readability.';
+        } else {
+          locationInsight += 'verify evening visibility conditions.';
+        }
+      }
     } else {
-      locationInsight = 'Mixed-use location: Diverse audience with varied demographics. Flexible messaging approach recommended. Good for general consumer brands and services.';
+      locationInsight += `${location.roadType} location in ${location.district}. Verify local conditions before campaign placement.`;
     }
 
+    // Creative strategy — based on audience and format
     let creativeStrategy = '';
-    const trafficType = this.getTrafficType(location);
-    const audience = this.getAudienceEstimate(location);
 
-    if (trafficType === 'Business' && audience === 'Young Professional') {
-      creativeStrategy = 'Target young professionals: Use modern design, tech-forward messaging, and professional color schemes. Consider LinkedIn-style aesthetics and career-focused benefits.';
-    } else if (trafficType === 'Residential' && audience === 'Family') {
-      creativeStrategy = 'Target families: Use warm colors, family imagery, and benefit-focused messaging. Emphasize safety, value, and family well-being. Consider Arabic cultural values.';
-    } else if (avgSpeed >= 100) {
-      creativeStrategy = 'Highway strategy: Bold, simple design with maximum contrast. Use primary colors, minimal text, and strong call-to-action. Focus on brand recognition over detailed information.';
+    if (traffic === 'Commuter') {
+      creativeStrategy = `Commuter corridor: Viewers see this billboard repeatedly (high repeat rate expected). Use sequential campaign strategy — Week 1: brand only, Week 3: product detail, Week 5: CTA with offer. ${audience.includes('professional') || audience.includes('Professional') ? 'Professional audience responds to clean, minimal design with clear value proposition.' : 'Bold, simple messaging for quick recognition at speed.'}`;
+    } else if (traffic === 'Tourist') {
+      creativeStrategy = `Tourism corridor: Mixed international and local audience. Bilingual content essential (Arabic primary per Ordinance 25/93, English subtitle for visitors). ${location.lighting?.toLowerCase().includes('weather') ? 'Weather-resistant format supports year-round campaigns.' : ''} Hospitality, F&B, and experience-based messaging performs well here.`;
+    } else if (traffic === 'Residential') {
+      creativeStrategy = `Residential area: ${audience}. Use warm colors, family imagery, and benefit-focused messaging. Arabic cultural values resonate — emphasize safety, quality, and family well-being. Weekend traffic patterns may differ from weekday; consider daypart messaging if digital format.`;
+    } else if (traffic === 'Commercial') {
+      creativeStrategy = `Commercial district: ${audience}. Professional design with clear value proposition. B2B messaging, financial services, and technology brands perform well. Peak visibility during weekday rush hours — time-sensitive offers and business services are effective.`;
     } else {
-      creativeStrategy = 'Balanced strategy: Combine brand awareness with informational content. Use clear hierarchy, readable fonts, and strategic color psychology for MENA market preferences.';
+      creativeStrategy = `Mixed-use area: ${audience}. Versatile location supporting both brand awareness and direct response campaigns. Use clear visual hierarchy with Arabic-first messaging. ${competition === 'High' ? 'High competition area — differentiate with bold design and unique creative angles.' : 'Lower competition gives your message more standout potential.'}`;
     }
 
     return {

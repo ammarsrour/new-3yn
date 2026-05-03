@@ -937,7 +937,7 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
                 <strong>Contrast Ratio:</strong> 4.5:1 minimum (WCAG AA standard)<br>
                 <strong>Arabic Text:</strong> 60% minimum space allocation (MTCIT)<br>
                 <strong>Word Count:</strong> 6-8 words maximum for highway speeds<br>
-                <strong>Viewing Time:</strong> 3-5 seconds at 65mph<br>
+                <strong>Viewing Time:</strong> 3-5 seconds at 100 km/h<br>
                 <strong>Cultural Compliance:</strong> Islamic design principles adherence
               </div>
             </div>
@@ -964,8 +964,8 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; font-size: 11px;">
           <div>
             <strong>Analysis Engine:</strong><br>
-            OpenAI GPT-4 Vision API<br>
-            Advanced Computer Vision
+            Claude Haiku 4.5 by Anthropic<br>
+            Advanced Vision AI
           </div>
           <div>
             <strong>Compliance Standards:</strong><br>
@@ -979,7 +979,7 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
           </div>
         </div>
         <div style="border-top: 1px solid #E5E7EB; padding-top: 15px; color: #9CA3AF;">
-          © 2025 3YN Billboard Analyzer. All rights reserved.<br>
+          © ${new Date().getFullYear()} 3YN Billboard Analyzer. All rights reserved.<br>
           For enterprise solutions and API access: enterprise@3yn.com<br>
           Report ID: ${data.timestamp.getTime()} | Generated: ${data.timestamp.toLocaleString()}
         </div>

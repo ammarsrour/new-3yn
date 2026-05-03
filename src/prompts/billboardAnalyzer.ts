@@ -154,7 +154,7 @@ LOCATION CONTEXT FOR ANALYSIS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📍 SITE DETAILS:
-   Location: ${location.locationName}
+   Location: ${location.locationName || 'Specified location'}
    Road: ${location.roadName || 'Not specified'}
    District: ${location.district || 'Not specified'}
    Highway: ${location.highwayDesignation || 'Not specified'}
@@ -162,16 +162,16 @@ LOCATION CONTEXT FOR ANALYSIS
 📏 PHYSICAL SPECIFICATIONS:
    Billboard size: ${boardWidth}m × ${boardHeight}m (${(boardWidth * boardHeight).toFixed(1)}m² total area)
    Distance from road: ${distanceFromRoad}m
-   Viewing angle: ${location.trafficDirectionVisibility}
+   Viewing angle: ${location.trafficDirectionVisibility || 'Bidirectional'}
 
 🚗 TRAFFIC CONDITIONS:
    Speed limit: ${speed} km/h (${(speed / 1.609).toFixed(0)} mph)
-   Road type: ${location.roadType}
+   Road type: ${location.roadType || 'Standard road'}
    Available viewing time: ${viewingTime.toFixed(1)} seconds at ${speed} km/h
 
 💡 ENVIRONMENTAL CONDITIONS:
-   Lighting: ${location.lighting}
-   District: ${location.district} conditions
+   Lighting: ${location.lighting || 'Standard outdoor'}
+   District: ${location.district || 'Local'} conditions
    Region: Oman (MENA market)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -188,13 +188,13 @@ LOCATION CONTEXT FOR ANALYSIS
 
 3. CONTRAST RATIO:
    Minimum: 4.5:1 (WCAG AA standard)
-   Recommended: 5.0:1+ for ${location.lighting} conditions
+   Recommended: 5.0:1+ for ${location.lighting || 'standard outdoor'} conditions
 
 4. ARABIC TEXT REQUIREMENT (OMAN ORDINANCE 25/93):
    "The main language of the advertisement shall be literary Arabic"
    Arabic must be PRIMARY/DOMINANT language (larger and more prominent than English)
    English may be used only if positioned "next to" Arabic
-   This is MANDATORY for ${location.district}, Oman
+   This is MANDATORY for ${location.district || 'this location'}, Oman
    Non-compliance = Municipality can legally remove billboard
 
 5. TEXT HIERARCHY:
@@ -212,9 +212,9 @@ IF word count > ${maxWords} words → overall_score ≤ 6.5/10 (COMPREHENSION FA
 IF contrast ratio < 4.5:1 → overall_score ≤ 6.0/10 (VISIBILITY FAILURE)
 IF multiple violations → Use LOWEST applicable score
 
-This billboard will be displayed at: ${location.locationName}
-Market: ${location.district}, Oman - MENA compliance is LEGALLY MANDATORY
-Speed context: ${speed} km/h ${location.roadType}
+This billboard will be displayed at: ${location.locationName || 'the specified location'}
+Market: ${location.district || 'this district'}, Oman - MENA compliance is LEGALLY MANDATORY
+Speed context: ${speed} km/h ${location.roadType || 'road'}
 Legal jurisdiction: Oman Ordinance 25/93 applies
 
 Apply these strict constraints. Flag ALL violations in critical_issues with specific details.

@@ -136,7 +136,7 @@ const buildDetailedAnalysisFromTool = (
   // MENA considerations
   if (billboardMetadata) {
     const billboard = billboardMetadata.location;
-    parts.push(`Location Context: ${billboard.locationName}, ${billboard.district} - ${billboard.roadType} at ${billboardMetadata.analysisContext.speedContext.kmh} km/h`);
+    parts.push(`Location Context: ${billboard.locationName || 'the specified location'}, ${billboard.district || 'this district'} - ${billboard.roadType || 'standard road'} at ${billboardMetadata.analysisContext.speedContext.kmh} km/h`);
   }
 
   return parts.join('\n\n');
@@ -445,7 +445,7 @@ const generateVariableDetailedAnalysis = (score: number, location: string, dista
   score >= 70 ? 'good' : score >= 50 ? 'moderate' : 'poor'
 } contrast for ${billboard?.lighting || 'outdoor'} viewing conditions. ${
   billboard?.district?.toLowerCase().includes('oman') || billboard?.district?.toLowerCase().includes('desert') ?
-  `Desert lighting conditions in ${billboard.district} require enhanced contrast ratios (5.0:1 minimum) due to high ambient light on ${billboard.roadName}.` :
+  `Desert lighting conditions in ${billboard?.district || 'the surrounding area'} require enhanced contrast ratios (5.0:1 minimum) due to high ambient light on ${billboard?.roadName || 'this roadway'}.` :
   `${billboard?.lighting || 'Outdoor'} lighting requires minimum 4.5:1 contrast ratio for optimal visibility.`
 }
 

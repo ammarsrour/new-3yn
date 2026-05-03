@@ -616,14 +616,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="issue-item minor-issue">
               <div class="issue-title">🟡 Optimization #${index + 1}: ${issue.split(':')[0] || issue}</div>
               <div class="issue-description">${issue.split(':')[1] || issue}</div>
-              <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
-                <strong style="color: #92400E;">Expected Improvement:</strong> 
-                <span style="color: #78350F; font-size: 13px;">
-                  ${index === 0 ? '+5-8 points in overall readability score' :
-                    index === 1 ? '+3-5 points with enhanced visual appeal' :
-                    '+2-4 points with better user engagement'}
-                </span>
-              </div>
             </div>
           `).join('')}
         </div>
@@ -780,34 +772,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
           </div>
         </div>
       </div>
-
-      <!-- MINOR ISSUES & OPTIMIZATIONS -->
-      ${data.minorIssues.length > 0 ? `
-      <div class="section">
-        <h2 class="section-title">🔧 Minor Issues & Optimizations</h2>
-        <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-          <p style="color: #92400E; font-weight: 600; margin-bottom: 15px;">
-            These enhancements will further improve billboard performance:
-          </p>
-        </div>
-        <div class="issues">
-          ${data.minorIssues.map((issue, index) => `
-            <div class="issue-item minor-issue">
-              <div class="issue-title">🟡 Enhancement #${index + 1}: ${issue.split(':')[0] || issue}</div>
-              <div class="issue-description">${issue.split(':')[1] || issue}</div>
-              <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
-                <strong style="color: #92400E;">Implementation Priority:</strong> 
-                <span style="color: #78350F; font-size: 13px;">
-                  ${index === 0 ? 'Medium - implement after critical fixes' :
-                    index === 1 ? 'Low - nice-to-have improvement' :
-                    'Optional - consider for future iterations'}
-                </span>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-      ` : ''}
 
       <!-- QUICK WINS DETAILED -->
       <div class="section">

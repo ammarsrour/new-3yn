@@ -698,21 +698,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
               </ul>
             </div>
           </div>
-
-          <div class="recommendation-card" style="border-left: 4px solid #059669;">
-            <div class="recommendation-header" style="color: #059669;">📊 Phase 4: Performance Monitoring</div>
-            <div class="recommendation-content">
-              <strong>Ongoing Actions:</strong>
-              <ul style="margin: 10px 0; padding-left: 20px;">
-                <li>A/B testing with improved design</li>
-                <li>Performance metrics tracking</li>
-                <li>Audience feedback collection</li>
-              </ul>
-              <strong>Expected Impact:</strong> Continuous optimization<br>
-              <strong>Investment:</strong> Ongoing monitoring<br>
-              <strong>ROI:</strong> Long-term campaign success
-            </div>
-          </div>
         </div>
       </div>
 
@@ -896,57 +881,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
                 data.score >= 50 ? 'Your billboard has solid potential. Implementing critical fixes will significantly improve competitive position.' :
                 'Your billboard needs substantial improvements to compete effectively. Focus on critical issues first for maximum impact.'}
             </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ROI PROJECTION -->
-      <div class="section">
-        <h2 class="section-title">💰 ROI Impact Projection</h2>
-        
-        <div style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); border: 1px solid #6EE7B7; border-radius: 12px; padding: 25px;">
-          <h3 style="color: #065F46; font-weight: 600; margin-bottom: 20px;">Expected Business Impact</h3>
-          
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
-            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 1px solid #A7F3D0;">
-              <div style="font-size: 32px; font-weight: 700; color: #059669;">+${Math.round((100 - data.score) * 0.5)}%</div>
-              <div style="font-size: 14px; color: #047857; font-weight: 500;">Campaign Effectiveness</div>
-              <div style="font-size: 11px; color: #6B7280; margin-top: 5px;">Based on readability improvements</div>
-            </div>
-            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 1px solid #A7F3D0;">
-              <div style="font-size: 32px; font-weight: 700; color: #059669;">${Math.round(2 + (data.score / 50))}x</div>
-              <div style="font-size: 14px; color: #047857; font-weight: 500;">Message Recognition</div>
-              <div style="font-size: 11px; color: #6B7280; margin-top: 5px;">Improved recall and brand awareness</div>
-            </div>
-            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; border: 1px solid #A7F3D0;">
-              <div style="font-size: 32px; font-weight: 700; color: #059669;">${Math.max(12, 48 - Math.round(data.criticalIssues.length * 8))}hrs</div>
-              <div style="font-size: 14px; color: #047857; font-weight: 500;">Implementation Time</div>
-              <div style="font-size: 11px; color: #6B7280; margin-top: 5px;">Total design and review time</div>
-            </div>
-          </div>
-          
-          <div class="highlight-box" style="background: white;">
-            <h4 style="color: #065F46; font-weight: 600; margin-bottom: 15px;">💡 Investment vs. Return Analysis:</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-              <div>
-                <div style="font-weight: 600; color: #374151; margin-bottom: 10px;">Investment Required:</div>
-                <ul style="margin: 0; padding-left: 20px; color: #6B7280; font-size: 14px;">
-                  <li>Design modifications: ${Math.max(8, data.criticalIssues.length * 4)} hours</li>
-                  <li>Review and approval: 4-6 hours</li>
-                  <li>Production updates: 2-4 hours</li>
-                  <li>Total estimated cost: $${Math.round((Math.max(8, data.criticalIssues.length * 4) + 6) * 75)}</li>
-                </ul>
-              </div>
-              <div>
-                <div style="font-weight: 600; color: #374151; margin-bottom: 10px;">Expected Returns:</div>
-                <ul style="margin: 0; padding-left: 20px; color: #6B7280; font-size: 14px;">
-                  <li>Increased brand recall: +${Math.round((100 - data.score) * 0.4)}%</li>
-                  <li>Better message comprehension: +${Math.round((100 - data.score) * 0.6)}%</li>
-                  <li>Enhanced campaign ROI: +${Math.round((100 - data.score) * 0.3)}%</li>
-                  <li>Improved market positioning</li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </div>

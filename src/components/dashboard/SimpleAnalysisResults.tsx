@@ -186,12 +186,14 @@ const SimpleAnalysisResults: React.FC<SimpleAnalysisResultsProps> = ({
         </div>
       )}
 
-      {/* AI Summary - if available, kept brief */}
+      {/* PASS 1 EDIT 9 (Omar MED-01): aiAnalysis hidden from UI - looked unpolished compared to structured cards above. Still rendered in PDF (pdfGenerator.ts) via the detailedAnalysis mapping in handleDownloadPDF. To restore, remove this comment block and uncomment the JSX below. */}
+      {/*
       {analysis.aiAnalysis && (
         <div className="bg-surface-50 p-4 sm:p-6 text-xs sm:text-sm text-navy-700">
           <p className="line-clamp-3 sm:line-clamp-4">{analysis.aiAnalysis}</p>
         </div>
       )}
+      */}
     </div>
   );
 };

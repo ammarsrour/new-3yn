@@ -373,7 +373,8 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
         </div>
       </details>
 
-      {/* AI Detailed Analysis - Last, for deep-dive */}
+      {/* PASS 1 EDIT 9 (Omar MED-01): aiAnalysis hidden from UI - looked unpolished compared to structured cards above. Still rendered in PDF (pdfGenerator.ts) via the detailedAnalysis mapping in handleDownloadPDF. To restore, remove this comment block and uncomment the JSX below. */}
+      {/*
       {analysis.aiAnalysis && (
         <div className="bg-white p-6">
           <div className="flex items-center space-x-2 mb-4">
@@ -385,6 +386,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({ analysis, onNewAnalys
           </div>
         </div>
       )}
+      */}
 
       {/* AI Enhancement CTA - Quieter, still prominent */}
       <div className="bg-surface-50 border border-surface-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">

@@ -596,14 +596,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="issue-item">
               <div class="issue-title">🔴 Critical Issue #${index + 1}: ${issue.split(':')[0] || issue}</div>
               <div class="issue-description">${issue.split(':')[1] || issue}</div>
-              <div style="margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 6px;">
-                <strong style="color: #991B1B;">Business Impact:</strong> 
-                <span style="color: #7F1D1D; font-size: 13px;">
-                  ${index === 0 ? 'Severely reduces message comprehension and brand recall' :
-                    index === 1 ? 'Limits visibility in various lighting conditions' :
-                    'Decreases overall campaign effectiveness and ROI'}
-                </span>
-              </div>
             </div>
           `).join('')}
         </div>
@@ -651,24 +643,6 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="issue-item quick-win">
               <div class="issue-title">⚡ Quick Win #${index + 1}: ${win.split(':')[0] || win}</div>
               <div class="issue-description">${win.split(':')[1] || win}</div>
-              <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div style="padding: 10px; background: rgba(255,255,255,0.8); border-radius: 6px;">
-                  <strong style="color: #1E40AF;">Implementation Time:</strong><br>
-                  <span style="color: #1E3A8A; font-size: 13px;">
-                    ${index === 0 ? '2-4 hours (design adjustment)' :
-                      index === 1 ? '1-2 hours (color modification)' :
-                      '3-6 hours (layout restructuring)'}
-                  </span>
-                </div>
-                <div style="padding: 10px; background: rgba(255,255,255,0.8); border-radius: 6px;">
-                  <strong style="color: #1E40AF;">Expected ROI:</strong><br>
-                  <span style="color: #1E3A8A; font-size: 13px;">
-                    ${index === 0 ? '+25-35% campaign effectiveness' :
-                      index === 1 ? '+15-25% visibility improvement' :
-                      '+10-20% message retention'}
-                  </span>
-                </div>
-              </div>
             </div>
           `).join('')}
         </div>
@@ -702,12 +676,9 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
               <ul style="margin: 10px 0; padding-left: 20px;">
                 ${data.criticalIssues.slice(0, 2).map(issue => `<li>${issue.split(':')[0] || issue}</li>`).join('')}
               </ul>
-              <strong>Expected Impact:</strong> +15-25 point score improvement<br>
-              <strong>Investment:</strong> 8-12 hours design work<br>
-              <strong>ROI:</strong> 200-300% campaign effectiveness increase
             </div>
           </div>
-          
+
           <div class="recommendation-card" style="border-left: 4px solid #F59E0B;">
             <div class="recommendation-header" style="color: #F59E0B;">⚡ Phase 2: Quick Wins (Week 2)</div>
             <div class="recommendation-content">
@@ -715,12 +686,9 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
               <ul style="margin: 10px 0; padding-left: 20px;">
                 ${data.quickWins.slice(0, 2).map(win => `<li>${win.split(':')[0] || win}</li>`).join('')}
               </ul>
-              <strong>Expected Impact:</strong> +8-15 point score improvement<br>
-              <strong>Investment:</strong> 4-6 hours design work<br>
-              <strong>ROI:</strong> 150-200% additional effectiveness
             </div>
           </div>
-          
+
           <div class="recommendation-card" style="border-left: 4px solid #3B82F6;">
             <div class="recommendation-header" style="color: #3B82F6;">🔧 Phase 3: Fine-tuning (Week 3)</div>
             <div class="recommendation-content">
@@ -728,12 +696,9 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
               <ul style="margin: 10px 0; padding-left: 20px;">
                 ${data.minorIssues.slice(0, 2).map(issue => `<li>${issue.split(':')[0] || issue}</li>`).join('')}
               </ul>
-              <strong>Expected Impact:</strong> +5-10 point score improvement<br>
-              <strong>Investment:</strong> 2-4 hours refinement<br>
-              <strong>ROI:</strong> 50-100% polish and professionalism
             </div>
           </div>
-          
+
           <div class="recommendation-card" style="border-left: 4px solid #059669;">
             <div class="recommendation-header" style="color: #059669;">📊 Phase 4: Performance Monitoring</div>
             <div class="recommendation-content">

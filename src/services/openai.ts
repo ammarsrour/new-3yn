@@ -63,9 +63,7 @@ const mapToolResponseToAnalysis = (
   };
 
   // Map recommendations to issues by priority
-  const criticalIssues = assessment.critical_issues.length > 0
-    ? assessment.critical_issues
-    : ['No critical issues identified'];
+  const criticalIssues = assessment.critical_issues;
 
   const quickWins = recommendations
     .filter(r => r.priority === 'HIGH')

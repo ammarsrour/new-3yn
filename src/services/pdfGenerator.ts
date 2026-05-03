@@ -1,11 +1,13 @@
+import type { Issue } from '../types/index';
+
 export interface PDFReportData {
   score: number;
   location: string;
   distance: number;
   timestamp: Date;
-  criticalIssues: string[];
-  minorIssues: string[];
-  quickWins: string[];
+  criticalIssues: Issue[];
+  minorIssues: Issue[];
+  quickWins: Issue[];
   detailedAnalysis: string;
   fontScore: number;
   contrastScore: number;
@@ -594,8 +596,8 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
         <div class="issues">
           ${data.criticalIssues.map((issue, index) => `
             <div class="issue-item">
-              <div class="issue-title">🔴 Critical Issue #${index + 1}: ${issue.split(':')[0] || issue}</div>
-              <div class="issue-description">${issue.split(':')[1] || issue}</div>
+              <div class="issue-title">🔴 Critical Issue #${index + 1}: ${issue.title}</div>
+              <div class="issue-description">${issue.description}</div>
             </div>
           `).join('')}
         </div>
@@ -614,8 +616,8 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
         <div class="issues">
           ${data.minorIssues.map((issue, index) => `
             <div class="issue-item minor-issue">
-              <div class="issue-title">🟡 Optimization #${index + 1}: ${issue.split(':')[0] || issue}</div>
-              <div class="issue-description">${issue.split(':')[1] || issue}</div>
+              <div class="issue-title">🟡 Optimization #${index + 1}: ${issue.title}</div>
+              <div class="issue-description">${issue.description}</div>
             </div>
           `).join('')}
         </div>
@@ -633,8 +635,8 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
         <div class="issues">
           ${data.quickWins.map((win, index) => `
             <div class="issue-item quick-win">
-              <div class="issue-title">⚡ Quick Win #${index + 1}: ${win.split(':')[0] || win}</div>
-              <div class="issue-description">${win.split(':')[1] || win}</div>
+              <div class="issue-title">⚡ Quick Win #${index + 1}: ${win.title}</div>
+              <div class="issue-description">${win.description}</div>
             </div>
           `).join('')}
         </div>
@@ -666,7 +668,7 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="recommendation-content">
               <strong>Priority Actions:</strong>
               <ul style="margin: 10px 0; padding-left: 20px;">
-                ${data.criticalIssues.slice(0, 2).map(issue => `<li>${issue.split(':')[0] || issue}</li>`).join('')}
+                ${data.criticalIssues.slice(0, 2).map(issue => `<li>${issue.title}</li>`).join('')}
               </ul>
             </div>
           </div>
@@ -676,7 +678,7 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="recommendation-content">
               <strong>Optimization Actions:</strong>
               <ul style="margin: 10px 0; padding-left: 20px;">
-                ${data.quickWins.slice(0, 2).map(win => `<li>${win.split(':')[0] || win}</li>`).join('')}
+                ${data.quickWins.slice(0, 2).map(win => `<li>${win.title}</li>`).join('')}
               </ul>
             </div>
           </div>
@@ -686,7 +688,7 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
             <div class="recommendation-content">
               <strong>Enhancement Actions:</strong>
               <ul style="margin: 10px 0; padding-left: 20px;">
-                ${data.minorIssues.slice(0, 2).map(issue => `<li>${issue.split(':')[0] || issue}</li>`).join('')}
+                ${data.minorIssues.slice(0, 2).map(issue => `<li>${issue.title}</li>`).join('')}
               </ul>
             </div>
           </div>
@@ -784,8 +786,8 @@ export const generatePDFReport = async (data: PDFReportData, userId?: string): P
         <div class="issues">
           ${data.quickWins.map((win, index) => `
             <div class="issue-item quick-win">
-              <div class="issue-title">💡 Quick Win #${index + 1}: ${win.split(':')[0] || win}</div>
-              <div class="issue-description">${win.split(':')[1] || win}</div>
+              <div class="issue-title">💡 Quick Win #${index + 1}: ${win.title}</div>
+              <div class="issue-description">${win.description}</div>
               <div style="margin-top: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                 <div style="padding: 8px; background: rgba(255,255,255,0.8); border-radius: 6px; text-align: center;">
                   <strong style="color: #1E40AF; font-size: 12px;">EFFORT</strong><br>
